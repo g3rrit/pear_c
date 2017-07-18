@@ -1,0 +1,11 @@
+main : () -> i32 = 
+{
+    printf("this working? \n"); 
+
+    return 0;
+}
+
+foo : (s : *char) -> *char = 
+{
+    return s;
+}
