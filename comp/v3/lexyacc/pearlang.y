@@ -41,9 +41,16 @@ void yyerror(const char* s);
 %token<str> DIVIDED
 %token<str> MODULO
 %token<str> HASH
-%token<str> BIGGER
-%token<str> SMALLER
 %token<str> QUOTATION
+
+%token<str> GREATER
+%token<str> LESS
+%token<str> GREQ
+%token<str> LEEQ
+%token<str> SAME
+%token<str> AND
+%token<str> OR
+%token<str> NOT
 
 %token<str> VOID
 %token<str> I8
@@ -60,7 +67,6 @@ void yyerror(const char* s);
 %token<str> INT
 
 %token<str> RETURN
-%token<str> IF
 %token<str> NEW
 %token<str> CRT
 %token<str> BREAK
@@ -68,12 +74,19 @@ void yyerror(const char* s);
 %token<str> STRUCT
 %token<str> INCLUDE
 
+%token<str> IF
+%token<str> ELSE
+%token<str> WHILE
+%token<str> FOR
+
+%token<str> LOCAL
+
 %token<str> TRUE
 %token<str> FALSE
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition
 %type<func> s_func func funcdef s_funcdef
 %type<struc> s_struct struct
 %type<assign> assignment
@@ -92,7 +105,11 @@ program:
 preproc:
        include_s {
             appendStr(&activeHeadT, 1, &$1);
-            appendStrF(&activeSourceT, 1, &$1);
+            appendStrF(&activeSourceDecT, 1, &$1);
+        }
+       | LOCAL include_s {
+            appendStrF(&activeSourceDecT, 1, &$2);
+            free($1);
         }
 ;
 
@@ -135,6 +152,8 @@ fcall:
             $$ = $1;
         }
 ;
+
+    /* FUNCTION */
 
 s_funcdef:
        ID COLON L_BRACE {
@@ -197,9 +216,23 @@ func:
         $$ = $1;
   
         printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $1->type, $1->id, $1->def, $1->body);
-        addFuncToFile($1);  
+        addFuncToFile($1,0);  
+    }
+    | LOCAL s_func R_GBRACE {
+        printf("local func \n");
+        appendStrF(&($2->body),1,&$3);
+        char *snl = "\n";
+        appendStr(&($2->body),1,&snl);
+        $$ = $2;
+  
+        printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $2->type, $2->id, $2->def, $2->body);
+        addFuncToFile($2,1);
     }
 ;        
+
+    /* FUNCTION */
+
+    /* STRUCT */
 
 s_struct:
         ID COLON STRUCT L_GBRACE {
@@ -221,9 +254,82 @@ s_struct:
 struct:
       s_struct R_GBRACE {
             printf("struct \n");
-            addStructToFile($1);
+            addStructToFile($1,0);
             $$ = $1;
         }
+      | LOCAL s_struct R_GBRACE {
+            printf("struct \n");
+            addStructToFile($2,1);
+            $$ = $2;
+        }
+;
+
+    /* STRUCT */
+
+    /* BLOCK */
+
+block_s:
+     L_GBRACE { 
+            $$ = createStr("{\n");
+            free($1);
+        }
+     | block_s statement {
+            char *arr[] = { $2, createStr("\n")};
+            appendStrF(&$1,2,arr);
+            $$ = $1;
+        }
+;
+
+block:
+     block_s R_GBRACE {
+            appendStrF(&$1, 1, &$2);
+            $$ = $1;
+        }
+;
+
+    /* BLOCK */
+
+    /* LOOPS */
+
+loop:
+    FOR L_BRACE assignment expression SEMICOLON expression R_BRACE block {
+            char *arr[] = { $2, createStrAssign($3), $4, $5, $6, $7, $8 };           
+            appendStrF(&$1,7, arr);
+            $$ = $1;
+        }
+    | WHILE L_BRACE expression R_BRACE block {
+            char *arr[] = { $2, $3, $4, $5};
+            appendStrF(&$1, 4, arr);
+            $$ = $1;
+        }
+;
+
+condition:
+         IF L_BRACE expression R_BRACE block {
+                char *arr[] = { $2, $3, $4, $5};
+                appendStrF(&$1, 4, arr);
+                $$ = $1;
+            }
+         | condition ELSE condition {
+                char *arr[] = { $2, $3};
+                appendStrF(&$1, 2, arr);
+                $$ = $1;
+            }
+         | condition ELSE block {
+                char *arr[] = { $2, $3 };
+                appendStrF(&$1, 2, arr);
+                $$ = $1;
+            }
+;
+
+conditionalOp:
+             GREATER {$$=$1;}
+             | LESS {$$=$1;}
+             | GREQ {$$=$1;}
+             | LEEQ {$$=$1;}
+             | AND {$$=$1;}
+             | OR {$$=$1;}
+             | SAME {$$=$1};
 ;
 
 areturn:
@@ -284,6 +390,19 @@ assignment:
                 free($4);
                 free($5);
                 free($7);
+            }
+          | ID COLON type SEMICOLON {
+                printf("assignment \n");
+                Assign *assign = malloc(sizeof(Assign));
+                assign->id = $1;
+                assign->type = createStr($3);
+                assign->def = $3;
+                char *arr[] = { " ", $1};
+                appendStr(&(assign->def), 2, arr);
+                assign->value = createStr("NULL");
+                $$ = assign;
+                free($2);
+                free($4);
             }
           | func {
                 Assign *assign = malloc(sizeof(Assign));
@@ -370,6 +489,25 @@ expression:
                 appendStrF(&$1,1,&$2);
                 $$ = $1;
             }
+          | NOT expression {
+                appendStrF(&$1,1,&$2);
+                $$ = $1;
+            }
+          | expression MINUS MINUS {
+                char *arr[] = { $2,$3};
+                appendStrF(&$1,2,arr);
+                $$ = $1;
+            }
+          | expression PLUS PLUS {
+                char *arr[] = { $2,$3};
+                appendStrF(&$1,2,arr);
+                $$ = $1;
+            }
+          | expression conditionalOp expression {
+                char *arr[] = { $2,$3};
+                appendStrF(&$1,2,arr);
+                $$ = $1;
+            }
 ;
 
 statement: 
@@ -382,6 +520,8 @@ statement:
                 char *res = createStrAssign($1);
                 $$ = res;
             }
+         | loop { $$ = $1;}
+         | condition { $$ = $1;}
          | func {
                 printf("function \n");
             }   
@@ -392,7 +532,10 @@ statement:
 ;
 
 type:
-     type TIMES  { $$ = $1;} 
+     type TIMES  { 
+        appendStrF(&$1, 1, &$2);
+        $$ = $1;
+    } 
     | VOID  {$$ = $1;}
     | I8    {$$ = $1;}
     | I16   {$$ = $1;}
@@ -406,6 +549,7 @@ type:
     | F64   {$$ = $1;}
     | BOOL  {$$ = $1;}
     | INT   {$$ = $1;}
+    | ID    {$$ = $1;}
 ;
 
 line: 
@@ -457,13 +601,6 @@ int main(int argc, char *argv[])
 
     //create stdfile in target dir
 
-    FILE *input = fopen("/Users/pear/Desktop/projects/pearlang/example/pearsrc/main.pear", "r");
-    if(input == NULL)
-    {
-        printf("couldnt open file \n");
-        return 0;
-    }
-
     printf("starting compilation \n");
 
     int count = 0;
@@ -489,6 +626,8 @@ int main(int argc, char *argv[])
         char *dotCs = createStr(farr[count - 1]);
         char *dotHb = createStr(farr[count - 1]);
         dotHb[strlen(dotHb) - 5] = 0;
+        dotCs[strlen(dotCs) - 5] = 0;
+        dotHs[strlen(dotHs) - 5] = 0;
         appendStr(&dotHs,1,&shs);   
         appendStr(&dotCs,1,&scs);
         appendStr(&dotHb,1,&shb);
@@ -497,7 +636,6 @@ int main(int argc, char *argv[])
         initFiles(dotHs,dotHb);
         //createC("/Users/pear/Desktop/projects/pearlang/example/output/", "test.c","test.h");
         createC("./",dotCs,dotHs);
-
         free(dotHs);
         free(dotCs);
         free(dotHb);

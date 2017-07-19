@@ -1,18 +1,6 @@
 TODO
 
--- add crt and new operator
-Foo *__new_Foo()
-{
-    Foo *res = malloc(sizeof(Foo));
-    res->val1 = val1;
-    return res;
-}
-
-Foo __crt_Foo()
-{
-    Foo res;
-    res.val1 = val1;
-    return res;
-}
-
+-- if struct is local let functions inside struct be local too
+-- solve this by having a global state objects 
+-- let functions inside struct be prefixed with __structname_
 

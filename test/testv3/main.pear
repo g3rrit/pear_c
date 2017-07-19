@@ -1,0 +1,41 @@
+local #include"stdio"
+
+main : () -> int
+{
+    printf("working \n");
+    
+    foo : Foo = crt Foo();
+    printf("foo: %s \n", foo.test());
+
+    count : i32 = 0;
+    while(count < 10)
+    {
+        printf("count: %i\n",count);
+        if(count >= 5)
+        {
+            printf("count bigger 5 \n");
+        }
+        count++;
+    }
+
+    return 0;
+}
+
+local Foo : struct 
+{
+    test : () -> char* 
+    {
+        res : char* = malloc(sizeof(char) * 10);
+        strcpy(res, "loltesg");
+        for(i : int = 0; i < 3; i++)
+        {
+            strcat(res,"l");
+        }
+        return res; 
+    }
+}
+
+local bar : () -> void
+{
+    printf("this working? \n");
+}

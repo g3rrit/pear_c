@@ -59,33 +59,43 @@
      DIVIDED = 275,
      MODULO = 276,
      HASH = 277,
-     BIGGER = 278,
-     SMALLER = 279,
-     QUOTATION = 280,
-     VOID = 281,
-     I8 = 282,
-     I16 = 283,
-     I32 = 284,
-     I64 = 285,
-     U8 = 286,
-     U16 = 287,
-     U32 = 288,
-     U64 = 289,
-     F32 = 290,
-     F64 = 291,
-     BOOL = 292,
-     INT = 293,
-     RETURN = 294,
-     IF = 295,
-     NEW = 296,
-     CRT = 297,
-     BREAK = 298,
-     CONTINUE = 299,
-     STRUCT = 300,
-     INCLUDE = 301,
-     TRUE = 302,
-     FALSE = 303,
-     NUL = 304
+     QUOTATION = 278,
+     GREATER = 279,
+     LESS = 280,
+     GREQ = 281,
+     LEEQ = 282,
+     SAME = 283,
+     AND = 284,
+     OR = 285,
+     NOT = 286,
+     VOID = 287,
+     I8 = 288,
+     I16 = 289,
+     I32 = 290,
+     I64 = 291,
+     U8 = 292,
+     U16 = 293,
+     U32 = 294,
+     U64 = 295,
+     F32 = 296,
+     F64 = 297,
+     BOOL = 298,
+     INT = 299,
+     RETURN = 300,
+     NEW = 301,
+     CRT = 302,
+     BREAK = 303,
+     CONTINUE = 304,
+     STRUCT = 305,
+     INCLUDE = 306,
+     IF = 307,
+     ELSE = 308,
+     WHILE = 309,
+     FOR = 310,
+     LOCAL = 311,
+     TRUE = 312,
+     FALSE = 313,
+     NUL = 314
    };
 #endif
 /* Tokens.  */
@@ -109,33 +119,43 @@
 #define DIVIDED 275
 #define MODULO 276
 #define HASH 277
-#define BIGGER 278
-#define SMALLER 279
-#define QUOTATION 280
-#define VOID 281
-#define I8 282
-#define I16 283
-#define I32 284
-#define I64 285
-#define U8 286
-#define U16 287
-#define U32 288
-#define U64 289
-#define F32 290
-#define F64 291
-#define BOOL 292
-#define INT 293
-#define RETURN 294
-#define IF 295
-#define NEW 296
-#define CRT 297
-#define BREAK 298
-#define CONTINUE 299
-#define STRUCT 300
-#define INCLUDE 301
-#define TRUE 302
-#define FALSE 303
-#define NUL 304
+#define QUOTATION 278
+#define GREATER 279
+#define LESS 280
+#define GREQ 281
+#define LEEQ 282
+#define SAME 283
+#define AND 284
+#define OR 285
+#define NOT 286
+#define VOID 287
+#define I8 288
+#define I16 289
+#define I32 290
+#define I64 291
+#define U8 292
+#define U16 293
+#define U32 294
+#define U64 295
+#define F32 296
+#define F64 297
+#define BOOL 298
+#define INT 299
+#define RETURN 300
+#define NEW 301
+#define CRT 302
+#define BREAK 303
+#define CONTINUE 304
+#define STRUCT 305
+#define INCLUDE 306
+#define IF 307
+#define ELSE 308
+#define WHILE 309
+#define FOR 310
+#define LOCAL 311
+#define TRUE 312
+#define FALSE 313
+#define NUL 314
 
 
 
@@ -151,7 +171,7 @@ typedef union YYSTYPE
     Struc *struc;
 }
 /* Line 1529 of yacc.c.  */
-#line 155 "./src/pearlang.tab.h"
+#line 175 "./src/pearlang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

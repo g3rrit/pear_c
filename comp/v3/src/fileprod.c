@@ -94,6 +94,7 @@ void printStruct(Struc *struc)
 
 char *activeHeadT = 0;
 char *activeSource = 0;
+char *activeSourceDecT = 0;
 
 void initFiles(char *name, char *nameH)
 {
@@ -102,6 +103,9 @@ void initFiles(char *name, char *nameH)
     
     if(activeSourceT)
         free(activeSourceT);
+
+    if(activeSourceDecT)
+        free(activeSourceDecT);
 
     activeHeadT = createStr("#ifndef ");
     appendStr(&activeHeadT, 1, &nameH);
@@ -115,12 +119,13 @@ void initFiles(char *name, char *nameH)
     char *stdint = "#include\"stdint.h\"\n";
     appendStr(&activeHeadT,1, &stdint);
 
-    activeSourceT = createStr("#include\"");
-    appendStr(&activeSourceT,1,&name);
+    activeSourceDecT = createStr("#include\"");
+    appendStr(&activeSourceDecT,1,&name);
     char *sqnl = "\" \n";
-    appendStr(&activeSourceT,1,&sqnl);
-    appendStr(&activeSourceT,1,&stdint);
+    appendStr(&activeSourceDecT,1,&sqnl);
+    appendStr(&activeSourceDecT,1,&stdint);
 
+    activeSourceT = createStr("\n");
 }
 
 void finishFiles()
@@ -130,37 +135,60 @@ void finishFiles()
     appendStr(&activeHeadT, 1,&sendif);
 
     writeToHead(activeHeadT);
+    writeToSource(activeSourceDecT);
     writeToSource(activeSourceT); 
 
-    printf("writing:\n head: \n %s \n source: \n %s \n", activeHeadT, activeSourceT);
+    printf("writing:\n head: \n %s \n source: \n %s %s \n", activeHeadT, activeSourceDecT, activeSourceT);
     free(activeHeadT);
     free(activeSourceT);
+    free(activeSourceDecT);
        
     activeHeadT = 0;
     activeSourceT = 0;
+    activeSourceDecT = 0;
 }
 
-void addFuncToFile(Func *func)
+void addFuncToFile(Func *func, int local)
 {
-    //to head
-    appendStr(&activeHeadT,1, &(func->type));
+    char **headRes;
+    if(local)
+    {
+        headRes = &activeSourceDecT;
+    }
+    else
+    {
+        headRes = &activeHeadT;
+    }
+
+    //to head if not local
+    appendStr(headRes,1, &(func->type));
     char *sf = " ";
-    appendStr(&activeHeadT,1,&sf);
-    appendStr(&activeHeadT,1,&(func->id));
-    appendStr(&activeHeadT,1,&(func->def));
+    appendStr(headRes,1,&sf);
+    appendStr(headRes,1,&(func->id));
+    appendStr(headRes,1,&(func->def));
     char *ssnl = "; \n";
-    appendStr(&activeHeadT,1,&ssnl);    
+    appendStr(headRes,1,&ssnl);    
 
     //to source
     char *arr[] = { func->type, " ", func->id, func->def, "\n", func->body};
     appendStr(&activeSourceT,6,arr);
 }
 
-void addStructToFile(Struc *struc)
+void addStructToFile(Struc *struc, int local)
 {
+    char **headRes;
+    if(local)
+    {
+        headRes = &activeSourceDecT;     
+    }
+    else
+    {
+        headRes = &activeHeadT;
+    }
+
     //to head
     char *arr[] = { "typedef struct ", struc->id, " { \n"};
-    appendStr(&activeHeadT,3,arr);
+    appendStr(headRes,3,arr);
 
     Sassign **sassign = &(struc->sassign);
 
@@ -168,7 +196,7 @@ void addStructToFile(Struc *struc)
     {
         Assign *assign = (*sassign)->assign;
         char *arr2[] = { assign->def, "; \n"};
-        appendStr(&activeHeadT, 2, arr2);
+        appendStr(headRes, 2, arr2);
 
         //printf("ass def: %s value %s \n", (*sassign)->assign->def, (*sassign)->assign->value);
         sassign = &((*sassign)->next);
@@ -177,7 +205,7 @@ void addStructToFile(Struc *struc)
     //char *snlb = "\n } ";
     //appendStr(&activeHeadT,1, &snlb);
     char *arr4[] = { "} ", struc->id, "; \n"};
-    appendStr(&activeHeadT, 3, arr4);
+    appendStr(headRes, 3, arr4);
 
     //create new func
     Func *func = malloc(sizeof(Func));
@@ -210,7 +238,7 @@ void addStructToFile(Struc *struc)
     char *sbnl = "} \n";
     appendStr(&func->body,1,&sbnl);
 
-    addFuncToFile(func);
+    addFuncToFile(func,local);
 
 
     //create crt func
@@ -240,7 +268,7 @@ void addStructToFile(Struc *struc)
        
     appendStr(&func2->body,1,&sbnl);
 
-    addFuncToFile(func2);
+    addFuncToFile(func2,local);
 }
 
 

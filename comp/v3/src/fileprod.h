@@ -46,13 +46,14 @@ void appendStrF(char **str, int size, char *arr[]);
 
 char *activeHeadT;
 char *activeSourceT;
+char *activeSourceDecT;
 
 void initFiles(char*, char*);
 
 void finishFiles();
 
-void addFuncToFile(Func *func);
+void addFuncToFile(Func *func, int local);
 
-void addStructToFile(Struc *struc);
+void addStructToFile(Struc *struc, int local);
 
 #endif

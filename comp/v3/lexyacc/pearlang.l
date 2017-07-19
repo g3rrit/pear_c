@@ -21,7 +21,12 @@ null                  {yylval.str = createStr("NULL"); return NUL;}
 crt                   {yylval.str = createStr(yytext); return CRT;}
 new                   {yylval.str = createStr(yytext); return NEW;}
 struct                {yylval.str = createStr(yytext); return STRUCT;}
-#include               {yylval.str = createStr(yytext); return INCLUDE;}
+#include              {yylval.str = createStr(yytext); return INCLUDE;}
+local                 {yylval.str = createStr(yytext); return LOCAL;}
+if                    {yylval.str = createStr(yytext); return IF;}
+else                  {yylval.str = createStr(yytext); return ELSE;}
+while                 {yylval.str = createStr(yytext); return WHILE;}
+for                   {yylval.str = createStr(yytext); return FOR;}
 
 ";"                   {yylval.str = createStr(yytext); printf("SEMICOLON "); return SEMICOLON;}
 ":"                   {yylval.str = createStr(yytext); printf("COLON "); return COLON;}
@@ -35,8 +40,14 @@ struct                {yylval.str = createStr(yytext); return STRUCT;}
 "-"                   {yylval.str = createStr(yytext); printf("MINUS"); return MINUS;}         
 "*"                   {yylval.str = createStr(yytext); printf("TIMES"); return TIMES;}
 "#"                   {yylval.str = createStr(yytext); printf("HASH"); return HASH;}
-"<"                   {yylval.str = createStr(yytext); printf("SMALLER"); return SMALLER;}
-">"                   {yylval.str = createStr(yytext); printf("BIGGER"); return BIGGER;}
+">"                   {yylval.str = createStr(yytext); printf("GREATER"); return GREATER;}
+"<"                   {yylval.str = createStr(yytext); printf("LESS"); return LESS;}
+">="                   {yylval.str = createStr(yytext); printf("GREQ"); return GREQ;}
+"<="                   {yylval.str = createStr(yytext); printf("LEEQ"); return LEEQ;}
+"=="                   {yylval.str = createStr(yytext); printf("SAME"); return SAME;}
+"||"                   {yylval.str = createStr(yytext); printf("OR"); return OR;}
+"&&"                   {yylval.str = createStr(yytext); printf("AND"); return AND;}
+"!"                   {yylval.str = createStr(yytext); printf("NOT"); return NOT;}
 "/"                   {yylval.str = createStr(yytext); printf("DIVIDED"); return DIVIDED;}
 "%"                   {yylval.str = createStr(yytext); printf("MODULO"); return MODULO;}
 "\""                  {yylval.str = createStr(yytext); printf("QUOTATION"); return QUOTATION;}

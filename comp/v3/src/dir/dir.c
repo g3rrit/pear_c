@@ -72,13 +72,13 @@ int createC(char *dir, char *sourceN, char *headN)
 void writeToHead(char *txt)
 {
     printf("writingToHead: \n %s",txt);
-    fprintf(activeHead, txt);
+    fprintf(activeHead, "%s", txt);
 }
 
 void writeToSource(char *txt)
 {
     printf("wrintingToSource: \n %s", txt);
-    fprintf(activeSource, txt);
+    fprintf(activeSource, "%s", txt);
 }
 
 void closeC()

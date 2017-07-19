@@ -1,0 +1,6 @@
+#include"stdio"
+
+testf : () -> void
+{
+    printf("does this work?");
+}
