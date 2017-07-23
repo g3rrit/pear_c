@@ -19,7 +19,7 @@ syn match pearNum '\d\+\.\d*' contained display
 syn match pearNum '[-+]\d\+\.\d*' contained display
 
 syn keyword pearKey return struct null new crt break continue local while if for else
-syn keyword pearType i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 bool void int
+syn keyword pearType i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 bool void int char
 
 syn keyword pearOp + - * sizeof < > == != !
 

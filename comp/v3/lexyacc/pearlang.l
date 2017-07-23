@@ -33,6 +33,7 @@ for                   {yylval.str = createStr(yytext); return FOR;}
 "("                   {yylval.str = createStr(yytext); printf("L_BRACE"); return L_BRACE;}
 ")"                   {yylval.str = createStr(yytext); printf("R_BRACE"); return R_BRACE;}
 "->"                  {yylval.str = createStr(yytext); printf("AR"); return AR;}
+"&"                   {yylval.str = createStr(yytext); printf("ADDRESS"); return ADDRESS;}
 "="                   {yylval.str = createStr(yytext); printf("EQUAL"); return EQUAL;}
 ","                   {yylval.str = createStr(yytext); printf("COMMA"); return COMMA;}
 "."                   {yylval.str = createStr(yytext); printf("DOT"); return DOT;}
@@ -45,6 +46,7 @@ for                   {yylval.str = createStr(yytext); return FOR;}
 ">="                   {yylval.str = createStr(yytext); printf("GREQ"); return GREQ;}
 "<="                   {yylval.str = createStr(yytext); printf("LEEQ"); return LEEQ;}
 "=="                   {yylval.str = createStr(yytext); printf("SAME"); return SAME;}
+"!="                   {yylval.str = createStr(yytext); printf("NOTEQ"); return NOTEQ;}
 "||"                   {yylval.str = createStr(yytext); printf("OR"); return OR;}
 "&&"                   {yylval.str = createStr(yytext); printf("AND"); return AND;}
 "!"                   {yylval.str = createStr(yytext); printf("NOT"); return NOT;}

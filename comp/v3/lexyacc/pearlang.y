@@ -2,8 +2,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"fileprod.h"
+#include"filealloc.h"
 #include"string.h"
 #include"dir.h"
+#include"globals.h"
+#include"stdbool.h"
 
 #define YYDEBUG 1
 
@@ -34,6 +37,7 @@ void yyerror(const char* s);
 %token<str> L_BRACE R_BRACE      /* ( ) */ 
 %token<str> L_GBRACE R_GBRACE    /* { } */
 %token<str> EQUAL                /* = */
+%token<str> ADDRESS
 
 %token<str> TIMES
 %token<str> PLUS
@@ -51,6 +55,7 @@ void yyerror(const char* s);
 %token<str> AND
 %token<str> OR
 %token<str> NOT
+%token<str> NOTEQ
 
 %token<str> VOID
 %token<str> I8
@@ -86,7 +91,7 @@ void yyerror(const char* s);
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment
 %type<func> s_func func funcdef s_funcdef
 %type<struc> s_struct struct
 %type<assign> assignment
@@ -98,17 +103,17 @@ void yyerror(const char* s);
 %%
 
 program: 
-       line
-       | program line 
+       program line 
+       | line
+       | program program
 ;
 
 preproc:
        include_s {
-            appendStr(&activeHeadT, 1, &$1);
-            appendStrF(&activeSourceDecT, 1, &$1);
+            appendStrF(&(activeFT.htdef), 1, &$1);
         }
        | LOCAL include_s {
-            appendStrF(&activeSourceDecT, 1, &$2);
+            appendStrF(&activeFT.stdef, 1, &$2);
             free($1);
         }
 ;
@@ -158,7 +163,18 @@ fcall:
 s_funcdef:
        ID COLON L_BRACE {
             printf("s_funcdef \n");
+            gsEnterFunc(createStr($1));
             Func *func = malloc(sizeof(Func));
+            if(globalS->inStruct)
+            {
+                char *arr[] = { createStr(globalS->structName), createStr("_")};
+                func->idpre = createStr("__");
+                appendStrF(&func->idpre, 2, arr);
+            }
+            else
+            {
+                func->idpre = createStr("");
+            }
             func->id = $1;
             func->def = $3;
             $$ = func;
@@ -166,15 +182,15 @@ s_funcdef:
         }
        | s_funcdef ID COLON type {
             printf("s_funcdef \n");
-            char *arr[] = { $4,$2};
-            appendStrF(&($1->def),1, arr);
+            char *arr[] = { $4, createStr(" "), $2};
+            appendStrF(&($1->def),3, arr);
             $$ = $1;
             free($3);
         }
        | s_funcdef COMMA ID COLON type {
             printf("s_funcdef \n");
-            char *arr[] = { $2, $5, $3};
-            appendStrF(&($1->def), 3, arr);
+            char *arr[] = { $2, $5, createStr(" "), $3};
+            appendStrF(&($1->def), 4, arr);
             $$ = $1;
             free($4);
         }
@@ -193,8 +209,6 @@ funcdef:
 s_func:
       funcdef L_GBRACE {
             printf("s_func \n");
-            char *snl = "\n";
-            appendStr(&$2,1,&snl);
             $1->body = $2;
             $$ = $1;
         }
@@ -216,7 +230,15 @@ func:
         $$ = $1;
   
         printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $1->type, $1->id, $1->def, $1->body);
-        addFuncToFile($1,0);  
+        if(globalS->inStruct)
+        {
+            addFuncToFile($1,1);
+        }
+        else
+        {
+            addFuncToFile($1,0);
+        }
+        gsExitFunc();
     }
     | LOCAL s_func R_GBRACE {
         printf("local func \n");
@@ -227,6 +249,7 @@ func:
   
         printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $2->type, $2->id, $2->def, $2->body);
         addFuncToFile($2,1);
+        gsExitFunc();
     }
 ;        
 
@@ -237,8 +260,17 @@ func:
 s_struct:
         ID COLON STRUCT L_GBRACE {
             printf("s_struct \n");
+            gsEnterStruct(createStr($1), false);
             Struc *struc = createStruct(); 
             struc->id = $1;
+            $$ = struc;
+            free($2);              
+        }
+        | LOCAL ID COLON STRUCT L_GBRACE {
+            printf("s_struct \n");
+            gsEnterStruct(createStr($1), true);
+            Struc *struc = createStruct(); 
+            struc->id = $2;
             $$ = struc;
             free($2);              
         }
@@ -254,13 +286,16 @@ s_struct:
 struct:
       s_struct R_GBRACE {
             printf("struct \n");
-            addStructToFile($1,0);
+            if(globalS->localS)
+            {
+                addStructToFile($1,1);
+            }
+            else
+            {
+                addStructToFile($1,0);
+            }
             $$ = $1;
-        }
-      | LOCAL s_struct R_GBRACE {
-            printf("struct \n");
-            addStructToFile($2,1);
-            $$ = $2;
+            gsExitStruct();
         }
 ;
 
@@ -311,13 +346,18 @@ condition:
                 $$ = $1;
             }
          | condition ELSE condition {
-                char *arr[] = { $2, $3};
-                appendStrF(&$1, 2, arr);
+                char *arr[] = { $2, createStr(" "), $3};
+                appendStrF(&$1, 3, arr);
                 $$ = $1;
             }
          | condition ELSE block {
                 char *arr[] = { $2, $3 };
                 appendStrF(&$1, 2, arr);
+                $$ = $1;
+            }
+         | IF L_BRACE expression R_BRACE statement {
+                char *arr[] = { $2, $3, $4, $5};
+                appendStrF(&$1, 4, arr);
                 $$ = $1;
             }
 ;
@@ -329,7 +369,8 @@ conditionalOp:
              | LEEQ {$$=$1;}
              | AND {$$=$1;}
              | OR {$$=$1;}
-             | SAME {$$=$1};
+             | SAME {$$=$1;}
+             | NOTEQ {$$=$1;}
 ;
 
 areturn:
@@ -412,9 +453,39 @@ assignment:
                 char *arr[] = { " (*", createStr($1->id), ")", createStr($1->def)};
                 appendStr(&assign->def,4,arr);
                 char *val = createStr("&");
+                appendStr(&val, 1, &($1->idpre));
                 appendStr(&val, 1, &($1->id));
                 assign->value = val;
                 $$ = assign;
+            }
+;
+
+allotment:
+         ID EQUAL expression SEMICOLON {
+                char *arr[] = { $2,$3,$4};
+                appendStrF(&$1,3,arr);
+                $$ = $1;
+            }
+;
+
+statement: 
+         expression SEMICOLON {
+                appendStr(&$1,1,&$2);
+                $$ = $1;
+            }
+         | areturn { $$ = $1;}
+         | allotment {$$=$1;}
+         | assignment { 
+                char *res = createStrAssign($1);
+                $$ = res;
+            }
+         | loop { $$ = $1;}
+         | condition { $$ = $1;}
+         | func {
+                printf("function \n");
+            }   
+         | struct {
+                printf("struct \n");
             }
 ;
 
@@ -425,6 +496,8 @@ expression:
           | FLOAT {$$=$1;}
           | STRING {$$=$1;}
           | ID {$$=$1;}
+          | TRUE {$$=$1;}
+          | FALSE {$$=$1;}
           | NEW ID L_BRACE R_BRACE {
                 char *res = createStr("__");
                 char *arr[] = { $1, createStr("_"), $2, createStr("()")};
@@ -440,6 +513,10 @@ expression:
                 $$ = res;
                 free($3);
                 free($4);
+            }
+          | ADDRESS expression {
+                appendStrF(&$1,1,&$2);
+                $$ = $1;
             }
           | expression DOT expression {
                 char *arr[] = { $2, $3};
@@ -510,27 +587,6 @@ expression:
             }
 ;
 
-statement: 
-         expression SEMICOLON {
-                appendStr(&$1,1,&$2);
-                $$ = $1;
-            }
-         | areturn { $$ = $1;}
-         | assignment { 
-                char *res = createStrAssign($1);
-                $$ = res;
-            }
-         | loop { $$ = $1;}
-         | condition { $$ = $1;}
-         | func {
-                printf("function \n");
-            }   
-         | struct {
-                printf("struct \n");
-            }
-
-;
-
 type:
      type TIMES  { 
         appendStrF(&$1, 1, &$2);
@@ -566,6 +622,8 @@ line:
 
 int yydebug = 1;
 
+void compileToOut(int argc, char **argv);
+
 int doCommand(int i, char *argv[])
 {
     if(strcmp("--o",argv[i]) == 0)
@@ -596,6 +654,8 @@ int main(int argc, char *argv[])
         }
     } 
 
+    char *gccarr[fileCount];
+
     int compiling = 1;
     //search for all files
 
@@ -618,6 +678,8 @@ int main(int argc, char *argv[])
             printf("couldnt open files \n");
             continue;
         }   
+        
+        initGlobalS();
 
         char *shs = ".h";
         char *scs = ".c";
@@ -631,6 +693,9 @@ int main(int argc, char *argv[])
         appendStr(&dotHs,1,&shs);   
         appendStr(&dotCs,1,&scs);
         appendStr(&dotHb,1,&shb);
+
+        //gcc 
+        gccarr[count - 1] = createStr(dotCs);
 
         //initFiles("test.h", "TEST_H");
         initFiles(dotHs,dotHb);
@@ -647,11 +712,43 @@ int main(int argc, char *argv[])
 
         finishFiles();
         closeC();
+        freeGlobalS();
     }
 
     printf("finished compiling \n");
 
+    //compileToOut(fileCount, gccarr);
+
+    printf("finished compiling to .out\n");
+
     return 0;
+}
+
+void compileToOut(int argc, char **argv)
+{
+    char *args = createStr("gcc ");
+    char *sem = " ";
+    for(int i = 0; i < argc; i++)
+    {
+        printf("%i %s", i, argv[i]);
+        appendStr(&args,1,&sem);
+        appendStrF(&args,1,&argv[i]);
+    }
+    printf("args: %s\n", args);
+    if(system(args) == -1)
+    {
+        printf("error compiling to .out\n");
+    }  
+    else
+    {
+        printf("finished compiling to .out\n");
+    }
+
+    /*for(int i = 0; i < argc; i++)
+    {
+        printf("count: %i\n",i);
+        free(argv[i]);
+    }*/
 }
 
 void yyerror(const char* s)

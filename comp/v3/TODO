@@ -2,5 +2,7 @@ TODO
 
 -- if struct is local let functions inside struct be local too
 -- solve this by having a global state objects 
--- let functions inside struct be prefixed with __structname_
+-- add syntactic sugar struct:fun(); -> struct.fun(&struct); care difference between pointer and object
+-- cleanup typedef in local structs
+-- cant prefix functions inside struct just make them local
 

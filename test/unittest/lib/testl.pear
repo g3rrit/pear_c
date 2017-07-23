@@ -1,0 +1,4 @@
+testLib : () -> bool 
+{
+    return true; 
+}

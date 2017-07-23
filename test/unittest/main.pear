@@ -1,0 +1,113 @@
+#include"testl"
+
+main : () -> int
+{
+    printf("starting test!\n");
+
+    checkTest("loop", testloop());
+    tStruct : TestStruct = crt TestStruct();
+    tStructp : TestStruct* = new TestStruct();
+    checkTest("struct", tStruct.testS(&tStruct) && tStructp->testS(tStructp));
+    free(tStructp);
+    checkTest("condition", testCondition());
+    checkTest("args", testArgs(15,true,"test"));
+    checkTest("local", testLocal());
+
+    return 0;
+}
+
+checkTest : (name : char*,res : bool) -> void
+{
+    if(res)
+    {
+        printf("test: %s succeeded! \n", name);
+    }
+    else
+    {
+        printf("test: %s failed! \n", name);
+    }
+}
+
+TestStruct : struct
+{
+    res : bool = true;
+    testS : (this : TestStruct*) -> bool 
+    {
+        return this->res;
+    }
+}
+
+local testLocal : () -> bool
+{
+    return true; 
+}
+
+testArgs : (num: i32, res : bool, txt : char*) -> bool
+{
+    if(num != 15)
+        res = false;
+
+    if(strcmp("test",txt) != 0)
+        res = false;
+    
+    return res;
+}
+
+testCondition : () -> bool
+{
+    res : bool = true;
+    if(true || false)
+    {
+        res = true;
+    }
+    else if(true)
+    {
+        res = false;
+    }
+    else
+    {
+        res = false;
+    }
+
+    tnum : i32 = null;
+    while(!tnum)
+    {
+        tnum = 10;
+    }
+
+    if(tnum != 10)
+        res = false;
+    
+    return res;
+}
+
+testloop : () -> bool
+{
+    res : bool = true;
+
+    count : i32 = 0;
+    for(i : i32 = 0; i < 15; i++)
+    {
+        count++;        
+    }
+    if(count != 15)
+        res = false;
+
+    for(i : i32 = 15; i > 0; i--)
+    {
+        count--;
+    }
+
+    if(count != 0)
+        res = false;
+
+    while(count < (15 - 5))
+    {
+        count++;
+    }
+
+    if(count != 10)
+        res = false;
+
+    return res;
+}
