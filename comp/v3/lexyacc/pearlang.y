@@ -7,12 +7,14 @@
 #include"dir.h"
 #include"globals.h"
 #include"stdbool.h"
+#include"compiler.h"
 
 #define YYDEBUG 1
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
+extern int lineNum;
 
 void yyerror(const char* s);
 %}
@@ -46,6 +48,7 @@ void yyerror(const char* s);
 %token<str> MODULO
 %token<str> HASH
 %token<str> QUOTATION
+%token<str> SIZEOF
 
 %token<str> GREATER
 %token<str> LESS
@@ -91,7 +94,7 @@ void yyerror(const char* s);
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast 
 %type<func> s_func func funcdef s_funcdef
 %type<struc> s_struct struct
 %type<assign> assignment
@@ -297,6 +300,10 @@ struct:
             $$ = $1;
             gsExitStruct();
         }
+      | struct COLON ID {
+            addSingleToFile($1,$3,globalS->lastLocal);
+            free($2);
+        }
 ;
 
     /* STRUCT */
@@ -466,6 +473,11 @@ allotment:
                 appendStrF(&$1,3,arr);
                 $$ = $1;
             }
+         | expression EQUAL expression SEMICOLON {
+                char *arr[] = { $2,$3,$4};
+                appendStrF(&$1,3,arr);
+                $$ = $1;
+            }
 ;
 
 statement: 
@@ -474,6 +486,14 @@ statement:
                 $$ = $1;
             }
          | areturn { $$ = $1;}
+         | CONTINUE SEMICOLON {
+                appendStr(&$1,1,&$2);
+                $$ = $1;
+            }  
+         | BREAK SEMICOLON {
+                appendStr(&$1,1,&$2);
+                $$ = $1;
+            }
          | allotment {$$=$1;}
          | assignment { 
                 char *res = createStrAssign($1);
@@ -498,6 +518,12 @@ expression:
           | ID {$$=$1;}
           | TRUE {$$=$1;}
           | FALSE {$$=$1;}
+          | STRING {$$=$1;}
+          | SIZEOF L_BRACE type R_BRACE {
+                char *arr[] = { $2,$3,$4};
+                appendStr(&$1,3,arr);
+                $$ = $1;
+            }
           | NEW ID L_BRACE R_BRACE {
                 char *res = createStr("__");
                 char *arr[] = { $1, createStr("_"), $2, createStr("()")};
@@ -514,7 +540,15 @@ expression:
                 free($3);
                 free($4);
             }
+          | TIMES expression {
+            appendStrF(&$1,1,&$2);
+                $$ = $1;
+            }
           | ADDRESS expression {
+                appendStrF(&$1,1,&$2);
+                $$ = $1;
+            }
+          | typecast expression {
                 appendStrF(&$1,1,&$2);
                 $$ = $1;
             }
@@ -587,12 +621,9 @@ expression:
             }
 ;
 
+
 type:
-     type TIMES  { 
-        appendStrF(&$1, 1, &$2);
-        $$ = $1;
-    } 
-    | VOID  {$$ = $1;}
+    VOID  {$$ = $1;}
     | I8    {$$ = $1;}
     | I16   {$$ = $1;}
     | I32   {$$ = $1;}
@@ -606,14 +637,31 @@ type:
     | BOOL  {$$ = $1;}
     | INT   {$$ = $1;}
     | ID    {$$ = $1;}
+    | type TIMES  { 
+        appendStrF(&$1, 1, &$2);
+        $$ = $1;
+    } 
+    | ID TIMES {
+            appendStrF(&$1,1,&$2);
+            $$ = $1;
+        }
 ;
+
+typecast:
+        L_BRACE type R_BRACE {
+                char *arr[] = { $2,$3};
+                appendStrF(&$1,2,arr);
+                $$ = $1;
+            }
 
 line: 
     statement {
         printf("statement \n");
     }
     | preproc {}
+    | struct {}
 ;
+
 
 
 %%
@@ -622,139 +670,29 @@ line:
 
 int yydebug = 1;
 
-void compileToOut(int argc, char **argv);
-
-int doCommand(int i, char *argv[])
-{
-    if(strcmp("--o",argv[i]) == 0)
-    {
-        i++; 
-        printf("output: %s\n",argv[i]); 
-    } 
-    return i;
-}
-
 int main(int argc, char *argv[])
 {
-    
-    //filter commands from file with -- 
-    int fileCount = 0;
-    char *farr[argc];
-    for(int i = 1; i < argc; i++)
-    {
-        if(strcmp("--", argv[i]) == 0)
-        {
-            i = doCommand(i, argv);
-        }   
-        else
-        {
-            farr[fileCount] = argv[i];
-            printf("argv: %s\n", argv[i]);
-            fileCount++;
-        }
-    } 
+    //INITIALIZE COMPILER
+    compInit(argc, argv); 
 
-    char *gccarr[fileCount];
+    //char *gccarr[fileCount];
 
-    int compiling = 1;
-    //search for all files
+    compile(); 
 
-    //create stdfile in target dir
-
-    printf("starting compilation \n");
-
-    int count = 0;
-    while(compiling)
-    {
-        printf("farr0: %s\n",farr[count]);
-        printf("farr0: %s\n",farr[0]);
-        yyin = fopen(farr[count],"r");
-        count++;
-        if(count >= fileCount)
-            compiling = 0;
-        
-        if(yyin == NULL)
-        {
-            printf("couldnt open files \n");
-            continue;
-        }   
-        
-        initGlobalS();
-
-        char *shs = ".h";
-        char *scs = ".c";
-        char *shb = "_H";
-        char *dotHs = createStr(farr[count - 1]);
-        char *dotCs = createStr(farr[count - 1]);
-        char *dotHb = createStr(farr[count - 1]);
-        dotHb[strlen(dotHb) - 5] = 0;
-        dotCs[strlen(dotCs) - 5] = 0;
-        dotHs[strlen(dotHs) - 5] = 0;
-        appendStr(&dotHs,1,&shs);   
-        appendStr(&dotCs,1,&scs);
-        appendStr(&dotHb,1,&shb);
-
-        //gcc 
-        gccarr[count - 1] = createStr(dotCs);
-
-        //initFiles("test.h", "TEST_H");
-        initFiles(dotHs,dotHb);
-        //createC("/Users/pear/Desktop/projects/pearlang/example/output/", "test.c","test.h");
-        createC("./",dotCs,dotHs);
-        free(dotHs);
-        free(dotCs);
-        free(dotHb);
-
-        do 
-        {
-            yyparse();
-        }while(!feof(yyin));
-
-        finishFiles();
-        closeC();
-        freeGlobalS();
-    }
+    compCleanUp();
 
     printf("finished compiling \n");
 
     //compileToOut(fileCount, gccarr);
 
-    printf("finished compiling to .out\n");
-
     return 0;
 }
 
-void compileToOut(int argc, char **argv)
-{
-    char *args = createStr("gcc ");
-    char *sem = " ";
-    for(int i = 0; i < argc; i++)
-    {
-        printf("%i %s", i, argv[i]);
-        appendStr(&args,1,&sem);
-        appendStrF(&args,1,&argv[i]);
-    }
-    printf("args: %s\n", args);
-    if(system(args) == -1)
-    {
-        printf("error compiling to .out\n");
-    }  
-    else
-    {
-        printf("finished compiling to .out\n");
-    }
 
-    /*for(int i = 0; i < argc; i++)
-    {
-        printf("count: %i\n",i);
-        free(argv[i]);
-    }*/
-}
 
 void yyerror(const char* s)
 {
-    printf("hello");
     fprintf(stderr, "parse error: %s \n", s);
-    printf("error sis: %s", s);
+    fprintf(stderr, "in line: %i\n", lineNum);
     close(0);
 }

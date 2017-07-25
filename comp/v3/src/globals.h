@@ -17,6 +17,7 @@ struct GlobalS
     char *funcName;
 
     bool localS;
+    bool lastLocal;
 };
 
 void initGlobalS();

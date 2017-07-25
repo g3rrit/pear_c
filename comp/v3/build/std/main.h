@@ -1,7 +1,8 @@
-#ifndef testl_H
-#define testl_H
+#ifndef main_H
+#define main_H
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
-bool testLib();
+#include"std.h"
+int main();
 #endif

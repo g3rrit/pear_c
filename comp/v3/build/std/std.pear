@@ -1,0 +1,175 @@
+#include"stdio"
+#include"stdbool"
+#include"stdint"
+#include"stdlib"
+#include"string"
+
+//--------------LIST-------------------
+
+List : struct
+{
+    start : ListNode* = null;
+
+    append : (this : List*, data : void*) -> void*
+    {
+        entry : ListNode** = &(this->start);
+
+        while(*entry)
+        {
+            entry = &((*entry)->next);
+        }
+        
+        (*entry) = new ListNode();
+        (*entry)->data = data;
+
+        return data;
+    }
+
+    get : (this : List*, i : i32) -> void*
+    {
+        entry : ListNode** = &(this->start);
+        count : i32 = 0;
+
+        while((count < i) && *entry)
+        {
+            entry = &((*entry)->next);
+            count++;
+        }
+        return (*entry)->data;
+    }
+
+    remove : (this : List*, i : i32) -> void*
+    {   
+        entry : ListNode** = &(this->start);
+        count : i32 = 0;
+        
+        while((count < i) && *entry)
+        {
+            entry = &((*entry)->next);
+            count++;
+        }
+        if((*entry)->next)
+        {
+            fentry : ListNode* = *entry;
+            *entry = (*entry)->next;
+            free(fentry);
+        }
+        else
+        {
+            free(*entry);
+            *entry = null;
+        }
+
+        return (*entry)->data;
+    }
+
+    delete : (this : List*) -> void
+    {
+        entry : ListNode** = &(this->start);
+        fentry : ListNode** = entry;
+        
+        while(*entry)
+        {
+            entry = &((*entry)->next); 
+            free(*fentry);
+            fentry = entry;
+        }
+    }
+}
+
+ListNode : struct
+{
+    data : void* = null;
+    next : ListNode* = null;
+}
+
+//-------------------------------------
+
+
+//-------------MAP---------------------
+
+Map : struct
+{
+    start : MapNode* = null;
+
+    append : (this : Map*, key : char*, data : void*) -> void*
+    {
+        entry : MapNode** = &(this->start);
+
+        while(*entry)
+        {
+            entry = &((*entry)->next);
+        }
+    
+        (*entry) = new MapNode();
+        (*entry)->key = key;
+        (*entry)->data = data;
+        return data;
+    }
+
+    get : (this : Map*, key : char*) -> void*
+    {
+        entry : MapNode** = &(this->start);
+        
+        while(*entry)
+        {
+            if(strcmp((*entry)->key, key) == 0)
+                return (*entry)->data;
+
+            entry = &((*entry)->next);
+        }
+        return null;
+    }
+
+    remove : (this : Map*, key : char*) -> void*
+    {
+        entry : MapNode** = &(this->start);
+        
+        while(*entry)
+        {
+            if(strcmp((*entry)->key, key) == 0)
+                break;
+
+            entry = &((*entry)->next);
+        }    
+        data : void* = (*entry)->data;
+        if((*entry)->next)
+        {
+            fentry : MapNode* = *entry;
+            *entry = (*entry)->next;
+            free(fentry);
+        }
+        else
+        {
+            free(*entry);
+            *entry = null;
+        }
+
+        return data;
+    }
+    
+    delete : (this : Map*) -> void
+    {
+        entry : MapNode** = &(this->start);
+        fentry : MapNode** = entry;
+        
+        while(*entry)
+        {
+            entry = &((*entry)->next); 
+            free(*fentry);
+            fentry = entry;
+        }
+    }
+}
+
+MapNode : struct
+{
+    data : void* = null;
+    key : char* = null;
+    next : MapNode* = null;
+}
+
+//-------------------------------------
+
+
+

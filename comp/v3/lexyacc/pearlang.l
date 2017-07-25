@@ -7,12 +7,14 @@
 #include"fileprod.h"
 
 #include"pearlang.tab.h"
+
+int lineNum = 0;
 %}
 
 %%
 
 [ \t] ; //ignore all whitespaces
-[\n]                  { printf("\n");} 
+[\n]                  { printf("\n"); lineNum++;} 
 
 return                {yylval.str = createStr(yytext); return RETURN;}
 break                 {yylval.str = createStr(yytext); return BREAK;}
@@ -27,6 +29,7 @@ if                    {yylval.str = createStr(yytext); return IF;}
 else                  {yylval.str = createStr(yytext); return ELSE;}
 while                 {yylval.str = createStr(yytext); return WHILE;}
 for                   {yylval.str = createStr(yytext); return FOR;}
+sizeof                {yylval.str = createStr(yytext); return SIZEOF;}
 
 ";"                   {yylval.str = createStr(yytext); printf("SEMICOLON "); return SEMICOLON;}
 ":"                   {yylval.str = createStr(yytext); printf("COLON "); return COLON;}

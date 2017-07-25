@@ -11,6 +11,7 @@ void initGlobalS()
     globalS->inStruct = false;
     globalS->structName = 0;
     globalS->localS = false;
+    globalS->lastLocal = false;
 }
 
 void gsEnterStruct(char *sname, bool local)
@@ -19,6 +20,7 @@ void gsEnterStruct(char *sname, bool local)
     globalS->inStruct = true;
     globalS->structName = sname;
     globalS->localS = local;
+    globalS->lastLocal = local;
 }
 
 void gsExitStruct()

@@ -61,43 +61,44 @@
      MODULO = 277,
      HASH = 278,
      QUOTATION = 279,
-     GREATER = 280,
-     LESS = 281,
-     GREQ = 282,
-     LEEQ = 283,
-     SAME = 284,
-     AND = 285,
-     OR = 286,
-     NOT = 287,
-     NOTEQ = 288,
-     VOID = 289,
-     I8 = 290,
-     I16 = 291,
-     I32 = 292,
-     I64 = 293,
-     U8 = 294,
-     U16 = 295,
-     U32 = 296,
-     U64 = 297,
-     F32 = 298,
-     F64 = 299,
-     BOOL = 300,
-     INT = 301,
-     RETURN = 302,
-     NEW = 303,
-     CRT = 304,
-     BREAK = 305,
-     CONTINUE = 306,
-     STRUCT = 307,
-     INCLUDE = 308,
-     IF = 309,
-     ELSE = 310,
-     WHILE = 311,
-     FOR = 312,
-     LOCAL = 313,
-     TRUE = 314,
-     FALSE = 315,
-     NUL = 316
+     SIZEOF = 280,
+     GREATER = 281,
+     LESS = 282,
+     GREQ = 283,
+     LEEQ = 284,
+     SAME = 285,
+     AND = 286,
+     OR = 287,
+     NOT = 288,
+     NOTEQ = 289,
+     VOID = 290,
+     I8 = 291,
+     I16 = 292,
+     I32 = 293,
+     I64 = 294,
+     U8 = 295,
+     U16 = 296,
+     U32 = 297,
+     U64 = 298,
+     F32 = 299,
+     F64 = 300,
+     BOOL = 301,
+     INT = 302,
+     RETURN = 303,
+     NEW = 304,
+     CRT = 305,
+     BREAK = 306,
+     CONTINUE = 307,
+     STRUCT = 308,
+     INCLUDE = 309,
+     IF = 310,
+     ELSE = 311,
+     WHILE = 312,
+     FOR = 313,
+     LOCAL = 314,
+     TRUE = 315,
+     FALSE = 316,
+     NUL = 317
    };
 #endif
 /* Tokens.  */
@@ -123,50 +124,51 @@
 #define MODULO 277
 #define HASH 278
 #define QUOTATION 279
-#define GREATER 280
-#define LESS 281
-#define GREQ 282
-#define LEEQ 283
-#define SAME 284
-#define AND 285
-#define OR 286
-#define NOT 287
-#define NOTEQ 288
-#define VOID 289
-#define I8 290
-#define I16 291
-#define I32 292
-#define I64 293
-#define U8 294
-#define U16 295
-#define U32 296
-#define U64 297
-#define F32 298
-#define F64 299
-#define BOOL 300
-#define INT 301
-#define RETURN 302
-#define NEW 303
-#define CRT 304
-#define BREAK 305
-#define CONTINUE 306
-#define STRUCT 307
-#define INCLUDE 308
-#define IF 309
-#define ELSE 310
-#define WHILE 311
-#define FOR 312
-#define LOCAL 313
-#define TRUE 314
-#define FALSE 315
-#define NUL 316
+#define SIZEOF 280
+#define GREATER 281
+#define LESS 282
+#define GREQ 283
+#define LEEQ 284
+#define SAME 285
+#define AND 286
+#define OR 287
+#define NOT 288
+#define NOTEQ 289
+#define VOID 290
+#define I8 291
+#define I16 292
+#define I32 293
+#define I64 294
+#define U8 295
+#define U16 296
+#define U32 297
+#define U64 298
+#define F32 299
+#define F64 300
+#define BOOL 301
+#define INT 302
+#define RETURN 303
+#define NEW 304
+#define CRT 305
+#define BREAK 306
+#define CONTINUE 307
+#define STRUCT 308
+#define INCLUDE 309
+#define IF 310
+#define ELSE 311
+#define WHILE 312
+#define FOR 313
+#define LOCAL 314
+#define TRUE 315
+#define FALSE 316
+#define NUL 317
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "./lexyacc/pearlang.y"
+#line 22 "./lexyacc/pearlang.y"
 {
     char *str;
     Func *func;
@@ -175,7 +177,7 @@ typedef union YYSTYPE
     Struc *struc;
 }
 /* Line 1529 of yacc.c.  */
-#line 179 "./src/pearlang.tab.h"
+#line 181 "./src/pearlang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

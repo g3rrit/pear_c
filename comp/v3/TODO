@@ -1,8 +1,5 @@
 TODO
 
--- if struct is local let functions inside struct be local too
--- solve this by having a global state objects 
--- add syntactic sugar struct:fun(); -> struct.fun(&struct); care difference between pointer and object
--- cleanup typedef in local structs
--- cant prefix functions inside struct just make them local
+-- rethink this sometimes u might need to pass ** as this !!!add syntactic sugar struct:fun(); -> struct.fun(&struct); care difference between pointer and object
+-- why cant comp reduce ID TIMES to type on its own?
 

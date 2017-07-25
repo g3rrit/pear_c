@@ -208,3 +208,40 @@ void addStructToFile(Struc *struc, int local)
 
     addFuncToFile(func2,local);
 }
+
+void addSingleToFile(Struc *struc, char *id, int local)
+{
+    if(!local)
+    {
+        char *arr[] = { struc->id, " ", id, ";\n"}; 
+        appendStr(&(activeFT.stdef), 4, arr);
+    }
+    else
+    {
+        char *arr[] = { struc->id, " ", id, ";\n"}; 
+        appendStr(&(activeFT.htdef), 4, arr);
+    }
+
+    char *arr[] = { struc->id, " ", id, "={"};
+    appendStr(&(activeFT.sdef),4,arr);
+
+    Sassign **sassign = &(struc->sassign);
+
+    while(*sassign)
+    {
+        Assign *assign = (*sassign)->assign;
+        if((*sassign)->next)
+        {
+            char *arr2[] = { ".", assign->id, "=", assign->value,","};
+            appendStr(&(activeFT.sdef), 5, arr2);
+        }
+        else
+        {
+            char *arr2[] = { ".", assign->id, "=", assign->value,"};\n"};
+            appendStr(&(activeFT.sdef), 5, arr2);
+        }
+        sassign = &((*sassign)->next);
+    }
+}
+
+

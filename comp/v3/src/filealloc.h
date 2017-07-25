@@ -26,4 +26,6 @@ void addFuncToFile(Func *func, int local);
 
 void addStructToFile(Struc *struc, int local);
 
+void addSingleToFile(Struc *struc, char *id, int local);
+
 #endif
