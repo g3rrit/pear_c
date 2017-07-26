@@ -1,4 +1,4 @@
-#include"testl"
+local include"testl"
 
 main : () -> int
 {
@@ -23,6 +23,7 @@ main : () -> int
     checkTest("lib", testLib());
     checkTest("pointer", testPointer());
     checkTest("singleton", testSingleton.test(&testSingleton));
+    checkTest("functionPointer", testFuncPointer(&testFuncPointerFunc, (30 != 3)));
 
     return 0;
 }
@@ -37,6 +38,21 @@ checkTest : (name : char*,res : bool) -> void
     {
         printf("test: %s failed! \n", name);
     }
+}
+
+testFuncPointer : (testFuncP : (res : (res2 : bool) -> bool) -> bool, res : bool) -> bool
+{
+    return (testFuncP(&testFuncPointerRes) && res);
+}
+
+testFuncPointerFunc : (res : (res2 : bool) -> bool) -> bool
+{
+    return (res(10 == 10) && true);
+}
+
+testFuncPointerRes : (res2 : bool) -> bool
+{
+    return res2;
 }
 
 TestSingleton: struct

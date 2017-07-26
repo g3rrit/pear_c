@@ -28,4 +28,6 @@ void addStructToFile(Struc *struc, int local);
 
 void addSingleToFile(Struc *struc, char *id, int local);
 
+void addFuncDecToFile(Func *func);
+
 #endif

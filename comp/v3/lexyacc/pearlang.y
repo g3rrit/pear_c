@@ -94,7 +94,7 @@ void yyerror(const char* s);
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast 
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast declaration
 %type<func> s_func func funcdef s_funcdef
 %type<struc> s_struct struct
 %type<assign> assignment
@@ -127,9 +127,10 @@ include_s:
             char *incC = $2;
             //free(&incC[strlen(incC)]);
             incC[strlen(incC) - 1] = 0;
-            char *arr[] = { incC, createStr(".h\"\n")};
-            appendStrF(&$1, 2, arr);
-            $$ = $1;
+            char *arr[] = { $1, incC, createStr(".h\"\n")};
+            char *res = createStr("#");
+            appendStrF(&res, 3, arr);
+            $$ = res;
         }
 ;
 
@@ -183,19 +184,16 @@ s_funcdef:
             $$ = func;
             free($2);
         }
-       | s_funcdef ID COLON type {
+       | s_funcdef declaration {
             printf("s_funcdef \n");
-            char *arr[] = { $4, createStr(" "), $2};
-            appendStrF(&($1->def),3, arr);
+            appendStrF(&($1->def),1, &$2);
             $$ = $1;
-            free($3);
         }
-       | s_funcdef COMMA ID COLON type {
+       | s_funcdef COMMA declaration {
             printf("s_funcdef \n");
-            char *arr[] = { $2, $5, createStr(" "), $3};
-            appendStrF(&($1->def), 4, arr);
+            char *arr[] = { $2, $3};
+            appendStrF(&($1->def), 2, arr);
             $$ = $1;
-            free($4);
         }
 ;
 
@@ -387,6 +385,10 @@ areturn:
             appendStrF(&$1,3,arr);
             $$ = $1;
        }
+       | RETURN SEMICOLON {
+            appendStr(&$1, 3, &$2);
+            $$ = $1;
+        }
 ;
 
 assignment:
@@ -464,6 +466,28 @@ assignment:
                 appendStr(&val, 1, &($1->id));
                 assign->value = val;
                 $$ = assign;
+            }
+;
+
+declaration:
+           ID COLON type {
+                char *arr[] = { createStr(" "), $1 };
+                appendStrF(&$3, 2, arr);
+                $$ = $3;
+                free($2);
+            }
+           | funcdef {
+                addFuncDecToFile($1); 
+                //TODO free func
+                char *res = createStr("__");
+                char *resapp = createStr("_");
+                if(globalS->inFunc)
+                    appendStr(&res,1, &(globalS->lastFuncName));
+                appendStrF(&res,1,&resapp);
+                char *arr[] = { $1->id, " ", $1->id};
+                appendStr(&res, 3, arr);
+                $$ = res;
+                gsExitFuncDec();
             }
 ;
 

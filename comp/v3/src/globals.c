@@ -1,4 +1,5 @@
 #include"globals.h"
+#include"fileprod.h"
 
 GlobalS *globalS = 0;
 
@@ -8,6 +9,7 @@ void initGlobalS()
     globalS->indentlvl = 0;
     globalS->inFunc = false;     
     globalS->funcName = 0;
+    globalS->lastFuncName = 0;
     globalS->inStruct = false;
     globalS->structName = 0;
     globalS->localS = false;
@@ -34,6 +36,8 @@ void gsExitStruct()
 
 void gsEnterFunc(char *fname)
 {
+    if(!(globalS->lastFuncName))
+        globalS->lastFuncName = globalS->funcName;
     globalS->indentlvl++;
     globalS->funcName = fname;
     globalS->inFunc = true;
@@ -43,8 +47,20 @@ void gsExitFunc()
 {
     globalS->indentlvl--;
     globalS->inFunc = false;
-    free(globalS->funcName);
+    if(globalS->funcName)
+        free(globalS->funcName);
     globalS->funcName = 0;
+    if(globalS->lastFuncName)
+        free(globalS->lastFuncName);
+    globalS->lastFuncName = 0;
+}
+
+void gsExitFuncDec()
+{
+    if(globalS->funcName)
+        free(globalS->funcName);
+    globalS->funcName = createStr(globalS->lastFuncName); 
+    globalS->indentlvl--;
 }
 
 void gsEnterBlock()
@@ -63,6 +79,8 @@ void freeGlobalS()
         free(globalS->structName);
     if(globalS->funcName)
         free(globalS->funcName);
+    if(globalS->lastFuncName)
+        free(globalS->lastFuncName);
 
     free(globalS);
 }

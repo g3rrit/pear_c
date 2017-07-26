@@ -23,7 +23,7 @@ null                  {yylval.str = createStr("NULL"); return NUL;}
 crt                   {yylval.str = createStr(yytext); return CRT;}
 new                   {yylval.str = createStr(yytext); return NEW;}
 struct                {yylval.str = createStr(yytext); return STRUCT;}
-#include              {yylval.str = createStr(yytext); return INCLUDE;}
+include              {yylval.str = createStr(yytext); return INCLUDE;}
 local                 {yylval.str = createStr(yytext); return LOCAL;}
 if                    {yylval.str = createStr(yytext); return IF;}
 else                  {yylval.str = createStr(yytext); return ELSE;}
@@ -87,7 +87,8 @@ void                  {yylval.str = createStr(yytext); printf("VOID"); return VO
                             printf("FLOAT");
                             return FLOAT;
                         }
-[a-zA-Z0-9]+            {yylval.str = createStr(yytext); 
+[a-zA-Z_][a-zA-Z0-9_]*  {yylval.str = createStr(yytext); 
+                            //[a-zA-Z0-9]+
                             printf("ID ");
                             return ID;
                         }

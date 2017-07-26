@@ -15,6 +15,7 @@ struct GlobalS
     //FUNCTION
     bool inFunc;     
     char *funcName;
+    char *lastFuncName;
 
     bool localS;
     bool lastLocal;
@@ -29,6 +30,8 @@ void gsExitStruct();
 
 void gsEnterFunc(char *fname);
 void gsExitFunc();
+
+void gsExitFuncDec();
 
 void gsEnterBlock();
 void gsExitBlock();

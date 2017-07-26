@@ -1,5 +1,6 @@
 #include"filealloc.h"
 #include"dir.h"
+#include"globals.h"
 
 ActiveFT activeFT = { .htdef = 0, .hdef = 0, .hbody = 0, .stdef = 0, .sdef = 0, .sbody = 0};
 
@@ -211,7 +212,7 @@ void addStructToFile(Struc *struc, int local)
 
 void addSingleToFile(Struc *struc, char *id, int local)
 {
-    if(!local)
+    if(local)
     {
         char *arr[] = { struc->id, " ", id, ";\n"}; 
         appendStr(&(activeFT.stdef), 4, arr);
@@ -243,5 +244,23 @@ void addSingleToFile(Struc *struc, char *id, int local)
         sassign = &((*sassign)->next);
     }
 }
+
+void addFuncDecToFile(Func *func)
+{
+    //char *token = createStr("__FD_");
+    //appendStr(&token,1,&(func->id));
+
+    char *appendName = createStr("__");
+
+    if(globalS->inFunc)
+        appendStr(&appendName,1,&(globalS->lastFuncName)); 
+
+    char *arr[] = { createStr("typedef "), createStr(func->type), createStr(" (*"), appendName, createStr("_"),  
+                    createStr(func->id), createStr(")"), createStr(func->def), createStr(";\n")};
+                    
+    appendStrF(&(activeFT.hdef), 9, arr); 
+}
+
+
 
 

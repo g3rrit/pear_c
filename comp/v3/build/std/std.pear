@@ -1,8 +1,8 @@
-#include"stdio"
-#include"stdbool"
-#include"stdint"
-#include"stdlib"
-#include"string"
+include"stdio"
+include"stdbool"
+include"stdint"
+include"stdlib"
+include"string"
 
 //--------------LIST-------------------
 
@@ -10,7 +10,7 @@ List : struct
 {
     start : ListNode* = null;
 
-    append : (this : List*, data : void*) -> void*
+    add : (this : List*, data : void*) -> void*
     {
         entry : ListNode** = &(this->start);
 
@@ -63,6 +63,19 @@ List : struct
         return (*entry)->data;
     }
 
+    forEach : (this : List*, fun : (data : void*) -> bool) -> bool
+    {
+        entry : ListNode** = &(this->start);
+
+        while(*entry)
+        {
+            if(!fun((*entry)->data))
+                return false;
+            entry = &((*entry)->next);
+        }
+        return true;
+    }
+
     delete : (this : List*) -> void
     {
         entry : ListNode** = &(this->start);
@@ -92,7 +105,7 @@ Map : struct
 {
     start : MapNode* = null;
 
-    append : (this : Map*, key : char*, data : void*) -> void*
+    add : (this : Map*, key : char*, data : void*) -> void*
     {
         entry : MapNode** = &(this->start);
 
@@ -147,7 +160,20 @@ Map : struct
 
         return data;
     }
-    
+
+    forEach : (this : Map*, fun : (data : void*) -> bool) -> bool
+    {
+        entry : MapNode** = &(this->start);
+
+        while(*entry)
+        {
+            if(!fun((*entry)->data))
+                return false;
+            entry = &((*entry)->next);
+        }
+        return true;
+    }
+
     delete : (this : Map*) -> void
     {
         entry : MapNode** = &(this->start);
@@ -167,6 +193,77 @@ MapNode : struct
     data : void* = null;
     key : char* = null;
     next : MapNode* = null;
+}
+
+//-------------------------------------
+
+//-------------EVENT-------------------
+
+EventList : struct
+{
+    map : Map* = null;    
+
+    add : (name : char*, fun : () -> bool) -> void
+    {
+        if(!event.map)
+            event.map = new Map();
+
+        tempList : List* = event.map->get(event.map, name);
+
+        if(!tempList)
+        {
+            tempList = new List();
+            event.map->add(event.map, name, tempList);
+        }
+    
+        tempList->add(tempList, fun);
+    } 
+
+    dispatch : (name : char*) -> bool 
+    {
+        tempList : List* = event.map->get(event.map, name); 
+    
+        if(!tempList)
+            return false;
+
+        return tempList->forEach(tempList, &__eventDispatchForEach);        
+    }
+
+    remove : (name : char*) -> void
+    {
+        tempList : List* = event.map->remove(event.map, name);
+
+        if(tempList)
+        {
+            tempList->delete(tempList);
+            free(tempList);
+        }
+    }
+
+    delete : () -> void
+    {
+        event.map->forEach(event.map, &__eventDeleteForEach);
+        free(event.map);
+    }
+    
+} : event
+
+__eventDispatchForEach : (data : () -> bool) -> bool
+{
+    return data(); 
+}
+
+__eventDeleteForEach : (data : void*) -> bool
+{
+    tempList : List* = data;
+
+    if(tempList)
+    {
+        tempList->delete(tempList);
+        free(tempList);
+    }
+
+    return true;
 }
 
 //-------------------------------------

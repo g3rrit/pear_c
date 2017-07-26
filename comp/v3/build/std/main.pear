@@ -1,13 +1,13 @@
-#include"std"
+include"std"
 
 main : () -> int
 {
     printf("listTest\n");
 
     list : List* = new List();
-    list->append(list, "list");
-    list->append(list, "is");
-    list->append(list, "working");
+    list->add(list, "list");
+    list->add(list, "is");
+    list->add(list, "working");
 
     for(i : i32 = 0; i < 3; i++)
     {
@@ -26,9 +26,9 @@ main : () -> int
     printf("maptest\n");
 
     map : Map* = new Map();
-    map->append(map, "gerrit", "proessl");
-    map->append(map, "dominik", "ermer");
-    map->append(map, "sophie", "meckl");
+    map->add(map, "gerrit", "proessl");
+    map->add(map, "dominik", "ermer");
+    map->add(map, "sophie", "meckl");
 
     printf("key: gerrit val: %s\n", map->get(map, "gerrit"));
     printf("key: dominik val: %s\n", map->get(map,"dominik"));
@@ -46,7 +46,43 @@ main : () -> int
         printf("map key sophie null working!\n");
     }
 
+    map->forEach(map, &printNames);
+
     map->delete(map);
 
+    event.add("test", &eventf1);
+    event.add("test", &eventf2);
+    event.add("test", &eventf3);
+    event.add("test1", &eventf1);
+    event.add("test2", &eventf1);
+
+    event.dispatch("test");
+    event.dispatch("test1");
+    event.dispatch("test2");
+
     return 0;
+}
+
+eventf1 : () -> bool
+{
+    printf("eventf1\n");
+    return true;
+}
+
+eventf2 : () -> bool
+{
+    printf("eventf2\n");
+    return false;
+}
+
+eventf3 : () -> bool
+{
+    printf("eventf3\n");
+    return true;
+}
+
+printNames : (data : void*) -> bool
+{
+    printf("foreach name: %s\n", (char*) data); 
+    return true;
 }

@@ -2,7 +2,7 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
-TestSingleton testSingleton;
+#include"testl.h"
 char* __TestSingleton_getName(TestSingleton* this);
 bool __TestSingleton_test(TestSingleton* this);
 TestSingleton testSingleton={.name="tom",.getName=&__TestSingleton_getName,.test=&__TestSingleton_test};
@@ -31,6 +31,7 @@ free(mlist);
 checkTest("lib",testLib());
 checkTest("pointer",testPointer());
 checkTest("singleton",testSingleton.test(&testSingleton));
+checkTest("functionPointer",testFuncPointer(&testFuncPointerFunc,(30!=3)));
 return 0;}
 void checkTest(char* name,bool res)
 {
@@ -39,6 +40,15 @@ printf("test: %s succeeded! \n",name);
 }else{
 printf("test: %s failed! \n",name);
 }}
+bool testFuncPointer(__testFuncPointer_testFuncP testFuncP,bool res)
+{
+return (testFuncP(&testFuncPointerRes)&&res);}
+bool testFuncPointerFunc(__testFuncPointerFunc_res res)
+{
+return (res(10==10)&&true);}
+bool testFuncPointerRes(bool res2)
+{
+return res2;}
 char* __TestSingleton_getName(TestSingleton* this)
 {
 return this->name;}

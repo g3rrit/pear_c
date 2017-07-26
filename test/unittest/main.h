@@ -3,12 +3,18 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
-#include"testl.h"
 typedef struct TestSingleton TestSingleton;
+TestSingleton testSingleton;
 typedef struct TestList TestList;
 typedef struct TestStruct TestStruct;
 int main();
 void checkTest(char* name,bool res);
+typedef bool (*__testFuncPointer_res)(bool res2);
+typedef bool (*__testFuncPointer_testFuncP)(__testFuncPointer_res res);
+bool testFuncPointer(__testFuncPointer_testFuncP testFuncP,bool res);
+typedef bool (*__testFuncPointerFunc_res)(bool res2);
+bool testFuncPointerFunc(__testFuncPointerFunc_res res);
+bool testFuncPointerRes(bool res2);
 struct TestSingleton {
 char* name; 
 char* (*getName)(TestSingleton* this); 
