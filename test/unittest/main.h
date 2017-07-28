@@ -3,11 +3,17 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
+typedef struct TestStructTag TestStructTag;
 typedef struct TestSingleton TestSingleton;
 TestSingleton testSingleton;
 typedef struct TestList TestList;
 typedef struct TestStruct TestStruct;
 int main();
+struct TestStructTag {
+bool res; 
+};
+TestStructTag* __new_TestStructTag();
+TestStructTag __crt_TestStructTag();
 void checkTest(char* name,bool res);
 typedef bool (*__testFuncPointer_res)(bool res2);
 typedef bool (*__testFuncPointer_testFuncP)(__testFuncPointer_res res);

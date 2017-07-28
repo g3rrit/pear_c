@@ -7,6 +7,7 @@ struct Compiler
     int fcount;
     char **files;
 
+    char *outputFolder;
 };
 
 Compiler compiler;

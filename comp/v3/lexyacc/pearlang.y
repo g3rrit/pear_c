@@ -230,7 +230,7 @@ func:
         appendStr(&($1->body),1,&snl);
         $$ = $1;
   
-        printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $1->type, $1->id, $1->def, $1->body);
+        //printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $1->type, $1->id, $1->def, $1->body);
         if(globalS->inStruct)
         {
             addFuncToFile($1,1);
@@ -248,7 +248,7 @@ func:
         appendStr(&($2->body),1,&snl);
         $$ = $2;
   
-        printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $2->type, $2->id, $2->def, $2->body);
+        //printf("function finished: \n type: %s \n id: %s \n def:  %s \n body: \n %s \n", $2->type, $2->id, $2->def, $2->body);
         addFuncToFile($2,1);
         gsExitFunc();
     }
@@ -386,7 +386,7 @@ areturn:
             $$ = $1;
        }
        | RETURN SEMICOLON {
-            appendStr(&$1, 3, &$2);
+            appendStr(&$1, 1, &$2);
             $$ = $1;
         }
 ;
@@ -665,6 +665,11 @@ type:
         appendStrF(&$1, 1, &$2);
         $$ = $1;
     } 
+    | STRUCT type {
+        char *arr[] = { createStr(" "), $2};
+        appendStr(&$1,2, arr);
+        $$ = $1;
+    }
     | ID TIMES {
             appendStrF(&$1,1,&$2);
             $$ = $1;

@@ -42,7 +42,7 @@ void appendStr(char **str, int size, char *arr[])
 
     *str = res;
     
-    printf("str: \n %s \n", *str);
+    //printf("str: \n %s \n", *str);
 }
 
 void appendStrF(char **str, int size, char *arr[])

@@ -32,7 +32,21 @@ checkTest("lib",testLib());
 checkTest("pointer",testPointer());
 checkTest("singleton",testSingleton.test(&testSingleton));
 checkTest("functionPointer",testFuncPointer(&testFuncPointerFunc,(30!=3)));
+struct TestStructTag testStructTag = __crt_TestStructTag();
+checkTest("struct tag",testStructTag.res);
 return 0;}
+TestStructTag* __new_TestStructTag()
+{ 
+TestStructTag *this = malloc(sizeof(TestStructTag));
+this->res = true; 
+return this;
+} 
+TestStructTag __crt_TestStructTag()
+{ 
+TestStructTag this;
+this.res = true; 
+return this;
+} 
 void checkTest(char* name,bool res)
 {
 if(res){

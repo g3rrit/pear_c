@@ -18,12 +18,13 @@ void compInit(int argc, char **argv)
 {
     lineNum = 0;
     compiler.files = 0;
+    compiler.outputFolder = "./";
     //filter commands from file with -- 
     int fileCount = 0;
     char *farr[argc];
     for(int i = 1; i < argc; i++)
     {
-        if(strcmp("--", argv[i]) == 0)
+        if(strncmp("-", argv[i], 1) == 0)
         {
             i = doCommand(i, argv);
         }   
@@ -108,7 +109,7 @@ void compile()
         //initFiles("test.h", "TEST_H");
         initFiles(fnameh,fnameH);
         //createC("/Users/pear/Desktop/projects/pearlang/example/output/", "test.c","test.h");
-        createC("./",fnamecd,fnamehd);
+        createC(compiler.outputFolder,fnamecd,fnamehd);
 
         printf("fname: %s\n", fname);
         printf("filestr: %s\n", filestr);
@@ -146,10 +147,11 @@ void compCleanUp()
 
 int doCommand(int i, char *argv[])
 {
-    if(strcmp("--o",argv[i]) == 0)
+    if(strcmp("-of",argv[i]) == 0)
     {
-        i++; 
-        printf("output: %s\n",argv[i]); 
+        printf("output: %s\n",argv[i + 1]); 
+        compiler.outputFolder = argv[i+1];
+        i++;
     } 
     return i;
 }

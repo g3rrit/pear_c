@@ -5,7 +5,10 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <stdlib.h>
+
+struct stat st = {0};
 
 FILE *activeHead;
 FILE *activeSource;
@@ -45,13 +48,18 @@ void printdir(char *dir, int depth)
 
 int createC(char *dir, char *sourceN, char *headN)
 {
-    char *head = malloc(sizeof(char) * (strlen(dir) + strlen(headN) + 1));
+    if (stat(dir, &st) == -1) 
+            mkdir(dir, 0700);
+
+    char *head = malloc(sizeof(char) * (strlen(dir) + strlen(headN) + 2));
     strcpy(head, dir);
+    strcat(head,"/");
     strcat(head, headN);
     printf("head: %s \n", head);
 
-    char *source = malloc(sizeof(char) * (strlen(dir) + strlen(sourceN) + 1));
+    char *source = malloc(sizeof(char) * (strlen(dir) + strlen(sourceN) + 2));
     strcpy(source, dir);
+    strcat(source,"/");
     strcat(source, sourceN);
     printf("source: %s \n", source);
 

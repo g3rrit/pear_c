@@ -53,7 +53,13 @@ void finishFiles()
     //add endif to head
     char *sendif = "#endif";
     appendStr(&activeFT.hbody, 1,&sendif);
-
+    /*printf("segfault here?\n");
+    printf("hdef: %s \n end1 \n" , activeFT.htdef);
+    printf("hdef: %s \n end2j \n" , activeFT.hdef);
+    printf("hdef: %s \n end3 \n" , activeFT.hbody);
+    printf("hdef: %s \n end4 \n" , activeFT.stdef);
+    printf("hdef: %s \n end5 \n" , activeFT.sdef);
+    printf("hdef: %s \n end6 \n" , activeFT.sbody);*/
     writeToHead(activeFT.htdef);
     writeToHead(activeFT.hdef);
     writeToHead(activeFT.hbody);

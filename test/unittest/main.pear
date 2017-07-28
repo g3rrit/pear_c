@@ -24,8 +24,15 @@ main : () -> int
     checkTest("pointer", testPointer());
     checkTest("singleton", testSingleton.test(&testSingleton));
     checkTest("functionPointer", testFuncPointer(&testFuncPointerFunc, (30 != 3)));
+    testStructTag : struct TestStructTag = crt TestStructTag();
+    checkTest("struct tag", testStructTag.res);
 
     return 0;
+}
+
+TestStructTag : struct 
+{
+    res : bool = true;
 }
 
 checkTest : (name : char*,res : bool) -> void
