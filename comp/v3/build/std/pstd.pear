@@ -10,6 +10,8 @@ List : struct
 {
     start : ListNode* = null;
 
+    size : i32 = 0;
+
     add : (this : List*, data : void*) -> void*
     {
         entry : ListNode** = &(this->start);
@@ -22,6 +24,8 @@ List : struct
         (*entry) = new ListNode();
         (*entry)->data = data;
 
+        this->size++;
+
         return data;
     }
 
@@ -29,6 +33,9 @@ List : struct
     {
         entry : ListNode** = &(this->start);
         count : i32 = 0;
+
+        if(count >= this->size)
+            return null;
 
         while((count < i) && *entry)
         {
@@ -42,12 +49,16 @@ List : struct
     {   
         entry : ListNode** = &(this->start);
         count : i32 = 0;
-        
+
+        if(count >= this->size)
+            return null;
+
         while((count < i) && *entry)
         {
             entry = &((*entry)->next);
             count++;
         }
+
         if((*entry)->next)
         {
             fentry : ListNode* = *entry;
@@ -59,6 +70,8 @@ List : struct
             free(*entry);
             *entry = null;
         }
+
+        this->size--;
 
         return (*entry)->data;
     }
@@ -105,6 +118,8 @@ Map : struct
 {
     start : MapNode* = null;
 
+    size : i32 = 0;
+
     add : (this : Map*, key : char*, data : void*) -> void*
     {
         entry : MapNode** = &(this->start);
@@ -117,6 +132,9 @@ Map : struct
         (*entry) = new MapNode();
         (*entry)->key = key;
         (*entry)->data = data;
+
+        this->size++;
+
         return data;
     }
 
@@ -137,14 +155,22 @@ Map : struct
     remove : (this : Map*, key : char*) -> void*
     {
         entry : MapNode** = &(this->start);
+
+        found : bool = false;
         
         while(*entry)
         {
             if(strcmp((*entry)->key, key) == 0)
+            {
+                found = true;
                 break;
+            }
 
             entry = &((*entry)->next);
         }    
+        if(!found)
+            return null;
+
         data : void* = (*entry)->data;
         if((*entry)->next)
         {
@@ -157,6 +183,8 @@ Map : struct
             free(*entry);
             *entry = null;
         }
+
+        this->size--;
 
         return data;
     }
@@ -203,64 +231,103 @@ EventList : struct
 {
     map : Map* = null;    
 
-    add : (name : char*, fun : () -> bool) -> void
+    add : (name : char*, id : char*, fun : (data : void*) -> bool) -> void
     {
         if(!event.map)
             event.map = new Map();
 
-        tempList : List* = event.map->get(event.map, name);
+        tempMap : Map* = event.map->get(event.map, name);
 
-        if(!tempList)
+        if(!tempMap)
         {
-            tempList = new List();
-            event.map->add(event.map, name, tempList);
+            tempMap = new Map();
+            event.map->add(event.map, name, tempMap);
         }
     
-        tempList->add(tempList, fun);
+        tempMap->add(tempMap, id, fun);
     } 
 
-    dispatch : (name : char*) -> bool 
+    dispatch : (name : char*, data : void*) -> bool 
     {
-        tempList : List* = event.map->get(event.map, name); 
+        if(!event.map)
+            return true;
+
+        tempMap : Map* = event.map->get(event.map, name); 
     
-        if(!tempList)
+        if(!tempMap)
             return false;
 
-        return tempList->forEach(tempList, &__eventDispatchForEach);        
+        entry : MapNode** = &(tempMap->start);
+
+        while(*entry)
+        {
+            if(!__eventDispatchForEach((*entry)->data, data))
+                return false;
+            entry = &((*entry)->next);
+        }
+
+        return true;
     }
 
     remove : (name : char*) -> void
     {
-        tempList : List* = event.map->remove(event.map, name);
+        if(!event.map)
+            return;
 
-        if(tempList)
+        tempMap : Map* = event.map->remove(event.map, name);
+
+        if(tempMap)
         {
-            tempList->delete(tempList);
-            free(tempList);
+            tempMap->delete(tempMap);
+            free(tempMap);
+        }
+    }
+
+    removeID : (name : char*, id : char*) -> void
+    {
+        if(!event.map)
+            return;
+    
+        tempMap : Map* = event.map->get(event.map, name);
+
+        if(tempMap)
+        {
+            printf("size: %i\n", tempMap->size);
+            tempMap->remove(tempMap, id);
+            printf("size: %i\n", tempMap->size);
+            if(tempMap->size <= 0)
+            {
+                printf("here\n");
+                tempMap->delete(tempMap);
+                free(tempMap);
+            }
         }
     }
 
     delete : () -> void
     {
+        if(!event.map)
+            return;
+
         event.map->forEach(event.map, &__eventDeleteForEach);
         free(event.map);
     }
     
 } : event
 
-__eventDispatchForEach : (data : () -> bool) -> bool
+__eventDispatchForEach : (fun : () -> bool, data : void*) -> bool
 {
-    return data(); 
+    return fun(data); 
 }
 
 __eventDeleteForEach : (data : void*) -> bool
 {
-    tempList : List* = data;
+    tempMap : Map* = data;
 
-    if(tempList)
+    if(tempMap)
     {
-        tempList->delete(tempList);
-        free(tempList);
+        tempMap->delete(tempMap);
+        free(tempMap);
     }
 
     return true;

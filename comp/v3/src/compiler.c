@@ -51,8 +51,10 @@ void compile()
 
     printf("starting compilation \n");
 
+    initGlobalS();
+
     int count = 0;
-    while(compiling)
+    while(compiling && !globalS->exit)
     {
         lineNum = 0;
         printf("files: %s\n",compiler.files[count]);
@@ -70,6 +72,8 @@ void compile()
         initGlobalS();
 
         char *filestr = createStr(compiler.files[count - 1]);
+        //if(strncmp(filestr, "./", 2))
+         //   filestr = filestr[2];
         char *fnamefree = createStr(filestr);
         char *fname = fnamefree;
         if(strrchr(fname,47))
@@ -97,6 +101,9 @@ void compile()
         //test.h
         char *fnameh = createStr(fname);
         appendStr(&fnameh,1,&shs);
+        //test.c
+        char *fnamec = createStr(fname);
+        appendStr(&fnamec,1,&scs);
         //./dir
         char *dirname = createStr(filestr);
         char *tempdirname = strrchr(dirname,47);
@@ -109,7 +116,8 @@ void compile()
         //initFiles("test.h", "TEST_H");
         initFiles(fnameh,fnameH);
         //createC("/Users/pear/Desktop/projects/pearlang/example/output/", "test.c","test.h");
-        createC(compiler.outputFolder,fnamecd,fnamehd);
+        //createC(compiler.outputFolder,fnamecd,fnamehd);
+        createC(compiler.outputFolder,fnamec,fnameh);
 
         printf("fname: %s\n", fname);
         printf("filestr: %s\n", filestr);
@@ -117,6 +125,7 @@ void compile()
         printf("fnamecd: %s\n", fnamecd);
         printf("fnameH: %s\n", fnameH);
         printf("fnameh: %s\n", fnameh);
+        printf("fnamec: %s\n", fnamec);
         printf("dirname: %s\n", dirname);
 
         free(fnamefree);
@@ -125,13 +134,14 @@ void compile()
         free(fnamecd);
         free(fnameH);
         free(fnameh);
+        free(fnamec);
         free(dirname);
 
         do 
         {
             yyparse();
-        }while(!feof(yyin));
-
+        }while(!feof(yyin) && !globalS->exit);
+        
         finishFiles();
         closeC();
         freeGlobalS();

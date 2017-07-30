@@ -38,7 +38,6 @@ void yyerror(const char* s);
 %token<str> DOT
 %token<str> L_BRACE R_BRACE      /* ( ) */ 
 %token<str> L_GBRACE R_GBRACE    /* { } */
-%token<str> L_ABRACE R_ABRACE    /* [ ] */
 %token<str> EQUAL                /* = */
 %token<str> ADDRESS
 
@@ -95,7 +94,7 @@ void yyerror(const char* s);
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast declaration equals access
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast declaration equals
 %type<func> s_func func funcdef s_funcdef
 %type<struc> s_struct struct
 %type<assign> assignment
@@ -113,7 +112,8 @@ program:
 ;
 
 equals:
-      PLUS EQUAL {
+      EQUAL {$$=$1;}
+      | PLUS EQUAL {
             appendStrF(&$1,1,&$2);
             $$=$1;
         }
@@ -159,11 +159,6 @@ s_fcall:
      ID L_BRACE {
             printf("fcall \n");
             appendStrF(&$1,1,&$2);
-            $$ = $1;
-        }
-     | access L_BRACE {
-            printf("fcall \n");
-            appendStrF(&$1, 1,&$2);
             $$ = $1;
         }
      | s_fcall expression {
@@ -417,7 +412,7 @@ areturn:
 ;
 
 assignment:
-          ID COLON type EQUAL expression SEMICOLON {
+          ID COLON type equals expression SEMICOLON {
                 printf("assignment \n");
                 /*char *arr[] = {$1, $4, $5,$6};
                 appendStrF(&$3,3,arr);
@@ -436,7 +431,7 @@ assignment:
                 free($4);
                 free($6);
             }
-         | ID COLON ID EQUAL expression SEMICOLON {
+         | ID COLON ID equals expression SEMICOLON {
                 printf("assignment \n");
                 Assign *assign = malloc(sizeof(Assign));
                 assign->id = $1;
@@ -451,7 +446,7 @@ assignment:
                 free($4);
                 free($6);
             }
-          | ID COLON ID TIMES EQUAL expression SEMICOLON {
+          | ID COLON ID TIMES equals expression SEMICOLON {
                 printf("assignment \n");
                 Assign *assign = malloc(sizeof(Assign));
                 assign->id = $1;
@@ -522,12 +517,7 @@ declaration:
 ;
 
 allotment:
-         ID EQUAL expression SEMICOLON {
-                char *arr[] = { $2,$3,$4};
-                appendStrF(&$1,3,arr);
-                $$ = $1;
-            }
-         | expression EQUAL expression SEMICOLON {
+         ID equals expression SEMICOLON {
                 char *arr[] = { $2,$3,$4};
                 appendStrF(&$1,3,arr);
                 $$ = $1;
@@ -568,39 +558,6 @@ statement:
             }
 ;
 
-access:
-      ID AR ID {
-            char *arr[] = { $2, $3};
-            appendStrF(&$1, 2, arr);
-            $$ = $1;
-        }
-      | ID L_ABRACE expression R_ABRACE {
-            char *arr[] = { $2, $3, $4};
-            appendStrF(&$1, 3, arr);
-            $$ = $1;
-        }
-      | access L_ABRACE expression R_ABRACE {
-            char *arr[] = { $2, $3, $4};
-            appendStrF(&$1, 3, arr);
-            $$ = $1;
-        }
-      | ID DOT ID {
-            char *arr[] = { $2, $3};
-            appendStrF(&$1, 2, arr);
-            $$ = $1;
-        }
-      | access DOT ID {
-            char *arr[] = { $2, $3};
-            appendStrF(&$1, 2, arr);
-            $$ = $1;
-        } 
-      | access AR ID {
-            char *arr[] = { $2, $3};
-            appendStrF(&$1, 2, arr);
-            $$ = $1;
-        }
-;
-
 expression:
           fcall { $$ = $1;}
           | NUL { $$ = $1;}
@@ -611,7 +568,6 @@ expression:
           | TRUE {$$=$1;}
           | FALSE {$$=$1;}
           | STRING {$$=$1;}
-          | access {$$=$1;}
           | SIZEOF L_BRACE type R_BRACE {
                 char *arr[] = { $2,$3,$4};
                 appendStr(&$1,3,arr);
@@ -634,7 +590,7 @@ expression:
                 free($4);
             }
           | TIMES expression {
-                appendStrF(&$1,1,&$2);
+            appendStrF(&$1,1,&$2);
                 $$ = $1;
             }
           | ADDRESS expression {

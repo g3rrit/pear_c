@@ -3,12 +3,34 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
+typedef struct TestArrayS TestArrayS;
+typedef struct TestIDType TestIDType;
+typedef struct TestExS TestExS;
 typedef struct TestStructTag TestStructTag;
 typedef struct TestSingleton TestSingleton;
 TestSingleton testSingleton;
 typedef struct TestList TestList;
 typedef struct TestStruct TestStruct;
 int main();
+bool testArray();
+struct TestArrayS {
+int num; 
+};
+TestArrayS* __new_TestArrayS();
+TestArrayS __crt_TestArrayS();
+struct TestIDType {
+bool res; 
+};
+TestIDType* __new_TestIDType();
+TestIDType __crt_TestIDType();
+bool testExpressions();
+struct TestExS {
+TestExS* start; 
+int32_t num; 
+bool (*test)(); 
+};
+TestExS* __new_TestExS();
+TestExS __crt_TestExS();
 struct TestStructTag {
 bool res; 
 };

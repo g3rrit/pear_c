@@ -170,8 +170,11 @@ void addStructToFile(Struc *struc, int local)
     {
         Assign *assign = (*sassign)->assign;
         
-        char *arr2[] = { "this->", assign->id, " = ", assign->value, "; \n"};
-        appendStr(&func->body, 5, arr2);
+        if(assign->init)
+        {
+            char *arr2[] = { "this->", assign->id, " = ", assign->value, "; \n"};
+            appendStr(&func->body, 5, arr2);
+        }
 
         sassign = &((*sassign)->next);
     }
@@ -203,8 +206,11 @@ void addStructToFile(Struc *struc, int local)
     {
         Assign *assign = (*sassign)->assign;
         
-        char *arr2[] = { "this.", assign->id, " = ", assign->value, "; \n"};
-        appendStr(&func2->body, 5, arr2);
+        if(assign->init)
+        {
+            char *arr2[] = { "this.", assign->id, " = ", assign->value, "; \n"};
+            appendStr(&func2->body, 5, arr2);
+        }
 
         sassign = &((*sassign)->next);
     }

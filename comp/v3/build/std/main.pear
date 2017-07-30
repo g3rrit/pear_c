@@ -1,4 +1,4 @@
-include"std"
+include"pstd"
 
 main : () -> int
 {
@@ -50,22 +50,39 @@ main : () -> int
 
     map->delete(map);
 
-    event.add("test", &eventf1);
-    event.add("test", &eventf2);
-    event.add("test", &eventf3);
-    event.add("test1", &eventf1);
-    event.add("test2", &eventf1);
+    event.add("test", "id1", &eventf1);
+    event.add("test", "id2", &eventf2);
+    event.add("test", "id3", &eventf3);
+    event.add("test1", "id4", &eventf1);
+    event.add("test1", "id5", &eventf1);
+    event.add("test2", "id6", &eventf1);
 
-    event.dispatch("test");
-    event.dispatch("test1");
-    event.dispatch("test2");
+    event.dispatch("test", "datah");
+    event.dispatch("test1", "datac");
+    event.dispatch("test2", "datab");
+
+    event.removeID("test", "id1");
+    printf("eventid1 rem\n");
+
+    event.dispatch("test", "datah");
+    event.dispatch("test1", "datac");
+    event.dispatch("test2", "datab");
+        
+    event.remove("test1");
+    printf("ev test1 rem \n");
+
+    event.dispatch("test", "datah");
+    event.dispatch("test1", "datac");
+    event.dispatch("test2", "datab");
+
+
 
     return 0;
 }
 
-eventf1 : () -> bool
+eventf1 : (data : char*) -> bool
 {
-    printf("eventf1\n");
+    printf("eventf1%s\n",data);
     return true;
 }
 

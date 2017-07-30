@@ -1,6 +1,8 @@
 #ifndef FILEPROD_H
 #define FILEPROD_H
 
+#include"stdbool.h"
+
 typedef struct Func
 {
     char *type;
@@ -22,6 +24,7 @@ typedef struct Assign
     char *id;
     char *def;
     char *value;
+    bool init;
 }Assign;
 
 typedef struct Sassign

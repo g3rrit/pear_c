@@ -5,8 +5,17 @@
 char *createStrAssign(Assign *assign)
 {
     char *res = assign->def;
-    char *arr[] = { createStr(" = "), assign->value, createStr(";")};
-    appendStrF(&res,3,arr);
+    if(assign->init)
+    {
+        char *arr[] = { createStr(" = "), assign->value, createStr(";")};
+        appendStrF(&res,3,arr);
+    }
+    else
+    {
+        char *app = createStr(";");
+        appendStrF(&res,1,&app);
+    }
+
     free(assign);
     return res;
 }

@@ -56,7 +56,8 @@ sizeof                {yylval.str = createStr(yytext); return SIZEOF;}
 "/"                   {yylval.str = createStr(yytext); printf("DIVIDED"); return DIVIDED;}
 "%"                   {yylval.str = createStr(yytext); printf("MODULO"); return MODULO;}
 "\""                  {yylval.str = createStr(yytext); printf("QUOTATION"); return QUOTATION;}
-
+"["                   {yylval.str = createStr(yytext); printf("L_ABRACE"); return L_ABRACE;}
+"]"                   {yylval.str = createStr(yytext); printf("R_ABRACE"); return R_ABRACE;}
 
 "{"                   {yylval.str = createStr(yytext); printf("L_GBRACE"); return L_GBRACE;}
 "}"                   {yylval.str = createStr(yytext); printf("R_GBRACE"); return R_GBRACE;}

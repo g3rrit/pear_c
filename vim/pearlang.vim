@@ -18,8 +18,10 @@ syn match pearNum '[-+]\d\+' contained display
 syn match pearNum '\d\+\.\d*' contained display
 syn match pearNum '[-+]\d\+\.\d*' contained display
 
-syn keyword pearKey return struct null new crt break continue local while if for else include
+syn keyword pearKey return struct new crt break continue local while if for else include
 syn keyword pearType i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 bool void int char
+syn keyword pearSpecial true false null
+syn keyword pearID this
 
 syn keyword pearOp + - * sizeof < > == != !
 
@@ -34,4 +36,6 @@ hi def link pearComment Comment
 hi def link pearType    Type
 hi def link pearString  String
 hi def link pearOp      Operator
+hi def link pearSpecial Special
+hi def link pearID      Identifier
 

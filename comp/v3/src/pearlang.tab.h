@@ -52,53 +52,55 @@
      R_BRACE = 268,
      L_GBRACE = 269,
      R_GBRACE = 270,
-     EQUAL = 271,
-     ADDRESS = 272,
-     TIMES = 273,
-     PLUS = 274,
-     MINUS = 275,
-     DIVIDED = 276,
-     MODULO = 277,
-     HASH = 278,
-     QUOTATION = 279,
-     SIZEOF = 280,
-     GREATER = 281,
-     LESS = 282,
-     GREQ = 283,
-     LEEQ = 284,
-     SAME = 285,
-     AND = 286,
-     OR = 287,
-     NOT = 288,
-     NOTEQ = 289,
-     VOID = 290,
-     I8 = 291,
-     I16 = 292,
-     I32 = 293,
-     I64 = 294,
-     U8 = 295,
-     U16 = 296,
-     U32 = 297,
-     U64 = 298,
-     F32 = 299,
-     F64 = 300,
-     BOOL = 301,
-     INT = 302,
-     RETURN = 303,
-     NEW = 304,
-     CRT = 305,
-     BREAK = 306,
-     CONTINUE = 307,
-     STRUCT = 308,
-     INCLUDE = 309,
-     IF = 310,
-     ELSE = 311,
-     WHILE = 312,
-     FOR = 313,
-     LOCAL = 314,
-     TRUE = 315,
-     FALSE = 316,
-     NUL = 317
+     L_ABRACE = 271,
+     R_ABRACE = 272,
+     EQUAL = 273,
+     ADDRESS = 274,
+     TIMES = 275,
+     PLUS = 276,
+     MINUS = 277,
+     DIVIDED = 278,
+     MODULO = 279,
+     HASH = 280,
+     QUOTATION = 281,
+     SIZEOF = 282,
+     GREATER = 283,
+     LESS = 284,
+     GREQ = 285,
+     LEEQ = 286,
+     SAME = 287,
+     AND = 288,
+     OR = 289,
+     NOT = 290,
+     NOTEQ = 291,
+     VOID = 292,
+     I8 = 293,
+     I16 = 294,
+     I32 = 295,
+     I64 = 296,
+     U8 = 297,
+     U16 = 298,
+     U32 = 299,
+     U64 = 300,
+     F32 = 301,
+     F64 = 302,
+     BOOL = 303,
+     INT = 304,
+     RETURN = 305,
+     NEW = 306,
+     CRT = 307,
+     BREAK = 308,
+     CONTINUE = 309,
+     STRUCT = 310,
+     INCLUDE = 311,
+     IF = 312,
+     ELSE = 313,
+     WHILE = 314,
+     FOR = 315,
+     LOCAL = 316,
+     TRUE = 317,
+     FALSE = 318,
+     NUL = 319
    };
 #endif
 /* Tokens.  */
@@ -115,53 +117,55 @@
 #define R_BRACE 268
 #define L_GBRACE 269
 #define R_GBRACE 270
-#define EQUAL 271
-#define ADDRESS 272
-#define TIMES 273
-#define PLUS 274
-#define MINUS 275
-#define DIVIDED 276
-#define MODULO 277
-#define HASH 278
-#define QUOTATION 279
-#define SIZEOF 280
-#define GREATER 281
-#define LESS 282
-#define GREQ 283
-#define LEEQ 284
-#define SAME 285
-#define AND 286
-#define OR 287
-#define NOT 288
-#define NOTEQ 289
-#define VOID 290
-#define I8 291
-#define I16 292
-#define I32 293
-#define I64 294
-#define U8 295
-#define U16 296
-#define U32 297
-#define U64 298
-#define F32 299
-#define F64 300
-#define BOOL 301
-#define INT 302
-#define RETURN 303
-#define NEW 304
-#define CRT 305
-#define BREAK 306
-#define CONTINUE 307
-#define STRUCT 308
-#define INCLUDE 309
-#define IF 310
-#define ELSE 311
-#define WHILE 312
-#define FOR 313
-#define LOCAL 314
-#define TRUE 315
-#define FALSE 316
-#define NUL 317
+#define L_ABRACE 271
+#define R_ABRACE 272
+#define EQUAL 273
+#define ADDRESS 274
+#define TIMES 275
+#define PLUS 276
+#define MINUS 277
+#define DIVIDED 278
+#define MODULO 279
+#define HASH 280
+#define QUOTATION 281
+#define SIZEOF 282
+#define GREATER 283
+#define LESS 284
+#define GREQ 285
+#define LEEQ 286
+#define SAME 287
+#define AND 288
+#define OR 289
+#define NOT 290
+#define NOTEQ 291
+#define VOID 292
+#define I8 293
+#define I16 294
+#define I32 295
+#define I64 296
+#define U8 297
+#define U16 298
+#define U32 299
+#define U64 300
+#define F32 301
+#define F64 302
+#define BOOL 303
+#define INT 304
+#define RETURN 305
+#define NEW 306
+#define CRT 307
+#define BREAK 308
+#define CONTINUE 309
+#define STRUCT 310
+#define INCLUDE 311
+#define IF 312
+#define ELSE 313
+#define WHILE 314
+#define FOR 315
+#define LOCAL 316
+#define TRUE 317
+#define FALSE 318
+#define NUL 319
 
 
 
@@ -177,7 +181,7 @@ typedef union YYSTYPE
     Struc *struc;
 }
 /* Line 1529 of yacc.c.  */
-#line 181 "./src/pearlang.tab.h"
+#line 185 "./src/pearlang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

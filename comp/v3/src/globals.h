@@ -19,6 +19,8 @@ struct GlobalS
 
     bool localS;
     bool lastLocal;
+
+    bool exit;
 };
 
 void initGlobalS();

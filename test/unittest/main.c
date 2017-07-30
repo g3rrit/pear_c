@@ -3,6 +3,7 @@
 #include"stdint.h"
 #include"stdbool.h"
 #include"testl.h"
+bool __TestExS_test();
 char* __TestSingleton_getName(TestSingleton* this);
 bool __TestSingleton_test(TestSingleton* this);
 TestSingleton testSingleton={.name="tom",.getName=&__TestSingleton_getName,.test=&__TestSingleton_test};
@@ -34,7 +35,82 @@ checkTest("singleton",testSingleton.test(&testSingleton));
 checkTest("functionPointer",testFuncPointer(&testFuncPointerFunc,(30!=3)));
 struct TestStructTag testStructTag = __crt_TestStructTag();
 checkTest("struct tag",testStructTag.res);
+checkTest("double arr",testExpressions());
+TestIDType testidtype;
+testidtype=__crt_TestIDType();
+checkTest("id as type",testidtype.res);
+checkTest("array access",testArray());
 return 0;}
+bool testArray()
+{
+int* tempS = malloc(sizeof(int)*10);
+TestArrayS testnum = __crt_TestArrayS();
+tempS[testnum.num]=5;
+bool res = true;
+for(int i = 0;i<10;i++){
+tempS[i]=i;
+}
+for(int i = 0;i<10;i++){
+if(tempS[i]!=i)res=false;
+}
+return res;}
+TestArrayS* __new_TestArrayS()
+{ 
+TestArrayS *this = malloc(sizeof(TestArrayS));
+this->num = 6; 
+return this;
+} 
+TestArrayS __crt_TestArrayS()
+{ 
+TestArrayS this;
+this.num = 6; 
+return this;
+} 
+TestIDType* __new_TestIDType()
+{ 
+TestIDType *this = malloc(sizeof(TestIDType));
+this->res = true; 
+return this;
+} 
+TestIDType __crt_TestIDType()
+{ 
+TestIDType this;
+this.res = true; 
+return this;
+} 
+bool testExpressions()
+{
+TestExS* testExS = __new_TestExS();
+testExS->start=__new_TestExS();
+int32_t num = 0;
+num+=10;
+testExS->start->num+=10;
+if(testExS->start->start){
+return false;
+}
+bool res = testExS->start->test();
+free(testExS->start);
+free(testExS);
+return res;}
+bool __TestExS_test()
+{
+return true;}
+TestExS* __new_TestExS()
+{ 
+TestExS *this = malloc(sizeof(TestExS));
+this->start = NULL; 
+this->num = 0; 
+this->test = &__TestExS_test; 
+return this;
+} 
+TestExS __crt_TestExS()
+{ 
+TestExS this;
+this.start = NULL; 
+this.num = 0; 
+this.test = &__TestExS_test; 
+return this;
+} 
 TestStructTag* __new_TestStructTag()
 { 
 TestStructTag *this = malloc(sizeof(TestStructTag));

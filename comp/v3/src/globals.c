@@ -14,6 +14,7 @@ void initGlobalS()
     globalS->structName = 0;
     globalS->localS = false;
     globalS->lastLocal = false;
+    globalS->exit = false;
 }
 
 void gsEnterStruct(char *sname, bool local)

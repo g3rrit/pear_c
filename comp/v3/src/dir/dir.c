@@ -79,14 +79,28 @@ int createC(char *dir, char *sourceN, char *headN)
 
 void writeToHead(char *txt)
 {
-    printf("writingToHead: \n %s",txt);
-    fprintf(activeHead, "%s", txt);
+    if(activeHead)
+    {
+        printf("writingToHead: \n %s",txt);
+        fprintf(activeHead, "%s", txt);
+    }
+    else
+    {
+        printf("header file not initialized\n");
+    }
 }
 
 void writeToSource(char *txt)
 {
-    printf("wrintingToSource: \n %s", txt);
-    fprintf(activeSource, "%s", txt);
+    if(activeSource)
+    {
+        printf("wrintingToSource: \n %s", txt);
+        fprintf(activeSource, "%s", txt);
+    }
+    else
+    {
+        printf("source file not initialized\n");
+    }
 }
 
 void closeC()

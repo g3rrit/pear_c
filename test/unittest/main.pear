@@ -26,8 +26,75 @@ main : () -> int
     checkTest("functionPointer", testFuncPointer(&testFuncPointerFunc, (30 != 3)));
     testStructTag : struct TestStructTag = crt TestStructTag();
     checkTest("struct tag", testStructTag.res);
+    checkTest("double arr", testExpressions());
+    testidtype : TestIDType;
+    testidtype = crt TestIDType();
+    checkTest("id as type", testidtype.res);    
+    checkTest("array access", testArray());
 
     return 0;
+}
+
+testArray : () -> bool
+{
+    tempS : int* = malloc(sizeof(int) * 10);
+    testnum : TestArrayS = crt TestArrayS();
+    tempS[testnum.num] = 5;
+    res : bool = true; 
+    
+    for(i : int = 0; i < 10; i++)
+    {
+        tempS[i] = i;
+    }
+
+    for(i : int = 0; i < 10; i++)
+    {
+        if(tempS[i] != i)
+            res = false;
+    }
+
+    return res;
+}
+
+TestArrayS : struct
+{
+    num : int = 6;
+}
+
+TestIDType : struct
+{
+    res : bool = true;
+}
+
+testExpressions : () -> bool
+{
+    testExS : TestExS* = new TestExS();
+    testExS->start = new TestExS();
+
+    num : i32 = 0;
+    num += 10;
+    testExS->start->num += 10;
+    if(testExS->start->start)
+    {
+        return false;
+    } 
+
+    res : bool = testExS->start->test();
+    
+    free(testExS->start);
+    free(testExS);
+
+    return res;
+}
+
+TestExS : struct
+{
+    start : TestExS* = null; 
+    num : i32 = 0;
+    test : () -> bool
+    {
+        return true;
+    }
 }
 
 TestStructTag : struct 
@@ -81,9 +148,9 @@ TestSingleton: struct
 
 TestList : struct
 {
-    data : void*;
-    next : TestList*;
-    prev : TestList**;
+    data : void* = null;
+    next : TestList* = null;
+    prev : TestList** = null;
 
     append : (this : TestList**, data : void*) -> bool 
     {
