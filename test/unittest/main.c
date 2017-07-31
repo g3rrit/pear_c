@@ -46,6 +46,8 @@ bool testArray()
 int* tempS = malloc(sizeof(int)*10);
 TestArrayS testnum = __crt_TestArrayS();
 tempS[testnum.num]=5;
+char ttestArr[10];
+char tttestArr[] = "fssf";
 bool res = true;
 for(int i = 0;i<10;i++){
 tempS[i]=i;

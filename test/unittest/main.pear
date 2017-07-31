@@ -40,6 +40,8 @@ testArray : () -> bool
     tempS : int* = malloc(sizeof(int) * 10);
     testnum : TestArrayS = crt TestArrayS();
     tempS[testnum.num] = 5;
+    ttestArr[10] : char;
+    tttestArr[] : char = "fssf";
     res : bool = true; 
     
     for(i : int = 0; i < 10; i++)

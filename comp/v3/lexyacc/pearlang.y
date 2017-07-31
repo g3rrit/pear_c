@@ -436,6 +436,25 @@ assignment:
                 free($4);
                 free($6);
             }
+         | access COLON type EQUAL expression SEMICOLON {
+                printf("assignment \n");
+                /*char *arr[] = {$1, $4, $5,$6};
+                appendStrF(&$3,3,arr);
+                $$ = $3;
+                free($2);*/
+                Assign *assign = malloc(sizeof(Assign));
+                assign->id = $1;
+                assign->type = createStr($3);
+                assign->def = $3;
+                char *arr[] = { " ", $1};
+                appendStr(&(assign->def), 2,arr);
+                assign->value = $5;
+                assign->init = true;
+                $$ = assign;
+                free($2);
+                free($4);
+                free($6);
+            }
          | ID COLON ID EQUAL expression SEMICOLON {
                 printf("assignment \n");
                 Assign *assign = malloc(sizeof(Assign));
@@ -470,6 +489,20 @@ assignment:
                 free($7);
             }
           | ID COLON type SEMICOLON {
+                printf("assignment \n");
+                Assign *assign = malloc(sizeof(Assign));
+                assign->id = $1;
+                assign->type = createStr($3);
+                assign->def = $3;
+                char *arr[] = { " ", $1};
+                appendStr(&(assign->def), 2, arr);
+                assign->value = createStr("NULL");
+                assign->init = false;
+                $$ = assign;
+                free($2);
+                free($4);
+            }
+          | access COLON type SEMICOLON {
                 printf("assignment \n");
                 Assign *assign = malloc(sizeof(Assign));
                 assign->id = $1;
@@ -570,6 +603,11 @@ statement:
 
 access:
       ID AR ID {
+            char *arr[] = { $2, $3};
+            appendStrF(&$1, 2, arr);
+            $$ = $1;
+        }
+      | ID L_ABRACE R_ABRACE {
             char *arr[] = { $2, $3};
             appendStrF(&$1, 2, arr);
             $$ = $1;
