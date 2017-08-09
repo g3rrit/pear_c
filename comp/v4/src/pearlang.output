@@ -1,0 +1,4467 @@
+Terminals which are not used
+
+   HASH
+   QUOTATION
+
+
+Rules never reduced
+
+   65 statement: func
+
+   75 expression: STRING
+
+  116 line: struct
+
+
+State 1 conflicts: 5 shift/reduce
+State 4 conflicts: 32 reduce/reduce
+State 33 conflicts: 27 reduce/reduce
+State 35 conflicts: 25 reduce/reduce
+State 37 conflicts: 1 shift/reduce
+State 53 conflicts: 1 shift/reduce, 2 reduce/reduce
+State 70 conflicts: 1 shift/reduce
+State 71 conflicts: 15 shift/reduce
+State 72 conflicts: 15 shift/reduce
+State 73 conflicts: 15 shift/reduce
+State 74 conflicts: 15 shift/reduce
+State 76 conflicts: 15 shift/reduce
+State 91 conflicts: 24 shift/reduce
+State 92 conflicts: 25 reduce/reduce
+State 95 conflicts: 3 shift/reduce
+State 131 conflicts: 15 shift/reduce
+State 132 conflicts: 5 shift/reduce
+State 142 conflicts: 1 shift/reduce
+State 143 conflicts: 1 shift/reduce
+State 160 conflicts: 3 shift/reduce
+State 170 conflicts: 1 shift/reduce
+State 171 conflicts: 15 shift/reduce
+State 172 conflicts: 15 shift/reduce
+State 173 conflicts: 15 shift/reduce
+State 174 conflicts: 16 shift/reduce
+State 175 conflicts: 15 shift/reduce
+State 176 conflicts: 16 shift/reduce
+State 177 conflicts: 15 shift/reduce
+State 178 conflicts: 15 shift/reduce
+State 179 conflicts: 15 shift/reduce
+State 181 conflicts: 15 shift/reduce
+State 182 conflicts: 5 shift/reduce
+State 186 conflicts: 1 shift/reduce
+State 202 conflicts: 16 reduce/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: program line
+    2        | line
+    3        | program program
+
+    4 equals: EQUAL
+    5       | PLUS EQUAL
+    6       | MINUS EQUAL
+    7       | TIMES EQUAL
+    8       | DIVIDED EQUAL
+
+    9 preproc: include_s
+   10        | LOCAL include_s
+
+   11 include_s: INCLUDE STRING
+
+   12 s_fcall: ID L_BRACE
+   13        | s_fcall expression
+   14        | s_fcall COMMA expression
+
+   15 fcall: s_fcall R_BRACE
+
+   16 s_funcdef: ID COLON L_BRACE
+   17          | s_funcdef declaration
+   18          | s_funcdef COMMA declaration
+
+   19 funcdef: s_funcdef R_BRACE AR type
+
+   20 s_func: funcdef L_GBRACE
+   21       | s_func statement
+
+   22 func: s_func R_GBRACE
+   23     | LOCAL s_func R_GBRACE
+
+   24 s_struct: ID COLON STRUCT L_GBRACE
+   25         | LOCAL ID COLON STRUCT L_GBRACE
+   26         | s_struct assignment
+
+   27 struct: s_struct R_GBRACE
+   28       | struct COLON ID
+
+   29 block_s: L_GBRACE
+   30        | block_s statement
+
+   31 block: block_s R_GBRACE
+
+   32 loop: FOR L_BRACE assignment expression SEMICOLON expression R_BRACE block
+   33     | WHILE L_BRACE expression R_BRACE block
+
+   34 condition: IF L_BRACE expression R_BRACE block
+   35          | condition ELSE condition
+   36          | condition ELSE block
+   37          | IF L_BRACE expression R_BRACE statement
+
+   38 conditionalOp: GREATER
+   39              | LESS
+   40              | GREQ
+   41              | LEEQ
+   42              | AND
+   43              | OR
+   44              | SAME
+   45              | NOTEQ
+
+   46 areturn: RETURN expression SEMICOLON
+   47        | RETURN SEMICOLON
+
+   48 assignment: ID COLON type equals expression SEMICOLON
+   49           | ID COLON ID equals expression SEMICOLON
+   50           | ID COLON ID TIMES equals expression SEMICOLON
+   51           | ID COLON type SEMICOLON
+   52           | func
+
+   53 declaration: ID COLON type
+   54            | funcdef
+
+   55 allotment: ID equals expression SEMICOLON
+   56          | expression equals expression SEMICOLON
+
+   57 statement: expression SEMICOLON
+   58          | areturn
+   59          | CONTINUE SEMICOLON
+   60          | BREAK SEMICOLON
+   61          | allotment
+   62          | assignment
+   63          | loop
+   64          | condition
+   65          | func
+   66          | struct
+
+   67 expression: fcall
+   68           | NUL
+   69           | NUMBER
+   70           | FLOAT
+   71           | STRING
+   72           | ID
+   73           | TRUE
+   74           | FALSE
+   75           | STRING
+   76           | SIZEOF L_BRACE type R_BRACE
+   77           | NEW ID L_BRACE R_BRACE
+   78           | CRT ID L_BRACE R_BRACE
+   79           | TIMES expression
+   80           | ADDRESS expression
+   81           | typecast expression
+   82           | expression DOT expression
+   83           | expression AR expression
+   84           | L_BRACE expression R_BRACE
+   85           | expression PLUS expression
+   86           | expression MINUS expression
+   87           | expression TIMES expression
+   88           | expression DIVIDED expression
+   89           | expression MODULO expression
+   90           | MINUS expression
+   91           | PLUS expression
+   92           | NOT expression
+   93           | expression MINUS MINUS
+   94           | expression PLUS PLUS
+   95           | expression conditionalOp expression
+
+   96 type: VOID
+   97     | I8
+   98     | I16
+   99     | I32
+  100     | I64
+  101     | U8
+  102     | U16
+  103     | U32
+  104     | U64
+  105     | F32
+  106     | F64
+  107     | BOOL
+  108     | INT
+  109     | ID
+  110     | type TIMES
+  111     | STRUCT type
+  112     | ID TIMES
+
+  113 typecast: L_BRACE type R_BRACE
+
+  114 line: statement
+  115     | preproc
+  116     | struct
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+ID (258) 12 16 24 25 28 48 49 50 51 53 55 72 77 78 109 112
+NUMBER (259) 69
+FLOAT (260) 70
+STRING (261) 11 71 75
+AR (262) 19 83
+COLON (263) 16 24 25 28 48 49 50 51 53
+SEMICOLON (264) 32 46 47 48 49 50 51 55 56 57 59 60
+COMMA (265) 14 18
+DOT (266) 82
+L_BRACE (267) 12 16 32 33 34 37 76 77 78 84 113
+R_BRACE (268) 15 19 32 33 34 37 76 77 78 84 113
+L_GBRACE (269) 20 24 25 29
+R_GBRACE (270) 22 23 27 31
+EQUAL (271) 4 5 6 7 8
+ADDRESS (272) 80
+TIMES (273) 7 50 79 87 110 112
+PLUS (274) 5 85 91 94
+MINUS (275) 6 86 90 93
+DIVIDED (276) 8 88
+MODULO (277) 89
+HASH (278)
+QUOTATION (279)
+SIZEOF (280) 76
+GREATER (281) 38
+LESS (282) 39
+GREQ (283) 40
+LEEQ (284) 41
+SAME (285) 44
+AND (286) 42
+OR (287) 43
+NOT (288) 92
+NOTEQ (289) 45
+VOID (290) 96
+I8 (291) 97
+I16 (292) 98
+I32 (293) 99
+I64 (294) 100
+U8 (295) 101
+U16 (296) 102
+U32 (297) 103
+U64 (298) 104
+F32 (299) 105
+F64 (300) 106
+BOOL (301) 107
+INT (302) 108
+RETURN (303) 46 47
+NEW (304) 77
+CRT (305) 78
+BREAK (306) 60
+CONTINUE (307) 59
+STRUCT (308) 24 25 111
+INCLUDE (309) 11
+IF (310) 34 37
+ELSE (311) 35 36
+WHILE (312) 33
+FOR (313) 32
+LOCAL (314) 10 23 25
+TRUE (315) 73
+FALSE (316) 74
+NUL (317) 68
+
+
+Nonterminals, with rules where they appear
+
+$accept (63)
+    on left: 0
+program (64)
+    on left: 1 2 3, on right: 0 1 3
+equals (65)
+    on left: 4 5 6 7 8, on right: 48 49 50 55 56
+preproc (66)
+    on left: 9 10, on right: 115
+include_s (67)
+    on left: 11, on right: 9 10
+s_fcall (68)
+    on left: 12 13 14, on right: 13 14 15
+fcall (69)
+    on left: 15, on right: 67
+s_funcdef (70)
+    on left: 16 17 18, on right: 17 18 19
+funcdef (71)
+    on left: 19, on right: 20 54
+s_func (72)
+    on left: 20 21, on right: 21 22 23
+func (73)
+    on left: 22 23, on right: 52 65
+s_struct (74)
+    on left: 24 25 26, on right: 26 27
+struct (75)
+    on left: 27 28, on right: 28 66 116
+block_s (76)
+    on left: 29 30, on right: 30 31
+block (77)
+    on left: 31, on right: 32 33 34 36
+loop (78)
+    on left: 32 33, on right: 63
+condition (79)
+    on left: 34 35 36 37, on right: 35 36 64
+conditionalOp (80)
+    on left: 38 39 40 41 42 43 44 45, on right: 95
+areturn (81)
+    on left: 46 47, on right: 58
+assignment (82)
+    on left: 48 49 50 51 52, on right: 26 32 62
+declaration (83)
+    on left: 53 54, on right: 17 18
+allotment (84)
+    on left: 55 56, on right: 61
+statement (85)
+    on left: 57 58 59 60 61 62 63 64 65 66, on right: 21 30 37 114
+expression (86)
+    on left: 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84
+    85 86 87 88 89 90 91 92 93 94 95, on right: 13 14 32 33 34 37 46
+    48 49 50 55 56 57 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
+    94 95
+type (87)
+    on left: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110
+    111 112, on right: 19 48 51 53 76 110 111 113
+typecast (88)
+    on left: 113, on right: 81
+line (89)
+    on left: 114 115 116, on right: 1 2
+
+
+state 0
+
+    0 $accept: . program $end
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    INCLUDE   shift, and go to state 17
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 21
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    program     go to state 25
+    preproc     go to state 26
+    include_s   go to state 27
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 35
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 41
+    expression  go to state 42
+    typecast    go to state 43
+    line        go to state 44
+
+
+state 1
+
+   12 s_fcall: ID . L_BRACE
+   16 s_funcdef: ID . COLON L_BRACE
+   24 s_struct: ID . COLON STRUCT L_GBRACE
+   48 assignment: ID . COLON type equals expression SEMICOLON
+   49           | ID . COLON ID equals expression SEMICOLON
+   50           | ID . COLON ID TIMES equals expression SEMICOLON
+   51           | ID . COLON type SEMICOLON
+   55 allotment: ID . equals expression SEMICOLON
+   72 expression: ID .
+
+    COLON    shift, and go to state 45
+    L_BRACE  shift, and go to state 46
+    EQUAL    shift, and go to state 47
+    TIMES    shift, and go to state 48
+    PLUS     shift, and go to state 49
+    MINUS    shift, and go to state 50
+    DIVIDED  shift, and go to state 51
+
+    EQUAL     [reduce using rule 72 (expression)]
+    TIMES     [reduce using rule 72 (expression)]
+    PLUS      [reduce using rule 72 (expression)]
+    MINUS     [reduce using rule 72 (expression)]
+    DIVIDED   [reduce using rule 72 (expression)]
+    $default  reduce using rule 72 (expression)
+
+    equals  go to state 52
+
+
+state 2
+
+   69 expression: NUMBER .
+
+    $default  reduce using rule 69 (expression)
+
+
+state 3
+
+   70 expression: FLOAT .
+
+    $default  reduce using rule 70 (expression)
+
+
+state 4
+
+   71 expression: STRING .
+   75           | STRING .
+
+    ID         reduce using rule 71 (expression)
+    ID         [reduce using rule 75 (expression)]
+    NUMBER     reduce using rule 71 (expression)
+    NUMBER     [reduce using rule 75 (expression)]
+    FLOAT      reduce using rule 71 (expression)
+    FLOAT      [reduce using rule 75 (expression)]
+    STRING     reduce using rule 71 (expression)
+    STRING     [reduce using rule 75 (expression)]
+    AR         reduce using rule 71 (expression)
+    AR         [reduce using rule 75 (expression)]
+    SEMICOLON  reduce using rule 71 (expression)
+    SEMICOLON  [reduce using rule 75 (expression)]
+    COMMA      reduce using rule 71 (expression)
+    COMMA      [reduce using rule 75 (expression)]
+    DOT        reduce using rule 71 (expression)
+    DOT        [reduce using rule 75 (expression)]
+    L_BRACE    reduce using rule 71 (expression)
+    L_BRACE    [reduce using rule 75 (expression)]
+    R_BRACE    reduce using rule 71 (expression)
+    R_BRACE    [reduce using rule 75 (expression)]
+    EQUAL      reduce using rule 71 (expression)
+    EQUAL      [reduce using rule 75 (expression)]
+    ADDRESS    reduce using rule 71 (expression)
+    ADDRESS    [reduce using rule 75 (expression)]
+    TIMES      reduce using rule 71 (expression)
+    TIMES      [reduce using rule 75 (expression)]
+    PLUS       reduce using rule 71 (expression)
+    PLUS       [reduce using rule 75 (expression)]
+    MINUS      reduce using rule 71 (expression)
+    MINUS      [reduce using rule 75 (expression)]
+    DIVIDED    reduce using rule 71 (expression)
+    DIVIDED    [reduce using rule 75 (expression)]
+    MODULO     reduce using rule 71 (expression)
+    MODULO     [reduce using rule 75 (expression)]
+    SIZEOF     reduce using rule 71 (expression)
+    SIZEOF     [reduce using rule 75 (expression)]
+    GREATER    reduce using rule 71 (expression)
+    GREATER    [reduce using rule 75 (expression)]
+    LESS       reduce using rule 71 (expression)
+    LESS       [reduce using rule 75 (expression)]
+    GREQ       reduce using rule 71 (expression)
+    GREQ       [reduce using rule 75 (expression)]
+    LEEQ       reduce using rule 71 (expression)
+    LEEQ       [reduce using rule 75 (expression)]
+    SAME       reduce using rule 71 (expression)
+    SAME       [reduce using rule 75 (expression)]
+    AND        reduce using rule 71 (expression)
+    AND        [reduce using rule 75 (expression)]
+    OR         reduce using rule 71 (expression)
+    OR         [reduce using rule 75 (expression)]
+    NOT        reduce using rule 71 (expression)
+    NOT        [reduce using rule 75 (expression)]
+    NOTEQ      reduce using rule 71 (expression)
+    NOTEQ      [reduce using rule 75 (expression)]
+    NEW        reduce using rule 71 (expression)
+    NEW        [reduce using rule 75 (expression)]
+    CRT        reduce using rule 71 (expression)
+    CRT        [reduce using rule 75 (expression)]
+    TRUE       reduce using rule 71 (expression)
+    TRUE       [reduce using rule 75 (expression)]
+    FALSE      reduce using rule 71 (expression)
+    FALSE      [reduce using rule 75 (expression)]
+    NUL        reduce using rule 71 (expression)
+    NUL        [reduce using rule 75 (expression)]
+    $default   reduce using rule 71 (expression)
+
+
+state 5
+
+   84 expression: L_BRACE . expression R_BRACE
+  113 typecast: L_BRACE . type R_BRACE
+
+    ID       shift, and go to state 53
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    VOID     shift, and go to state 54
+    I8       shift, and go to state 55
+    I16      shift, and go to state 56
+    I32      shift, and go to state 57
+    I64      shift, and go to state 58
+    U8       shift, and go to state 59
+    U16      shift, and go to state 60
+    U32      shift, and go to state 61
+    U64      shift, and go to state 62
+    F32      shift, and go to state 63
+    F64      shift, and go to state 64
+    BOOL     shift, and go to state 65
+    INT      shift, and go to state 66
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    STRUCT   shift, and go to state 67
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 68
+    type        go to state 69
+    typecast    go to state 43
+
+
+state 6
+
+   80 expression: ADDRESS . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 71
+    typecast    go to state 43
+
+
+state 7
+
+   79 expression: TIMES . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 72
+    typecast    go to state 43
+
+
+state 8
+
+   91 expression: PLUS . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 73
+    typecast    go to state 43
+
+
+state 9
+
+   90 expression: MINUS . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 74
+    typecast    go to state 43
+
+
+state 10
+
+   76 expression: SIZEOF . L_BRACE type R_BRACE
+
+    L_BRACE  shift, and go to state 75
+
+
+state 11
+
+   92 expression: NOT . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 76
+    typecast    go to state 43
+
+
+state 12
+
+   46 areturn: RETURN . expression SEMICOLON
+   47        | RETURN . SEMICOLON
+
+    ID         shift, and go to state 70
+    NUMBER     shift, and go to state 2
+    FLOAT      shift, and go to state 3
+    STRING     shift, and go to state 4
+    SEMICOLON  shift, and go to state 77
+    L_BRACE    shift, and go to state 5
+    ADDRESS    shift, and go to state 6
+    TIMES      shift, and go to state 7
+    PLUS       shift, and go to state 8
+    MINUS      shift, and go to state 9
+    SIZEOF     shift, and go to state 10
+    NOT        shift, and go to state 11
+    NEW        shift, and go to state 13
+    CRT        shift, and go to state 14
+    TRUE       shift, and go to state 22
+    FALSE      shift, and go to state 23
+    NUL        shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 78
+    typecast    go to state 43
+
+
+state 13
+
+   77 expression: NEW . ID L_BRACE R_BRACE
+
+    ID  shift, and go to state 79
+
+
+state 14
+
+   78 expression: CRT . ID L_BRACE R_BRACE
+
+    ID  shift, and go to state 80
+
+
+state 15
+
+   60 statement: BREAK . SEMICOLON
+
+    SEMICOLON  shift, and go to state 81
+
+
+state 16
+
+   59 statement: CONTINUE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 82
+
+
+state 17
+
+   11 include_s: INCLUDE . STRING
+
+    STRING  shift, and go to state 83
+
+
+state 18
+
+   34 condition: IF . L_BRACE expression R_BRACE block
+   37          | IF . L_BRACE expression R_BRACE statement
+
+    L_BRACE  shift, and go to state 84
+
+
+state 19
+
+   33 loop: WHILE . L_BRACE expression R_BRACE block
+
+    L_BRACE  shift, and go to state 85
+
+
+state 20
+
+   32 loop: FOR . L_BRACE assignment expression SEMICOLON expression R_BRACE block
+
+    L_BRACE  shift, and go to state 86
+
+
+state 21
+
+   10 preproc: LOCAL . include_s
+   23 func: LOCAL . s_func R_GBRACE
+   25 s_struct: LOCAL . ID COLON STRUCT L_GBRACE
+
+    ID       shift, and go to state 87
+    INCLUDE  shift, and go to state 17
+
+    include_s  go to state 88
+    s_funcdef  go to state 30
+    funcdef    go to state 31
+    s_func     go to state 89
+
+
+state 22
+
+   73 expression: TRUE .
+
+    $default  reduce using rule 73 (expression)
+
+
+state 23
+
+   74 expression: FALSE .
+
+    $default  reduce using rule 74 (expression)
+
+
+state 24
+
+   68 expression: NUL .
+
+    $default  reduce using rule 68 (expression)
+
+
+state 25
+
+    0 $accept: program . $end
+    1 program: program . line
+    3        | program . program
+
+    $end      shift, and go to state 90
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    INCLUDE   shift, and go to state 17
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 21
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    program     go to state 91
+    preproc     go to state 26
+    include_s   go to state 27
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 35
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 41
+    expression  go to state 42
+    typecast    go to state 43
+    line        go to state 92
+
+
+state 26
+
+  115 line: preproc .
+
+    $default  reduce using rule 115 (line)
+
+
+state 27
+
+    9 preproc: include_s .
+
+    $default  reduce using rule 9 (preproc)
+
+
+state 28
+
+   13 s_fcall: s_fcall . expression
+   14        | s_fcall . COMMA expression
+   15 fcall: s_fcall . R_BRACE
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    COMMA    shift, and go to state 93
+    L_BRACE  shift, and go to state 5
+    R_BRACE  shift, and go to state 94
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 95
+    typecast    go to state 43
+
+
+state 29
+
+   67 expression: fcall .
+
+    $default  reduce using rule 67 (expression)
+
+
+state 30
+
+   17 s_funcdef: s_funcdef . declaration
+   18          | s_funcdef . COMMA declaration
+   19 funcdef: s_funcdef . R_BRACE AR type
+
+    ID       shift, and go to state 96
+    COMMA    shift, and go to state 97
+    R_BRACE  shift, and go to state 98
+
+    s_funcdef    go to state 30
+    funcdef      go to state 99
+    declaration  go to state 100
+
+
+state 31
+
+   20 s_func: funcdef . L_GBRACE
+
+    L_GBRACE  shift, and go to state 101
+
+
+state 32
+
+   21 s_func: s_func . statement
+   22 func: s_func . R_GBRACE
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    R_GBRACE  shift, and go to state 102
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 103
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 104
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 105
+    expression  go to state 42
+    typecast    go to state 43
+
+
+state 33
+
+   52 assignment: func .
+   65 statement: func .
+
+    $end      reduce using rule 52 (assignment)
+    $end      [reduce using rule 65 (statement)]
+    ID        reduce using rule 52 (assignment)
+    ID        [reduce using rule 65 (statement)]
+    NUMBER    reduce using rule 52 (assignment)
+    NUMBER    [reduce using rule 65 (statement)]
+    FLOAT     reduce using rule 52 (assignment)
+    FLOAT     [reduce using rule 65 (statement)]
+    STRING    reduce using rule 52 (assignment)
+    STRING    [reduce using rule 65 (statement)]
+    L_BRACE   reduce using rule 52 (assignment)
+    L_BRACE   [reduce using rule 65 (statement)]
+    R_GBRACE  reduce using rule 52 (assignment)
+    R_GBRACE  [reduce using rule 65 (statement)]
+    ADDRESS   reduce using rule 52 (assignment)
+    ADDRESS   [reduce using rule 65 (statement)]
+    TIMES     reduce using rule 52 (assignment)
+    TIMES     [reduce using rule 65 (statement)]
+    PLUS      reduce using rule 52 (assignment)
+    PLUS      [reduce using rule 65 (statement)]
+    MINUS     reduce using rule 52 (assignment)
+    MINUS     [reduce using rule 65 (statement)]
+    SIZEOF    reduce using rule 52 (assignment)
+    SIZEOF    [reduce using rule 65 (statement)]
+    NOT       reduce using rule 52 (assignment)
+    NOT       [reduce using rule 65 (statement)]
+    RETURN    reduce using rule 52 (assignment)
+    RETURN    [reduce using rule 65 (statement)]
+    NEW       reduce using rule 52 (assignment)
+    NEW       [reduce using rule 65 (statement)]
+    CRT       reduce using rule 52 (assignment)
+    CRT       [reduce using rule 65 (statement)]
+    BREAK     reduce using rule 52 (assignment)
+    BREAK     [reduce using rule 65 (statement)]
+    CONTINUE  reduce using rule 52 (assignment)
+    CONTINUE  [reduce using rule 65 (statement)]
+    INCLUDE   reduce using rule 52 (assignment)
+    INCLUDE   [reduce using rule 65 (statement)]
+    IF        reduce using rule 52 (assignment)
+    IF        [reduce using rule 65 (statement)]
+    ELSE      reduce using rule 52 (assignment)
+    ELSE      [reduce using rule 65 (statement)]
+    WHILE     reduce using rule 52 (assignment)
+    WHILE     [reduce using rule 65 (statement)]
+    FOR       reduce using rule 52 (assignment)
+    FOR       [reduce using rule 65 (statement)]
+    LOCAL     reduce using rule 52 (assignment)
+    LOCAL     [reduce using rule 65 (statement)]
+    TRUE      reduce using rule 52 (assignment)
+    TRUE      [reduce using rule 65 (statement)]
+    FALSE     reduce using rule 52 (assignment)
+    FALSE     [reduce using rule 65 (statement)]
+    NUL       reduce using rule 52 (assignment)
+    NUL       [reduce using rule 65 (statement)]
+    $default  reduce using rule 52 (assignment)
+
+
+state 34
+
+   26 s_struct: s_struct . assignment
+   27 struct: s_struct . R_GBRACE
+
+    ID        shift, and go to state 106
+    R_GBRACE  shift, and go to state 107
+    LOCAL     shift, and go to state 108
+
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 109
+    assignment  go to state 110
+
+
+state 35
+
+   28 struct: struct . COLON ID
+   66 statement: struct .
+  116 line: struct .
+
+    COLON  shift, and go to state 111
+
+    $end      reduce using rule 66 (statement)
+    $end      [reduce using rule 116 (line)]
+    ID        reduce using rule 66 (statement)
+    ID        [reduce using rule 116 (line)]
+    NUMBER    reduce using rule 66 (statement)
+    NUMBER    [reduce using rule 116 (line)]
+    FLOAT     reduce using rule 66 (statement)
+    FLOAT     [reduce using rule 116 (line)]
+    STRING    reduce using rule 66 (statement)
+    STRING    [reduce using rule 116 (line)]
+    L_BRACE   reduce using rule 66 (statement)
+    L_BRACE   [reduce using rule 116 (line)]
+    ADDRESS   reduce using rule 66 (statement)
+    ADDRESS   [reduce using rule 116 (line)]
+    TIMES     reduce using rule 66 (statement)
+    TIMES     [reduce using rule 116 (line)]
+    PLUS      reduce using rule 66 (statement)
+    PLUS      [reduce using rule 116 (line)]
+    MINUS     reduce using rule 66 (statement)
+    MINUS     [reduce using rule 116 (line)]
+    SIZEOF    reduce using rule 66 (statement)
+    SIZEOF    [reduce using rule 116 (line)]
+    NOT       reduce using rule 66 (statement)
+    NOT       [reduce using rule 116 (line)]
+    RETURN    reduce using rule 66 (statement)
+    RETURN    [reduce using rule 116 (line)]
+    NEW       reduce using rule 66 (statement)
+    NEW       [reduce using rule 116 (line)]
+    CRT       reduce using rule 66 (statement)
+    CRT       [reduce using rule 116 (line)]
+    BREAK     reduce using rule 66 (statement)
+    BREAK     [reduce using rule 116 (line)]
+    CONTINUE  reduce using rule 66 (statement)
+    CONTINUE  [reduce using rule 116 (line)]
+    INCLUDE   reduce using rule 66 (statement)
+    INCLUDE   [reduce using rule 116 (line)]
+    IF        reduce using rule 66 (statement)
+    IF        [reduce using rule 116 (line)]
+    WHILE     reduce using rule 66 (statement)
+    WHILE     [reduce using rule 116 (line)]
+    FOR       reduce using rule 66 (statement)
+    FOR       [reduce using rule 116 (line)]
+    LOCAL     reduce using rule 66 (statement)
+    LOCAL     [reduce using rule 116 (line)]
+    TRUE      reduce using rule 66 (statement)
+    TRUE      [reduce using rule 116 (line)]
+    FALSE     reduce using rule 66 (statement)
+    FALSE     [reduce using rule 116 (line)]
+    NUL       reduce using rule 66 (statement)
+    NUL       [reduce using rule 116 (line)]
+    $default  reduce using rule 66 (statement)
+
+
+state 36
+
+   63 statement: loop .
+
+    $default  reduce using rule 63 (statement)
+
+
+state 37
+
+   35 condition: condition . ELSE condition
+   36          | condition . ELSE block
+   64 statement: condition .
+
+    ELSE  shift, and go to state 112
+
+    ELSE      [reduce using rule 64 (statement)]
+    $default  reduce using rule 64 (statement)
+
+
+state 38
+
+   58 statement: areturn .
+
+    $default  reduce using rule 58 (statement)
+
+
+state 39
+
+   62 statement: assignment .
+
+    $default  reduce using rule 62 (statement)
+
+
+state 40
+
+   61 statement: allotment .
+
+    $default  reduce using rule 61 (statement)
+
+
+state 41
+
+  114 line: statement .
+
+    $default  reduce using rule 114 (line)
+
+
+state 42
+
+   56 allotment: expression . equals expression SEMICOLON
+   57 statement: expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 114
+    DOT        shift, and go to state 115
+    EQUAL      shift, and go to state 47
+    TIMES      shift, and go to state 116
+    PLUS       shift, and go to state 117
+    MINUS      shift, and go to state 118
+    DIVIDED    shift, and go to state 119
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    equals         go to state 129
+    conditionalOp  go to state 130
+
+
+state 43
+
+   81 expression: typecast . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 131
+    typecast    go to state 43
+
+
+state 44
+
+    2 program: line .
+
+    $default  reduce using rule 2 (program)
+
+
+state 45
+
+   16 s_funcdef: ID COLON . L_BRACE
+   24 s_struct: ID COLON . STRUCT L_GBRACE
+   48 assignment: ID COLON . type equals expression SEMICOLON
+   49           | ID COLON . ID equals expression SEMICOLON
+   50           | ID COLON . ID TIMES equals expression SEMICOLON
+   51           | ID COLON . type SEMICOLON
+
+    ID       shift, and go to state 132
+    L_BRACE  shift, and go to state 133
+    VOID     shift, and go to state 54
+    I8       shift, and go to state 55
+    I16      shift, and go to state 56
+    I32      shift, and go to state 57
+    I64      shift, and go to state 58
+    U8       shift, and go to state 59
+    U16      shift, and go to state 60
+    U32      shift, and go to state 61
+    U64      shift, and go to state 62
+    F32      shift, and go to state 63
+    F64      shift, and go to state 64
+    BOOL     shift, and go to state 65
+    INT      shift, and go to state 66
+    STRUCT   shift, and go to state 134
+
+    type  go to state 135
+
+
+state 46
+
+   12 s_fcall: ID L_BRACE .
+
+    $default  reduce using rule 12 (s_fcall)
+
+
+state 47
+
+    4 equals: EQUAL .
+
+    $default  reduce using rule 4 (equals)
+
+
+state 48
+
+    7 equals: TIMES . EQUAL
+
+    EQUAL  shift, and go to state 136
+
+
+state 49
+
+    5 equals: PLUS . EQUAL
+
+    EQUAL  shift, and go to state 137
+
+
+state 50
+
+    6 equals: MINUS . EQUAL
+
+    EQUAL  shift, and go to state 138
+
+
+state 51
+
+    8 equals: DIVIDED . EQUAL
+
+    EQUAL  shift, and go to state 139
+
+
+state 52
+
+   55 allotment: ID equals . expression SEMICOLON
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 140
+    typecast    go to state 43
+
+
+state 53
+
+   12 s_fcall: ID . L_BRACE
+   72 expression: ID .
+  109 type: ID .
+  112     | ID . TIMES
+
+    L_BRACE  shift, and go to state 46
+    TIMES    shift, and go to state 141
+
+    R_BRACE   reduce using rule 72 (expression)
+    R_BRACE   [reduce using rule 109 (type)]
+    TIMES     [reduce using rule 72 (expression)]
+    TIMES     [reduce using rule 109 (type)]
+    $default  reduce using rule 72 (expression)
+
+
+state 54
+
+   96 type: VOID .
+
+    $default  reduce using rule 96 (type)
+
+
+state 55
+
+   97 type: I8 .
+
+    $default  reduce using rule 97 (type)
+
+
+state 56
+
+   98 type: I16 .
+
+    $default  reduce using rule 98 (type)
+
+
+state 57
+
+   99 type: I32 .
+
+    $default  reduce using rule 99 (type)
+
+
+state 58
+
+  100 type: I64 .
+
+    $default  reduce using rule 100 (type)
+
+
+state 59
+
+  101 type: U8 .
+
+    $default  reduce using rule 101 (type)
+
+
+state 60
+
+  102 type: U16 .
+
+    $default  reduce using rule 102 (type)
+
+
+state 61
+
+  103 type: U32 .
+
+    $default  reduce using rule 103 (type)
+
+
+state 62
+
+  104 type: U64 .
+
+    $default  reduce using rule 104 (type)
+
+
+state 63
+
+  105 type: F32 .
+
+    $default  reduce using rule 105 (type)
+
+
+state 64
+
+  106 type: F64 .
+
+    $default  reduce using rule 106 (type)
+
+
+state 65
+
+  107 type: BOOL .
+
+    $default  reduce using rule 107 (type)
+
+
+state 66
+
+  108 type: INT .
+
+    $default  reduce using rule 108 (type)
+
+
+state 67
+
+  111 type: STRUCT . type
+
+    ID      shift, and go to state 142
+    VOID    shift, and go to state 54
+    I8      shift, and go to state 55
+    I16     shift, and go to state 56
+    I32     shift, and go to state 57
+    I64     shift, and go to state 58
+    U8      shift, and go to state 59
+    U16     shift, and go to state 60
+    U32     shift, and go to state 61
+    U64     shift, and go to state 62
+    F32     shift, and go to state 63
+    F64     shift, and go to state 64
+    BOOL    shift, and go to state 65
+    INT     shift, and go to state 66
+    STRUCT  shift, and go to state 67
+
+    type  go to state 143
+
+
+state 68
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   84           | L_BRACE expression . R_BRACE
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    R_BRACE  shift, and go to state 144
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 69
+
+  110 type: type . TIMES
+  113 typecast: L_BRACE type . R_BRACE
+
+    R_BRACE  shift, and go to state 149
+    TIMES    shift, and go to state 150
+
+
+state 70
+
+   12 s_fcall: ID . L_BRACE
+   72 expression: ID .
+
+    L_BRACE  shift, and go to state 46
+
+    L_BRACE   [reduce using rule 72 (expression)]
+    $default  reduce using rule 72 (expression)
+
+
+state 71
+
+   80 expression: ADDRESS expression .
+   82           | expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 80 (expression)]
+    DOT       [reduce using rule 80 (expression)]
+    TIMES     [reduce using rule 80 (expression)]
+    PLUS      [reduce using rule 80 (expression)]
+    MINUS     [reduce using rule 80 (expression)]
+    DIVIDED   [reduce using rule 80 (expression)]
+    MODULO    [reduce using rule 80 (expression)]
+    GREATER   [reduce using rule 80 (expression)]
+    LESS      [reduce using rule 80 (expression)]
+    GREQ      [reduce using rule 80 (expression)]
+    LEEQ      [reduce using rule 80 (expression)]
+    SAME      [reduce using rule 80 (expression)]
+    AND       [reduce using rule 80 (expression)]
+    OR        [reduce using rule 80 (expression)]
+    NOTEQ     [reduce using rule 80 (expression)]
+    $default  reduce using rule 80 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 72
+
+   79 expression: TIMES expression .
+   82           | expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 79 (expression)]
+    DOT       [reduce using rule 79 (expression)]
+    TIMES     [reduce using rule 79 (expression)]
+    PLUS      [reduce using rule 79 (expression)]
+    MINUS     [reduce using rule 79 (expression)]
+    DIVIDED   [reduce using rule 79 (expression)]
+    MODULO    [reduce using rule 79 (expression)]
+    GREATER   [reduce using rule 79 (expression)]
+    LESS      [reduce using rule 79 (expression)]
+    GREQ      [reduce using rule 79 (expression)]
+    LEEQ      [reduce using rule 79 (expression)]
+    SAME      [reduce using rule 79 (expression)]
+    AND       [reduce using rule 79 (expression)]
+    OR        [reduce using rule 79 (expression)]
+    NOTEQ     [reduce using rule 79 (expression)]
+    $default  reduce using rule 79 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 73
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   91           | PLUS expression .
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 91 (expression)]
+    DOT       [reduce using rule 91 (expression)]
+    TIMES     [reduce using rule 91 (expression)]
+    PLUS      [reduce using rule 91 (expression)]
+    MINUS     [reduce using rule 91 (expression)]
+    DIVIDED   [reduce using rule 91 (expression)]
+    MODULO    [reduce using rule 91 (expression)]
+    GREATER   [reduce using rule 91 (expression)]
+    LESS      [reduce using rule 91 (expression)]
+    GREQ      [reduce using rule 91 (expression)]
+    LEEQ      [reduce using rule 91 (expression)]
+    SAME      [reduce using rule 91 (expression)]
+    AND       [reduce using rule 91 (expression)]
+    OR        [reduce using rule 91 (expression)]
+    NOTEQ     [reduce using rule 91 (expression)]
+    $default  reduce using rule 91 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 74
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   90           | MINUS expression .
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 90 (expression)]
+    DOT       [reduce using rule 90 (expression)]
+    TIMES     [reduce using rule 90 (expression)]
+    PLUS      [reduce using rule 90 (expression)]
+    MINUS     [reduce using rule 90 (expression)]
+    DIVIDED   [reduce using rule 90 (expression)]
+    MODULO    [reduce using rule 90 (expression)]
+    GREATER   [reduce using rule 90 (expression)]
+    LESS      [reduce using rule 90 (expression)]
+    GREQ      [reduce using rule 90 (expression)]
+    LEEQ      [reduce using rule 90 (expression)]
+    SAME      [reduce using rule 90 (expression)]
+    AND       [reduce using rule 90 (expression)]
+    OR        [reduce using rule 90 (expression)]
+    NOTEQ     [reduce using rule 90 (expression)]
+    $default  reduce using rule 90 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 75
+
+   76 expression: SIZEOF L_BRACE . type R_BRACE
+
+    ID      shift, and go to state 142
+    VOID    shift, and go to state 54
+    I8      shift, and go to state 55
+    I16     shift, and go to state 56
+    I32     shift, and go to state 57
+    I64     shift, and go to state 58
+    U8      shift, and go to state 59
+    U16     shift, and go to state 60
+    U32     shift, and go to state 61
+    U64     shift, and go to state 62
+    F32     shift, and go to state 63
+    F64     shift, and go to state 64
+    BOOL    shift, and go to state 65
+    INT     shift, and go to state 66
+    STRUCT  shift, and go to state 67
+
+    type  go to state 151
+
+
+state 76
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   92           | NOT expression .
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 92 (expression)]
+    DOT       [reduce using rule 92 (expression)]
+    TIMES     [reduce using rule 92 (expression)]
+    PLUS      [reduce using rule 92 (expression)]
+    MINUS     [reduce using rule 92 (expression)]
+    DIVIDED   [reduce using rule 92 (expression)]
+    MODULO    [reduce using rule 92 (expression)]
+    GREATER   [reduce using rule 92 (expression)]
+    LESS      [reduce using rule 92 (expression)]
+    GREQ      [reduce using rule 92 (expression)]
+    LEEQ      [reduce using rule 92 (expression)]
+    SAME      [reduce using rule 92 (expression)]
+    AND       [reduce using rule 92 (expression)]
+    OR        [reduce using rule 92 (expression)]
+    NOTEQ     [reduce using rule 92 (expression)]
+    $default  reduce using rule 92 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 77
+
+   47 areturn: RETURN SEMICOLON .
+
+    $default  reduce using rule 47 (areturn)
+
+
+state 78
+
+   46 areturn: RETURN expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 152
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 79
+
+   77 expression: NEW ID . L_BRACE R_BRACE
+
+    L_BRACE  shift, and go to state 153
+
+
+state 80
+
+   78 expression: CRT ID . L_BRACE R_BRACE
+
+    L_BRACE  shift, and go to state 154
+
+
+state 81
+
+   60 statement: BREAK SEMICOLON .
+
+    $default  reduce using rule 60 (statement)
+
+
+state 82
+
+   59 statement: CONTINUE SEMICOLON .
+
+    $default  reduce using rule 59 (statement)
+
+
+state 83
+
+   11 include_s: INCLUDE STRING .
+
+    $default  reduce using rule 11 (include_s)
+
+
+state 84
+
+   34 condition: IF L_BRACE . expression R_BRACE block
+   37          | IF L_BRACE . expression R_BRACE statement
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 155
+    typecast    go to state 43
+
+
+state 85
+
+   33 loop: WHILE L_BRACE . expression R_BRACE block
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 156
+    typecast    go to state 43
+
+
+state 86
+
+   32 loop: FOR L_BRACE . assignment expression SEMICOLON expression R_BRACE block
+
+    ID     shift, and go to state 106
+    LOCAL  shift, and go to state 108
+
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 109
+    assignment  go to state 157
+
+
+state 87
+
+   16 s_funcdef: ID . COLON L_BRACE
+   25 s_struct: LOCAL ID . COLON STRUCT L_GBRACE
+
+    COLON  shift, and go to state 158
+
+
+state 88
+
+   10 preproc: LOCAL include_s .
+
+    $default  reduce using rule 10 (preproc)
+
+
+state 89
+
+   21 s_func: s_func . statement
+   23 func: LOCAL s_func . R_GBRACE
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    R_GBRACE  shift, and go to state 159
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 103
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 104
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 105
+    expression  go to state 42
+    typecast    go to state 43
+
+
+state 90
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 91
+
+    1 program: program . line
+    3        | program . program
+    3        | program program .
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    INCLUDE   shift, and go to state 17
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 21
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    ID        [reduce using rule 3 (program)]
+    NUMBER    [reduce using rule 3 (program)]
+    FLOAT     [reduce using rule 3 (program)]
+    STRING    [reduce using rule 3 (program)]
+    L_BRACE   [reduce using rule 3 (program)]
+    ADDRESS   [reduce using rule 3 (program)]
+    TIMES     [reduce using rule 3 (program)]
+    PLUS      [reduce using rule 3 (program)]
+    MINUS     [reduce using rule 3 (program)]
+    SIZEOF    [reduce using rule 3 (program)]
+    NOT       [reduce using rule 3 (program)]
+    RETURN    [reduce using rule 3 (program)]
+    NEW       [reduce using rule 3 (program)]
+    CRT       [reduce using rule 3 (program)]
+    BREAK     [reduce using rule 3 (program)]
+    CONTINUE  [reduce using rule 3 (program)]
+    INCLUDE   [reduce using rule 3 (program)]
+    IF        [reduce using rule 3 (program)]
+    WHILE     [reduce using rule 3 (program)]
+    FOR       [reduce using rule 3 (program)]
+    LOCAL     [reduce using rule 3 (program)]
+    TRUE      [reduce using rule 3 (program)]
+    FALSE     [reduce using rule 3 (program)]
+    NUL       [reduce using rule 3 (program)]
+    $default  reduce using rule 3 (program)
+
+    program     go to state 91
+    preproc     go to state 26
+    include_s   go to state 27
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 35
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 41
+    expression  go to state 42
+    typecast    go to state 43
+    line        go to state 92
+
+
+state 92
+
+    1 program: program line .
+    2        | line .
+
+    $end      reduce using rule 1 (program)
+    $end      [reduce using rule 2 (program)]
+    ID        reduce using rule 1 (program)
+    ID        [reduce using rule 2 (program)]
+    NUMBER    reduce using rule 1 (program)
+    NUMBER    [reduce using rule 2 (program)]
+    FLOAT     reduce using rule 1 (program)
+    FLOAT     [reduce using rule 2 (program)]
+    STRING    reduce using rule 1 (program)
+    STRING    [reduce using rule 2 (program)]
+    L_BRACE   reduce using rule 1 (program)
+    L_BRACE   [reduce using rule 2 (program)]
+    ADDRESS   reduce using rule 1 (program)
+    ADDRESS   [reduce using rule 2 (program)]
+    TIMES     reduce using rule 1 (program)
+    TIMES     [reduce using rule 2 (program)]
+    PLUS      reduce using rule 1 (program)
+    PLUS      [reduce using rule 2 (program)]
+    MINUS     reduce using rule 1 (program)
+    MINUS     [reduce using rule 2 (program)]
+    SIZEOF    reduce using rule 1 (program)
+    SIZEOF    [reduce using rule 2 (program)]
+    NOT       reduce using rule 1 (program)
+    NOT       [reduce using rule 2 (program)]
+    RETURN    reduce using rule 1 (program)
+    RETURN    [reduce using rule 2 (program)]
+    NEW       reduce using rule 1 (program)
+    NEW       [reduce using rule 2 (program)]
+    CRT       reduce using rule 1 (program)
+    CRT       [reduce using rule 2 (program)]
+    BREAK     reduce using rule 1 (program)
+    BREAK     [reduce using rule 2 (program)]
+    CONTINUE  reduce using rule 1 (program)
+    CONTINUE  [reduce using rule 2 (program)]
+    INCLUDE   reduce using rule 1 (program)
+    INCLUDE   [reduce using rule 2 (program)]
+    IF        reduce using rule 1 (program)
+    IF        [reduce using rule 2 (program)]
+    WHILE     reduce using rule 1 (program)
+    WHILE     [reduce using rule 2 (program)]
+    FOR       reduce using rule 1 (program)
+    FOR       [reduce using rule 2 (program)]
+    LOCAL     reduce using rule 1 (program)
+    LOCAL     [reduce using rule 2 (program)]
+    TRUE      reduce using rule 1 (program)
+    TRUE      [reduce using rule 2 (program)]
+    FALSE     reduce using rule 1 (program)
+    FALSE     [reduce using rule 2 (program)]
+    NUL       reduce using rule 1 (program)
+    NUL       [reduce using rule 2 (program)]
+    $default  reduce using rule 1 (program)
+
+
+state 93
+
+   14 s_fcall: s_fcall COMMA . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 160
+    typecast    go to state 43
+
+
+state 94
+
+   15 fcall: s_fcall R_BRACE .
+
+    $default  reduce using rule 15 (fcall)
+
+
+state 95
+
+   13 s_fcall: s_fcall expression .
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    TIMES     [reduce using rule 13 (s_fcall)]
+    PLUS      [reduce using rule 13 (s_fcall)]
+    MINUS     [reduce using rule 13 (s_fcall)]
+    $default  reduce using rule 13 (s_fcall)
+
+    conditionalOp  go to state 130
+
+
+state 96
+
+   16 s_funcdef: ID . COLON L_BRACE
+   53 declaration: ID . COLON type
+
+    COLON  shift, and go to state 161
+
+
+state 97
+
+   18 s_funcdef: s_funcdef COMMA . declaration
+
+    ID  shift, and go to state 96
+
+    s_funcdef    go to state 30
+    funcdef      go to state 99
+    declaration  go to state 162
+
+
+state 98
+
+   19 funcdef: s_funcdef R_BRACE . AR type
+
+    AR  shift, and go to state 163
+
+
+state 99
+
+   54 declaration: funcdef .
+
+    $default  reduce using rule 54 (declaration)
+
+
+state 100
+
+   17 s_funcdef: s_funcdef declaration .
+
+    $default  reduce using rule 17 (s_funcdef)
+
+
+state 101
+
+   20 s_func: funcdef L_GBRACE .
+
+    $default  reduce using rule 20 (s_func)
+
+
+state 102
+
+   22 func: s_func R_GBRACE .
+
+    $default  reduce using rule 22 (func)
+
+
+state 103
+
+   23 func: LOCAL . s_func R_GBRACE
+   25 s_struct: LOCAL . ID COLON STRUCT L_GBRACE
+
+    ID  shift, and go to state 87
+
+    s_funcdef  go to state 30
+    funcdef    go to state 31
+    s_func     go to state 89
+
+
+state 104
+
+   28 struct: struct . COLON ID
+   66 statement: struct .
+
+    COLON  shift, and go to state 111
+
+    $default  reduce using rule 66 (statement)
+
+
+state 105
+
+   21 s_func: s_func statement .
+
+    $default  reduce using rule 21 (s_func)
+
+
+state 106
+
+   16 s_funcdef: ID . COLON L_BRACE
+   48 assignment: ID . COLON type equals expression SEMICOLON
+   49           | ID . COLON ID equals expression SEMICOLON
+   50           | ID . COLON ID TIMES equals expression SEMICOLON
+   51           | ID . COLON type SEMICOLON
+
+    COLON  shift, and go to state 164
+
+
+state 107
+
+   27 struct: s_struct R_GBRACE .
+
+    $default  reduce using rule 27 (struct)
+
+
+state 108
+
+   23 func: LOCAL . s_func R_GBRACE
+
+    ID  shift, and go to state 165
+
+    s_funcdef  go to state 30
+    funcdef    go to state 31
+    s_func     go to state 89
+
+
+state 109
+
+   52 assignment: func .
+
+    $default  reduce using rule 52 (assignment)
+
+
+state 110
+
+   26 s_struct: s_struct assignment .
+
+    $default  reduce using rule 26 (s_struct)
+
+
+state 111
+
+   28 struct: struct COLON . ID
+
+    ID  shift, and go to state 166
+
+
+state 112
+
+   35 condition: condition ELSE . condition
+   36          | condition ELSE . block
+
+    L_GBRACE  shift, and go to state 167
+    IF        shift, and go to state 18
+
+    block_s    go to state 168
+    block      go to state 169
+    condition  go to state 170
+
+
+state 113
+
+   83 expression: expression AR . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 171
+    typecast    go to state 43
+
+
+state 114
+
+   57 statement: expression SEMICOLON .
+
+    $default  reduce using rule 57 (statement)
+
+
+state 115
+
+   82 expression: expression DOT . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 172
+    typecast    go to state 43
+
+
+state 116
+
+    7 equals: TIMES . EQUAL
+   87 expression: expression TIMES . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    EQUAL    shift, and go to state 136
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 173
+    typecast    go to state 43
+
+
+state 117
+
+    5 equals: PLUS . EQUAL
+   85 expression: expression PLUS . expression
+   94           | expression PLUS . PLUS
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    EQUAL    shift, and go to state 137
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 174
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 175
+    typecast    go to state 43
+
+
+state 118
+
+    6 equals: MINUS . EQUAL
+   86 expression: expression MINUS . expression
+   93           | expression MINUS . MINUS
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    EQUAL    shift, and go to state 138
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 176
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 177
+    typecast    go to state 43
+
+
+state 119
+
+    8 equals: DIVIDED . EQUAL
+   88 expression: expression DIVIDED . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    EQUAL    shift, and go to state 139
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 178
+    typecast    go to state 43
+
+
+state 120
+
+   89 expression: expression MODULO . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 179
+    typecast    go to state 43
+
+
+state 121
+
+   38 conditionalOp: GREATER .
+
+    $default  reduce using rule 38 (conditionalOp)
+
+
+state 122
+
+   39 conditionalOp: LESS .
+
+    $default  reduce using rule 39 (conditionalOp)
+
+
+state 123
+
+   40 conditionalOp: GREQ .
+
+    $default  reduce using rule 40 (conditionalOp)
+
+
+state 124
+
+   41 conditionalOp: LEEQ .
+
+    $default  reduce using rule 41 (conditionalOp)
+
+
+state 125
+
+   44 conditionalOp: SAME .
+
+    $default  reduce using rule 44 (conditionalOp)
+
+
+state 126
+
+   42 conditionalOp: AND .
+
+    $default  reduce using rule 42 (conditionalOp)
+
+
+state 127
+
+   43 conditionalOp: OR .
+
+    $default  reduce using rule 43 (conditionalOp)
+
+
+state 128
+
+   45 conditionalOp: NOTEQ .
+
+    $default  reduce using rule 45 (conditionalOp)
+
+
+state 129
+
+   56 allotment: expression equals . expression SEMICOLON
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 180
+    typecast    go to state 43
+
+
+state 130
+
+   95 expression: expression conditionalOp . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 181
+    typecast    go to state 43
+
+
+state 131
+
+   81 expression: typecast expression .
+   82           | expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 81 (expression)]
+    DOT       [reduce using rule 81 (expression)]
+    TIMES     [reduce using rule 81 (expression)]
+    PLUS      [reduce using rule 81 (expression)]
+    MINUS     [reduce using rule 81 (expression)]
+    DIVIDED   [reduce using rule 81 (expression)]
+    MODULO    [reduce using rule 81 (expression)]
+    GREATER   [reduce using rule 81 (expression)]
+    LESS      [reduce using rule 81 (expression)]
+    GREQ      [reduce using rule 81 (expression)]
+    LEEQ      [reduce using rule 81 (expression)]
+    SAME      [reduce using rule 81 (expression)]
+    AND       [reduce using rule 81 (expression)]
+    OR        [reduce using rule 81 (expression)]
+    NOTEQ     [reduce using rule 81 (expression)]
+    $default  reduce using rule 81 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 132
+
+   49 assignment: ID COLON ID . equals expression SEMICOLON
+   50           | ID COLON ID . TIMES equals expression SEMICOLON
+  109 type: ID .
+  112     | ID . TIMES
+
+    EQUAL    shift, and go to state 47
+    TIMES    shift, and go to state 182
+    PLUS     shift, and go to state 49
+    MINUS    shift, and go to state 50
+    DIVIDED  shift, and go to state 51
+
+    EQUAL     [reduce using rule 109 (type)]
+    TIMES     [reduce using rule 109 (type)]
+    PLUS      [reduce using rule 109 (type)]
+    MINUS     [reduce using rule 109 (type)]
+    DIVIDED   [reduce using rule 109 (type)]
+    $default  reduce using rule 109 (type)
+
+    equals  go to state 183
+
+
+state 133
+
+   16 s_funcdef: ID COLON L_BRACE .
+
+    $default  reduce using rule 16 (s_funcdef)
+
+
+state 134
+
+   24 s_struct: ID COLON STRUCT . L_GBRACE
+  111 type: STRUCT . type
+
+    ID        shift, and go to state 142
+    L_GBRACE  shift, and go to state 184
+    VOID      shift, and go to state 54
+    I8        shift, and go to state 55
+    I16       shift, and go to state 56
+    I32       shift, and go to state 57
+    I64       shift, and go to state 58
+    U8        shift, and go to state 59
+    U16       shift, and go to state 60
+    U32       shift, and go to state 61
+    U64       shift, and go to state 62
+    F32       shift, and go to state 63
+    F64       shift, and go to state 64
+    BOOL      shift, and go to state 65
+    INT       shift, and go to state 66
+    STRUCT    shift, and go to state 67
+
+    type  go to state 143
+
+
+state 135
+
+   48 assignment: ID COLON type . equals expression SEMICOLON
+   51           | ID COLON type . SEMICOLON
+  110 type: type . TIMES
+
+    SEMICOLON  shift, and go to state 185
+    EQUAL      shift, and go to state 47
+    TIMES      shift, and go to state 186
+    PLUS       shift, and go to state 49
+    MINUS      shift, and go to state 50
+    DIVIDED    shift, and go to state 51
+
+    equals  go to state 187
+
+
+state 136
+
+    7 equals: TIMES EQUAL .
+
+    $default  reduce using rule 7 (equals)
+
+
+state 137
+
+    5 equals: PLUS EQUAL .
+
+    $default  reduce using rule 5 (equals)
+
+
+state 138
+
+    6 equals: MINUS EQUAL .
+
+    $default  reduce using rule 6 (equals)
+
+
+state 139
+
+    8 equals: DIVIDED EQUAL .
+
+    $default  reduce using rule 8 (equals)
+
+
+state 140
+
+   55 allotment: ID equals expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 188
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 141
+
+  112 type: ID TIMES .
+
+    $default  reduce using rule 112 (type)
+
+
+state 142
+
+  109 type: ID .
+  112     | ID . TIMES
+
+    TIMES  shift, and go to state 141
+
+    TIMES     [reduce using rule 109 (type)]
+    $default  reduce using rule 109 (type)
+
+
+state 143
+
+  110 type: type . TIMES
+  111     | STRUCT type .
+
+    TIMES  shift, and go to state 150
+
+    TIMES     [reduce using rule 111 (type)]
+    $default  reduce using rule 111 (type)
+
+
+state 144
+
+   84 expression: L_BRACE expression R_BRACE .
+
+    $default  reduce using rule 84 (expression)
+
+
+state 145
+
+   87 expression: expression TIMES . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 173
+    typecast    go to state 43
+
+
+state 146
+
+   85 expression: expression PLUS . expression
+   94           | expression PLUS . PLUS
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 174
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 175
+    typecast    go to state 43
+
+
+state 147
+
+   86 expression: expression MINUS . expression
+   93           | expression MINUS . MINUS
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 176
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 177
+    typecast    go to state 43
+
+
+state 148
+
+   88 expression: expression DIVIDED . expression
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 178
+    typecast    go to state 43
+
+
+state 149
+
+  113 typecast: L_BRACE type R_BRACE .
+
+    $default  reduce using rule 113 (typecast)
+
+
+state 150
+
+  110 type: type TIMES .
+
+    $default  reduce using rule 110 (type)
+
+
+state 151
+
+   76 expression: SIZEOF L_BRACE type . R_BRACE
+  110 type: type . TIMES
+
+    R_BRACE  shift, and go to state 189
+    TIMES    shift, and go to state 150
+
+
+state 152
+
+   46 areturn: RETURN expression SEMICOLON .
+
+    $default  reduce using rule 46 (areturn)
+
+
+state 153
+
+   77 expression: NEW ID L_BRACE . R_BRACE
+
+    R_BRACE  shift, and go to state 190
+
+
+state 154
+
+   78 expression: CRT ID L_BRACE . R_BRACE
+
+    R_BRACE  shift, and go to state 191
+
+
+state 155
+
+   34 condition: IF L_BRACE expression . R_BRACE block
+   37          | IF L_BRACE expression . R_BRACE statement
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    R_BRACE  shift, and go to state 192
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 156
+
+   33 loop: WHILE L_BRACE expression . R_BRACE block
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    R_BRACE  shift, and go to state 193
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 157
+
+   32 loop: FOR L_BRACE assignment . expression SEMICOLON expression R_BRACE block
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 194
+    typecast    go to state 43
+
+
+state 158
+
+   16 s_funcdef: ID COLON . L_BRACE
+   25 s_struct: LOCAL ID COLON . STRUCT L_GBRACE
+
+    L_BRACE  shift, and go to state 133
+    STRUCT   shift, and go to state 195
+
+
+state 159
+
+   23 func: LOCAL s_func R_GBRACE .
+
+    $default  reduce using rule 23 (func)
+
+
+state 160
+
+   14 s_fcall: s_fcall COMMA expression .
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    TIMES     [reduce using rule 14 (s_fcall)]
+    PLUS      [reduce using rule 14 (s_fcall)]
+    MINUS     [reduce using rule 14 (s_fcall)]
+    $default  reduce using rule 14 (s_fcall)
+
+    conditionalOp  go to state 130
+
+
+state 161
+
+   16 s_funcdef: ID COLON . L_BRACE
+   53 declaration: ID COLON . type
+
+    ID       shift, and go to state 142
+    L_BRACE  shift, and go to state 133
+    VOID     shift, and go to state 54
+    I8       shift, and go to state 55
+    I16      shift, and go to state 56
+    I32      shift, and go to state 57
+    I64      shift, and go to state 58
+    U8       shift, and go to state 59
+    U16      shift, and go to state 60
+    U32      shift, and go to state 61
+    U64      shift, and go to state 62
+    F32      shift, and go to state 63
+    F64      shift, and go to state 64
+    BOOL     shift, and go to state 65
+    INT      shift, and go to state 66
+    STRUCT   shift, and go to state 67
+
+    type  go to state 196
+
+
+state 162
+
+   18 s_funcdef: s_funcdef COMMA declaration .
+
+    $default  reduce using rule 18 (s_funcdef)
+
+
+state 163
+
+   19 funcdef: s_funcdef R_BRACE AR . type
+
+    ID      shift, and go to state 142
+    VOID    shift, and go to state 54
+    I8      shift, and go to state 55
+    I16     shift, and go to state 56
+    I32     shift, and go to state 57
+    I64     shift, and go to state 58
+    U8      shift, and go to state 59
+    U16     shift, and go to state 60
+    U32     shift, and go to state 61
+    U64     shift, and go to state 62
+    F32     shift, and go to state 63
+    F64     shift, and go to state 64
+    BOOL    shift, and go to state 65
+    INT     shift, and go to state 66
+    STRUCT  shift, and go to state 67
+
+    type  go to state 197
+
+
+state 164
+
+   16 s_funcdef: ID COLON . L_BRACE
+   48 assignment: ID COLON . type equals expression SEMICOLON
+   49           | ID COLON . ID equals expression SEMICOLON
+   50           | ID COLON . ID TIMES equals expression SEMICOLON
+   51           | ID COLON . type SEMICOLON
+
+    ID       shift, and go to state 132
+    L_BRACE  shift, and go to state 133
+    VOID     shift, and go to state 54
+    I8       shift, and go to state 55
+    I16      shift, and go to state 56
+    I32      shift, and go to state 57
+    I64      shift, and go to state 58
+    U8       shift, and go to state 59
+    U16      shift, and go to state 60
+    U32      shift, and go to state 61
+    U64      shift, and go to state 62
+    F32      shift, and go to state 63
+    F64      shift, and go to state 64
+    BOOL     shift, and go to state 65
+    INT      shift, and go to state 66
+    STRUCT   shift, and go to state 67
+
+    type  go to state 135
+
+
+state 165
+
+   16 s_funcdef: ID . COLON L_BRACE
+
+    COLON  shift, and go to state 198
+
+
+state 166
+
+   28 struct: struct COLON ID .
+
+    $default  reduce using rule 28 (struct)
+
+
+state 167
+
+   29 block_s: L_GBRACE .
+
+    $default  reduce using rule 29 (block_s)
+
+
+state 168
+
+   30 block_s: block_s . statement
+   31 block: block_s . R_GBRACE
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    R_GBRACE  shift, and go to state 199
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 103
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 104
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 200
+    expression  go to state 42
+    typecast    go to state 43
+
+
+state 169
+
+   36 condition: condition ELSE block .
+
+    $default  reduce using rule 36 (condition)
+
+
+state 170
+
+   35 condition: condition . ELSE condition
+   35          | condition ELSE condition .
+   36          | condition . ELSE block
+
+    ELSE  shift, and go to state 112
+
+    ELSE      [reduce using rule 35 (condition)]
+    $default  reduce using rule 35 (condition)
+
+
+state 171
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   83           | expression AR expression .
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 83 (expression)]
+    DOT       [reduce using rule 83 (expression)]
+    TIMES     [reduce using rule 83 (expression)]
+    PLUS      [reduce using rule 83 (expression)]
+    MINUS     [reduce using rule 83 (expression)]
+    DIVIDED   [reduce using rule 83 (expression)]
+    MODULO    [reduce using rule 83 (expression)]
+    GREATER   [reduce using rule 83 (expression)]
+    LESS      [reduce using rule 83 (expression)]
+    GREQ      [reduce using rule 83 (expression)]
+    LEEQ      [reduce using rule 83 (expression)]
+    SAME      [reduce using rule 83 (expression)]
+    AND       [reduce using rule 83 (expression)]
+    OR        [reduce using rule 83 (expression)]
+    NOTEQ     [reduce using rule 83 (expression)]
+    $default  reduce using rule 83 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 172
+
+   82 expression: expression . DOT expression
+   82           | expression DOT expression .
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 82 (expression)]
+    DOT       [reduce using rule 82 (expression)]
+    TIMES     [reduce using rule 82 (expression)]
+    PLUS      [reduce using rule 82 (expression)]
+    MINUS     [reduce using rule 82 (expression)]
+    DIVIDED   [reduce using rule 82 (expression)]
+    MODULO    [reduce using rule 82 (expression)]
+    GREATER   [reduce using rule 82 (expression)]
+    LESS      [reduce using rule 82 (expression)]
+    GREQ      [reduce using rule 82 (expression)]
+    LEEQ      [reduce using rule 82 (expression)]
+    SAME      [reduce using rule 82 (expression)]
+    AND       [reduce using rule 82 (expression)]
+    OR        [reduce using rule 82 (expression)]
+    NOTEQ     [reduce using rule 82 (expression)]
+    $default  reduce using rule 82 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 173
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   87           | expression TIMES expression .
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 87 (expression)]
+    DOT       [reduce using rule 87 (expression)]
+    TIMES     [reduce using rule 87 (expression)]
+    PLUS      [reduce using rule 87 (expression)]
+    MINUS     [reduce using rule 87 (expression)]
+    DIVIDED   [reduce using rule 87 (expression)]
+    MODULO    [reduce using rule 87 (expression)]
+    GREATER   [reduce using rule 87 (expression)]
+    LESS      [reduce using rule 87 (expression)]
+    GREQ      [reduce using rule 87 (expression)]
+    LEEQ      [reduce using rule 87 (expression)]
+    SAME      [reduce using rule 87 (expression)]
+    AND       [reduce using rule 87 (expression)]
+    OR        [reduce using rule 87 (expression)]
+    NOTEQ     [reduce using rule 87 (expression)]
+    $default  reduce using rule 87 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 174
+
+   91 expression: PLUS . expression
+   94           | expression PLUS PLUS .
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    ID        [reduce using rule 94 (expression)]
+    NUMBER    [reduce using rule 94 (expression)]
+    FLOAT     [reduce using rule 94 (expression)]
+    STRING    [reduce using rule 94 (expression)]
+    L_BRACE   [reduce using rule 94 (expression)]
+    ADDRESS   [reduce using rule 94 (expression)]
+    TIMES     [reduce using rule 94 (expression)]
+    PLUS      [reduce using rule 94 (expression)]
+    MINUS     [reduce using rule 94 (expression)]
+    SIZEOF    [reduce using rule 94 (expression)]
+    NOT       [reduce using rule 94 (expression)]
+    NEW       [reduce using rule 94 (expression)]
+    CRT       [reduce using rule 94 (expression)]
+    TRUE      [reduce using rule 94 (expression)]
+    FALSE     [reduce using rule 94 (expression)]
+    NUL       [reduce using rule 94 (expression)]
+    $default  reduce using rule 94 (expression)
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 73
+    typecast    go to state 43
+
+
+state 175
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   85           | expression PLUS expression .
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 85 (expression)]
+    DOT       [reduce using rule 85 (expression)]
+    TIMES     [reduce using rule 85 (expression)]
+    PLUS      [reduce using rule 85 (expression)]
+    MINUS     [reduce using rule 85 (expression)]
+    DIVIDED   [reduce using rule 85 (expression)]
+    MODULO    [reduce using rule 85 (expression)]
+    GREATER   [reduce using rule 85 (expression)]
+    LESS      [reduce using rule 85 (expression)]
+    GREQ      [reduce using rule 85 (expression)]
+    LEEQ      [reduce using rule 85 (expression)]
+    SAME      [reduce using rule 85 (expression)]
+    AND       [reduce using rule 85 (expression)]
+    OR        [reduce using rule 85 (expression)]
+    NOTEQ     [reduce using rule 85 (expression)]
+    $default  reduce using rule 85 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 176
+
+   90 expression: MINUS . expression
+   93           | expression MINUS MINUS .
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    ID        [reduce using rule 93 (expression)]
+    NUMBER    [reduce using rule 93 (expression)]
+    FLOAT     [reduce using rule 93 (expression)]
+    STRING    [reduce using rule 93 (expression)]
+    L_BRACE   [reduce using rule 93 (expression)]
+    ADDRESS   [reduce using rule 93 (expression)]
+    TIMES     [reduce using rule 93 (expression)]
+    PLUS      [reduce using rule 93 (expression)]
+    MINUS     [reduce using rule 93 (expression)]
+    SIZEOF    [reduce using rule 93 (expression)]
+    NOT       [reduce using rule 93 (expression)]
+    NEW       [reduce using rule 93 (expression)]
+    CRT       [reduce using rule 93 (expression)]
+    TRUE      [reduce using rule 93 (expression)]
+    FALSE     [reduce using rule 93 (expression)]
+    NUL       [reduce using rule 93 (expression)]
+    $default  reduce using rule 93 (expression)
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 74
+    typecast    go to state 43
+
+
+state 177
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   86           | expression MINUS expression .
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 86 (expression)]
+    DOT       [reduce using rule 86 (expression)]
+    TIMES     [reduce using rule 86 (expression)]
+    PLUS      [reduce using rule 86 (expression)]
+    MINUS     [reduce using rule 86 (expression)]
+    DIVIDED   [reduce using rule 86 (expression)]
+    MODULO    [reduce using rule 86 (expression)]
+    GREATER   [reduce using rule 86 (expression)]
+    LESS      [reduce using rule 86 (expression)]
+    GREQ      [reduce using rule 86 (expression)]
+    LEEQ      [reduce using rule 86 (expression)]
+    SAME      [reduce using rule 86 (expression)]
+    AND       [reduce using rule 86 (expression)]
+    OR        [reduce using rule 86 (expression)]
+    NOTEQ     [reduce using rule 86 (expression)]
+    $default  reduce using rule 86 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 178
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   88           | expression DIVIDED expression .
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 88 (expression)]
+    DOT       [reduce using rule 88 (expression)]
+    TIMES     [reduce using rule 88 (expression)]
+    PLUS      [reduce using rule 88 (expression)]
+    MINUS     [reduce using rule 88 (expression)]
+    DIVIDED   [reduce using rule 88 (expression)]
+    MODULO    [reduce using rule 88 (expression)]
+    GREATER   [reduce using rule 88 (expression)]
+    LESS      [reduce using rule 88 (expression)]
+    GREQ      [reduce using rule 88 (expression)]
+    LEEQ      [reduce using rule 88 (expression)]
+    SAME      [reduce using rule 88 (expression)]
+    AND       [reduce using rule 88 (expression)]
+    OR        [reduce using rule 88 (expression)]
+    NOTEQ     [reduce using rule 88 (expression)]
+    $default  reduce using rule 88 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 179
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   89           | expression MODULO expression .
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 89 (expression)]
+    DOT       [reduce using rule 89 (expression)]
+    TIMES     [reduce using rule 89 (expression)]
+    PLUS      [reduce using rule 89 (expression)]
+    MINUS     [reduce using rule 89 (expression)]
+    DIVIDED   [reduce using rule 89 (expression)]
+    MODULO    [reduce using rule 89 (expression)]
+    GREATER   [reduce using rule 89 (expression)]
+    LESS      [reduce using rule 89 (expression)]
+    GREQ      [reduce using rule 89 (expression)]
+    LEEQ      [reduce using rule 89 (expression)]
+    SAME      [reduce using rule 89 (expression)]
+    AND       [reduce using rule 89 (expression)]
+    OR        [reduce using rule 89 (expression)]
+    NOTEQ     [reduce using rule 89 (expression)]
+    $default  reduce using rule 89 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 180
+
+   56 allotment: expression equals expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 201
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 181
+
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+   95           | expression conditionalOp expression .
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    AR        [reduce using rule 95 (expression)]
+    DOT       [reduce using rule 95 (expression)]
+    TIMES     [reduce using rule 95 (expression)]
+    PLUS      [reduce using rule 95 (expression)]
+    MINUS     [reduce using rule 95 (expression)]
+    DIVIDED   [reduce using rule 95 (expression)]
+    MODULO    [reduce using rule 95 (expression)]
+    GREATER   [reduce using rule 95 (expression)]
+    LESS      [reduce using rule 95 (expression)]
+    GREQ      [reduce using rule 95 (expression)]
+    LEEQ      [reduce using rule 95 (expression)]
+    SAME      [reduce using rule 95 (expression)]
+    AND       [reduce using rule 95 (expression)]
+    OR        [reduce using rule 95 (expression)]
+    NOTEQ     [reduce using rule 95 (expression)]
+    $default  reduce using rule 95 (expression)
+
+    conditionalOp  go to state 130
+
+
+state 182
+
+    7 equals: TIMES . EQUAL
+   50 assignment: ID COLON ID TIMES . equals expression SEMICOLON
+  112 type: ID TIMES .
+
+    EQUAL    shift, and go to state 202
+    TIMES    shift, and go to state 48
+    PLUS     shift, and go to state 49
+    MINUS    shift, and go to state 50
+    DIVIDED  shift, and go to state 51
+
+    EQUAL     [reduce using rule 112 (type)]
+    TIMES     [reduce using rule 112 (type)]
+    PLUS      [reduce using rule 112 (type)]
+    MINUS     [reduce using rule 112 (type)]
+    DIVIDED   [reduce using rule 112 (type)]
+    $default  reduce using rule 112 (type)
+
+    equals  go to state 203
+
+
+state 183
+
+   49 assignment: ID COLON ID equals . expression SEMICOLON
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 204
+    typecast    go to state 43
+
+
+state 184
+
+   24 s_struct: ID COLON STRUCT L_GBRACE .
+
+    $default  reduce using rule 24 (s_struct)
+
+
+state 185
+
+   51 assignment: ID COLON type SEMICOLON .
+
+    $default  reduce using rule 51 (assignment)
+
+
+state 186
+
+    7 equals: TIMES . EQUAL
+  110 type: type TIMES .
+
+    EQUAL  shift, and go to state 136
+
+    EQUAL     [reduce using rule 110 (type)]
+    $default  reduce using rule 110 (type)
+
+
+state 187
+
+   48 assignment: ID COLON type equals . expression SEMICOLON
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 205
+    typecast    go to state 43
+
+
+state 188
+
+   55 allotment: ID equals expression SEMICOLON .
+
+    $default  reduce using rule 55 (allotment)
+
+
+state 189
+
+   76 expression: SIZEOF L_BRACE type R_BRACE .
+
+    $default  reduce using rule 76 (expression)
+
+
+state 190
+
+   77 expression: NEW ID L_BRACE R_BRACE .
+
+    $default  reduce using rule 77 (expression)
+
+
+state 191
+
+   78 expression: CRT ID L_BRACE R_BRACE .
+
+    $default  reduce using rule 78 (expression)
+
+
+state 192
+
+   34 condition: IF L_BRACE expression R_BRACE . block
+   37          | IF L_BRACE expression R_BRACE . statement
+
+    ID        shift, and go to state 1
+    NUMBER    shift, and go to state 2
+    FLOAT     shift, and go to state 3
+    STRING    shift, and go to state 4
+    L_BRACE   shift, and go to state 5
+    L_GBRACE  shift, and go to state 167
+    ADDRESS   shift, and go to state 6
+    TIMES     shift, and go to state 7
+    PLUS      shift, and go to state 8
+    MINUS     shift, and go to state 9
+    SIZEOF    shift, and go to state 10
+    NOT       shift, and go to state 11
+    RETURN    shift, and go to state 12
+    NEW       shift, and go to state 13
+    CRT       shift, and go to state 14
+    BREAK     shift, and go to state 15
+    CONTINUE  shift, and go to state 16
+    IF        shift, and go to state 18
+    WHILE     shift, and go to state 19
+    FOR       shift, and go to state 20
+    LOCAL     shift, and go to state 103
+    TRUE      shift, and go to state 22
+    FALSE     shift, and go to state 23
+    NUL       shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    s_funcdef   go to state 30
+    funcdef     go to state 31
+    s_func      go to state 32
+    func        go to state 33
+    s_struct    go to state 34
+    struct      go to state 104
+    block_s     go to state 168
+    block       go to state 206
+    loop        go to state 36
+    condition   go to state 37
+    areturn     go to state 38
+    assignment  go to state 39
+    allotment   go to state 40
+    statement   go to state 207
+    expression  go to state 42
+    typecast    go to state 43
+
+
+state 193
+
+   33 loop: WHILE L_BRACE expression R_BRACE . block
+
+    L_GBRACE  shift, and go to state 167
+
+    block_s  go to state 168
+    block    go to state 208
+
+
+state 194
+
+   32 loop: FOR L_BRACE assignment expression . SEMICOLON expression R_BRACE block
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 209
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 195
+
+   25 s_struct: LOCAL ID COLON STRUCT . L_GBRACE
+
+    L_GBRACE  shift, and go to state 210
+
+
+state 196
+
+   53 declaration: ID COLON type .
+  110 type: type . TIMES
+
+    TIMES  shift, and go to state 150
+
+    $default  reduce using rule 53 (declaration)
+
+
+state 197
+
+   19 funcdef: s_funcdef R_BRACE AR type .
+  110 type: type . TIMES
+
+    TIMES  shift, and go to state 150
+
+    $default  reduce using rule 19 (funcdef)
+
+
+state 198
+
+   16 s_funcdef: ID COLON . L_BRACE
+
+    L_BRACE  shift, and go to state 133
+
+
+state 199
+
+   31 block: block_s R_GBRACE .
+
+    $default  reduce using rule 31 (block)
+
+
+state 200
+
+   30 block_s: block_s statement .
+
+    $default  reduce using rule 30 (block_s)
+
+
+state 201
+
+   56 allotment: expression equals expression SEMICOLON .
+
+    $default  reduce using rule 56 (allotment)
+
+
+state 202
+
+    4 equals: EQUAL .
+    7       | TIMES EQUAL .
+
+    ID        reduce using rule 4 (equals)
+    ID        [reduce using rule 7 (equals)]
+    NUMBER    reduce using rule 4 (equals)
+    NUMBER    [reduce using rule 7 (equals)]
+    FLOAT     reduce using rule 4 (equals)
+    FLOAT     [reduce using rule 7 (equals)]
+    STRING    reduce using rule 4 (equals)
+    STRING    [reduce using rule 7 (equals)]
+    L_BRACE   reduce using rule 4 (equals)
+    L_BRACE   [reduce using rule 7 (equals)]
+    ADDRESS   reduce using rule 4 (equals)
+    ADDRESS   [reduce using rule 7 (equals)]
+    TIMES     reduce using rule 4 (equals)
+    TIMES     [reduce using rule 7 (equals)]
+    PLUS      reduce using rule 4 (equals)
+    PLUS      [reduce using rule 7 (equals)]
+    MINUS     reduce using rule 4 (equals)
+    MINUS     [reduce using rule 7 (equals)]
+    SIZEOF    reduce using rule 4 (equals)
+    SIZEOF    [reduce using rule 7 (equals)]
+    NOT       reduce using rule 4 (equals)
+    NOT       [reduce using rule 7 (equals)]
+    NEW       reduce using rule 4 (equals)
+    NEW       [reduce using rule 7 (equals)]
+    CRT       reduce using rule 4 (equals)
+    CRT       [reduce using rule 7 (equals)]
+    TRUE      reduce using rule 4 (equals)
+    TRUE      [reduce using rule 7 (equals)]
+    FALSE     reduce using rule 4 (equals)
+    FALSE     [reduce using rule 7 (equals)]
+    NUL       reduce using rule 4 (equals)
+    NUL       [reduce using rule 7 (equals)]
+    $default  reduce using rule 4 (equals)
+
+
+state 203
+
+   50 assignment: ID COLON ID TIMES equals . expression SEMICOLON
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 211
+    typecast    go to state 43
+
+
+state 204
+
+   49 assignment: ID COLON ID equals expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 212
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 205
+
+   48 assignment: ID COLON type equals expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 213
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 206
+
+   34 condition: IF L_BRACE expression R_BRACE block .
+
+    $default  reduce using rule 34 (condition)
+
+
+state 207
+
+   37 condition: IF L_BRACE expression R_BRACE statement .
+
+    $default  reduce using rule 37 (condition)
+
+
+state 208
+
+   33 loop: WHILE L_BRACE expression R_BRACE block .
+
+    $default  reduce using rule 33 (loop)
+
+
+state 209
+
+   32 loop: FOR L_BRACE assignment expression SEMICOLON . expression R_BRACE block
+
+    ID       shift, and go to state 70
+    NUMBER   shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    STRING   shift, and go to state 4
+    L_BRACE  shift, and go to state 5
+    ADDRESS  shift, and go to state 6
+    TIMES    shift, and go to state 7
+    PLUS     shift, and go to state 8
+    MINUS    shift, and go to state 9
+    SIZEOF   shift, and go to state 10
+    NOT      shift, and go to state 11
+    NEW      shift, and go to state 13
+    CRT      shift, and go to state 14
+    TRUE     shift, and go to state 22
+    FALSE    shift, and go to state 23
+    NUL      shift, and go to state 24
+
+    s_fcall     go to state 28
+    fcall       go to state 29
+    expression  go to state 214
+    typecast    go to state 43
+
+
+state 210
+
+   25 s_struct: LOCAL ID COLON STRUCT L_GBRACE .
+
+    $default  reduce using rule 25 (s_struct)
+
+
+state 211
+
+   50 assignment: ID COLON ID TIMES equals expression . SEMICOLON
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR         shift, and go to state 113
+    SEMICOLON  shift, and go to state 215
+    DOT        shift, and go to state 115
+    TIMES      shift, and go to state 145
+    PLUS       shift, and go to state 146
+    MINUS      shift, and go to state 147
+    DIVIDED    shift, and go to state 148
+    MODULO     shift, and go to state 120
+    GREATER    shift, and go to state 121
+    LESS       shift, and go to state 122
+    GREQ       shift, and go to state 123
+    LEEQ       shift, and go to state 124
+    SAME       shift, and go to state 125
+    AND        shift, and go to state 126
+    OR         shift, and go to state 127
+    NOTEQ      shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 212
+
+   49 assignment: ID COLON ID equals expression SEMICOLON .
+
+    $default  reduce using rule 49 (assignment)
+
+
+state 213
+
+   48 assignment: ID COLON type equals expression SEMICOLON .
+
+    $default  reduce using rule 48 (assignment)
+
+
+state 214
+
+   32 loop: FOR L_BRACE assignment expression SEMICOLON expression . R_BRACE block
+   82 expression: expression . DOT expression
+   83           | expression . AR expression
+   85           | expression . PLUS expression
+   86           | expression . MINUS expression
+   87           | expression . TIMES expression
+   88           | expression . DIVIDED expression
+   89           | expression . MODULO expression
+   93           | expression . MINUS MINUS
+   94           | expression . PLUS PLUS
+   95           | expression . conditionalOp expression
+
+    AR       shift, and go to state 113
+    DOT      shift, and go to state 115
+    R_BRACE  shift, and go to state 216
+    TIMES    shift, and go to state 145
+    PLUS     shift, and go to state 146
+    MINUS    shift, and go to state 147
+    DIVIDED  shift, and go to state 148
+    MODULO   shift, and go to state 120
+    GREATER  shift, and go to state 121
+    LESS     shift, and go to state 122
+    GREQ     shift, and go to state 123
+    LEEQ     shift, and go to state 124
+    SAME     shift, and go to state 125
+    AND      shift, and go to state 126
+    OR       shift, and go to state 127
+    NOTEQ    shift, and go to state 128
+
+    conditionalOp  go to state 130
+
+
+state 215
+
+   50 assignment: ID COLON ID TIMES equals expression SEMICOLON .
+
+    $default  reduce using rule 50 (assignment)
+
+
+state 216
+
+   32 loop: FOR L_BRACE assignment expression SEMICOLON expression R_BRACE . block
+
+    L_GBRACE  shift, and go to state 167
+
+    block_s  go to state 168
+    block    go to state 217
+
+
+state 217
+
+   32 loop: FOR L_BRACE assignment expression SEMICOLON expression R_BRACE block .
+
+    $default  reduce using rule 32 (loop)

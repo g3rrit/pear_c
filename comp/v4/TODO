@@ -1,0 +1,5 @@
+TODO
+
+-- rethink this sometimes u might need to pass ** as this !!!add syntactic sugar struct:fun(); -> struct.fun(&struct); care difference between pointer and object
+-- why cant comp reduce ID TIMES to type on its own?
+
