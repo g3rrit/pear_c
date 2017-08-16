@@ -2,12 +2,14 @@ local include"testl"
 
 main : () -> int
 {
+    printf("start");
     printf("starting test!\n");
 
+    checkTest("test this", testThis.test());
     checkTest("loop", testloop());
     tStruct : TestStruct = crt TestStruct();
     tStructp : TestStruct* = new TestStruct();
-    checkTest("struct", tStruct.testS(&tStruct) && tStructp->testS(tStructp));
+    checkTest("struct", tStruct.testS() && tStructp->testS());
     free(tStructp);
     checkTest("condition", testCondition());
     checkTest("args", testArgs(15,true,"test"));
@@ -22,7 +24,7 @@ main : () -> int
     free(mlist);
     checkTest("lib", testLib());
     checkTest("pointer", testPointer());
-    checkTest("singleton", testSingleton.test(&testSingleton));
+    checkTest("singleton", testSingleton.test());
     checkTest("functionPointer", testFuncPointer(&testFuncPointerFunc, (30 != 3)));
     testStructTag : struct TestStructTag = crt TestStructTag();
     checkTest("struct tag", testStructTag.res);
@@ -31,9 +33,42 @@ main : () -> int
     testidtype = crt TestIDType();
     checkTest("id as type", testidtype.res);    
     checkTest("array access", testArray());
+    checkTest("function pointer", testFunctionPointer());
 
     return 0;
 }
+
+testFunctionPointer : () -> bool
+{
+    temp : TestFP = crt TestFP();
+    temp.fun = &testfpt;
+
+    return temp.test(temp.fun);    
+}
+
+TestFP : struct
+{
+    test : (fun : () -> bool) -> bool
+    {
+        tfun : () -> bool = this->fun;
+        return tfun() && fun();
+    }
+
+    fun : () -> bool; 
+}
+
+testfpt : () -> bool
+{
+    return true;
+}
+
+TestThis : struct
+{
+    test : () -> bool
+    {
+        return true;
+    }
+} : testThis
 
 testArray : () -> bool
 {
@@ -134,13 +169,13 @@ testFuncPointerRes : (res2 : bool) -> bool
 TestSingleton: struct
 {
     name : char* = "tom";
-    getName : (this : TestSingleton*) -> char*
+    getName : () -> char*
     {
         return this->name;
     }
-    test : (this : TestSingleton*) -> bool
+    test : () -> bool
     {
-        if(strcmp(this->getName(this), "tom") == 0)
+        if(strcmp(this->getName(), "tom") == 0)
             return true;
         
         return false;
@@ -154,24 +189,24 @@ TestList : struct
     next : TestList* = null;
     prev : TestList** = null;
 
-    append : (this : TestList**, data : void*) -> bool 
+    append : (his : TestList**, data : void*) -> bool 
     {
-        while(*this)
+        while(*his)
         {
-            this = &((*this)->next);
+            his = &((*his)->next);
         }         
-        *this = new TestList();
-        (*this)->data = data;
+        *his = new TestList();
+        (*his)->data = data;
         return true;
     }
 
-    print : (this : TestList**) -> i32
+    print : (his : TestList**) -> i32
     {  
         count : i32 = 0;
-        while(*this)
+        while(*his)
         {
-            printf("element: %i = %s\n", count, (char*)(*this)->data);
-            this = &((*this)->next);
+            printf("element: %i = %s\n", count, (char*)(*his)->data);
+            his = &((*his)->next);
             count++;
         } 
         return count;
@@ -202,7 +237,7 @@ testPointer : () -> bool
 TestStruct : struct
 {
     res : bool = true;
-    testS : (this : TestStruct*) -> bool 
+    testS : () -> bool 
     {
         return this->res;
     }

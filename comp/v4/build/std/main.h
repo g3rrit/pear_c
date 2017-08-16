@@ -10,7 +10,7 @@ struct TestU {
 Map* fmap; 
 int count; 
 char* id; 
-bool (*update)(TestU* this); 
+bool (*update)(TestU *this,char* tst); 
 };
 TestU* __new_TestU();
 TestU __crt_TestU();

@@ -2,24 +2,23 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
-void* __List_add(List* this,void* data);
-void* __List_get(List* this,int32_t i);
-void* __List_remove(List* this,int32_t i);
-bool __List_forEach(List* this,__forEach_fun fun);
-void __List_delete(List* this);
-void* __Map_add(Map* this,char* key,void* data);
-void* __Map_get(Map* this,char* key);
-void* __Map_remove(Map* this,char* key);
-bool __Map_forEach(Map* this,__forEach_fun fun);
-void __Map_delete(Map* this);
-void __EventList_add(char* name,char* id,__add_fun fun,void* clos);
-bool __EventList_dispatch(char* name,void* data);
-void __EventList_remove(char* name);
-void __EventList_removeID(char* name,char* id);
-void __EventList_delete();
+void* __List_add(List *this,void* data);
+void* __List_get(List *this,int32_t i);
+void* __List_remove(List *this,int32_t i);
+bool __List_forEach(List *this,bool (*fun)(void* data));
+void __List_delete(List *this);
+void* __Map_add(Map *this,char* key,void* data);
+void* __Map_get(Map *this,char* key);
+void* __Map_remove(Map *this,char* key);
+bool __Map_forEach(Map *this,bool (*fun)(void* data));
+void __Map_delete(Map *this);
+void __EventList_add(EventList *this,char* name,char* id,bool (*fun)(void* clos,void* data),void* clos);
+bool __EventList_dispatch(EventList *this,char* name,void* data);
+void __EventList_remove(EventList *this,char* name);
+void __EventList_removeID(EventList *this,char* name,char* id);
+void __EventList_delete(EventList *this);
 EventList event={.map=NULL,.add=&__EventList_add,.dispatch=&__EventList_dispatch,.remove=&__EventList_remove,.removeID=&__EventList_removeID,.delete=&__EventList_delete};
-bool __EventData_fun(void* clos,void* data);
-void* __List_add(List* this,void* data)
+void* __List_add(List *this,void* data)
 {
 ListNode** entry = &(this->start);
 while(*entry){
@@ -29,8 +28,8 @@ entry=&((*entry)->next);
 (*entry)->data=data;
 (*entry)->next=NULL;
 this->size++;
-return data;}
-void* __List_get(List* this,int32_t i)
+return data;
+}void* __List_get(List *this,int32_t i)
 {
 ListNode** entry = &(this->start);
 int32_t count = 0;
@@ -39,8 +38,8 @@ while((count<i)&&*entry){
 entry=&((*entry)->next);
 count++;
 }
-return (*entry)->data;}
-void* __List_remove(List* this,int32_t i)
+return (*entry)->data;
+}void* __List_remove(List *this,int32_t i)
 {
 ListNode** entry = &(this->start);
 int32_t count = 0;
@@ -58,8 +57,8 @@ free(*entry);
 *entry=NULL;
 }
 this->size--;
-return (*entry)->data;}
-bool __List_forEach(List* this,__forEach_fun fun)
+return (*entry)->data;
+}bool __List_forEach(List *this,bool (*fun)(void* data))
 {
 ListNode* entry = (this->start);
 while(entry){
@@ -67,8 +66,8 @@ ListNode* tempEntry = entry;
 entry=((entry)->next);
 if(!fun((tempEntry)->data))return false;
 }
-return true;}
-void __List_delete(List* this)
+return true;
+}void __List_delete(List *this)
 {
 ListNode** entry = &(this->start);
 ListNode** fentry = entry;
@@ -76,8 +75,8 @@ while(*entry){
 entry=&((*entry)->next);
 free(*fentry);
 fentry=entry;
-}}
-List* __new_List()
+}
+}List* __new_List()
 { 
 List *this = malloc(sizeof(List));
 this->start = NULL; 
@@ -115,7 +114,7 @@ this.data = NULL;
 this.next = NULL; 
 return this;
 } 
-void* __Map_add(Map* this,char* key,void* data)
+void* __Map_add(Map *this,char* key,void* data)
 {
 MapNode** entry = &(this->start);
 while(*entry){
@@ -126,16 +125,16 @@ entry=&((*entry)->next);
 (*entry)->data=data;
 (*entry)->next=NULL;
 this->size++;
-return data;}
-void* __Map_get(Map* this,char* key)
+return data;
+}void* __Map_get(Map *this,char* key)
 {
 MapNode** entry = &(this->start);
 while(*entry){
 if(strcmp((*entry)->key,key)==0)return (*entry)->data;
 entry=&((*entry)->next);
 }
-return NULL;}
-void* __Map_remove(Map* this,char* key)
+return NULL;
+}void* __Map_remove(Map *this,char* key)
 {
 MapNode** entry = &(this->start);
 bool found = false;
@@ -157,8 +156,8 @@ free(*entry);
 *entry=NULL;
 }
 this->size--;
-return data;}
-bool __Map_forEach(Map* this,__forEach_fun fun)
+return data;
+}bool __Map_forEach(Map *this,bool (*fun)(void* data))
 {
 MapNode* entry = (this->start);
 while(entry){
@@ -166,8 +165,8 @@ MapNode* tempEntry = entry;
 entry=((entry)->next);
 if(!fun((tempEntry)->data))return false;
 }
-return true;}
-void __Map_delete(Map* this)
+return true;
+}void __Map_delete(Map *this)
 {
 MapNode** entry = &(this->start);
 MapNode** fentry = entry;
@@ -175,8 +174,8 @@ while(*entry){
 entry=&((*entry)->next);
 free(*fentry);
 fentry=entry;
-}}
-Map* __new_Map()
+}
+}Map* __new_Map()
 { 
 Map *this = malloc(sizeof(Map));
 this->start = NULL; 
@@ -216,7 +215,7 @@ this.key = NULL;
 this.next = NULL; 
 return this;
 } 
-void __EventList_add(char* name,char* id,__add_fun fun,void* clos)
+void __EventList_add(EventList *this,char* name,char* id,bool (*fun)(void* clos,void* data),void* clos)
 {
 if(!event.map)event.map=__new_Map();
 Map* tempMap = event.map->get(event.map,name);
@@ -227,8 +226,8 @@ event.map->add(event.map,name,tempMap);
 EventData* eventData = __new_EventData();
 eventData->fun=fun;
 eventData->clos=clos;
-tempMap->add(tempMap,id,eventData);}
-bool __EventList_dispatch(char* name,void* data)
+tempMap->add(tempMap,id,eventData);
+}bool __EventList_dispatch(EventList *this,char* name,void* data)
 {
 if(!event.map)return true;
 Map* tempMap = event.map->get(event.map,name);
@@ -239,8 +238,8 @@ MapNode* tentry = entry;
 entry=((entry)->next);
 if(!__eventDispatchForEach((tentry)->data,data))return false;
 }
-return true;}
-void __EventList_remove(char* name)
+return true;
+}void __EventList_remove(EventList *this,char* name)
 {
 if(!event.map)return;
 Map* tempMap = event.map->remove(event.map,name);
@@ -248,8 +247,8 @@ if(tempMap){
 tempMap->forEach(tempMap,&__eventDeleteMapForEach);
 tempMap->delete(tempMap);
 free(tempMap);
-}}
-void __EventList_removeID(char* name,char* id)
+}
+}void __EventList_removeID(EventList *this,char* name,char* id)
 {
 if(!event.map)return;
 Map* tempMap = event.map->get(event.map,name);
@@ -259,13 +258,13 @@ if(tempMap->size<=0){
 tempMap->delete(tempMap);
 free(tempMap);
 }
-}}
-void __EventList_delete()
+}
+}void __EventList_delete(EventList *this)
 {
 if(!event.map)return;
 event.map->forEach(event.map,&__eventDeleteForEach);
-free(event.map);}
-EventList* __new_EventList()
+free(event.map);
+}EventList* __new_EventList()
 { 
 EventList *this = malloc(sizeof(EventList));
 this->map = NULL; 
@@ -287,28 +286,25 @@ this.removeID = &__EventList_removeID;
 this.delete = &__EventList_delete; 
 return this;
 } 
-bool __EventData_fun(void* clos,void* data)
-{}
 EventData* __new_EventData()
 { 
 EventData *this = malloc(sizeof(EventData));
-this->fun = &__EventData_fun; 
 return this;
 } 
 EventData __crt_EventData()
 { 
 EventData this;
-this.fun = &__EventData_fun; 
 return this;
 } 
 bool __eventDispatchForEach(EventData* eventData,void* data)
 {
-return eventData->fun(eventData->clos,data);}
-bool __eventDeleteMapForEach(EventData* eventData)
+bool (*fun)(void* clos,void* data) = eventData->fun;
+return fun(eventData->clos,data);
+}bool __eventDeleteMapForEach(EventData* eventData)
 {
 free(eventData);
-return true;}
-bool __eventDeleteForEach(void* data)
+return true;
+}bool __eventDeleteForEach(void* data)
 {
 Map* tempMap = data;
 if(tempMap){
@@ -316,4 +312,5 @@ tempMap->forEach(tempMap,&__eventDeleteMapForEach);
 tempMap->delete(tempMap);
 free(tempMap);
 }
-return true;}
+return true;
+}

@@ -5,14 +5,16 @@
 
 char *createStrDecl(Decl *decl)
 {
-    char *res = createStr("__");
+    // why  __ ??
+    /*char *res = createStr("__");
     char *resapp = createStr("_");
     if(globalS->inFunc)
         appendStr(&res,1, &(globalS->lastFuncName));
     appendStrF(&res,1,&resapp);
     char *arr[] = { decl->id, " ", decl->id};
     appendStr(&res, 3, arr);
-    return res;
+    return res;*/
+    return NULL;
 }
 
 char *createStrAssign(Assign *assign)
@@ -20,13 +22,8 @@ char *createStrAssign(Assign *assign)
     char *res = assign->def;
     if(assign->init)
     {
-        char *arr[] = { createStr(" = "), assign->value, createStr(";")};
-        appendStrF(&res,3,arr);
-    }
-    else
-    {
-        char *app = createStr(";");
-        appendStrF(&res,1,&app);
+        char *arr[] = { createStr(" = "), assign->value};
+        appendStrF(&res,2,arr);
     }
 
     free(assign);

@@ -60,7 +60,14 @@ void gsExitFuncDec()
 {
     if(globalS->funcName)
         free(globalS->funcName);
-    globalS->funcName = createStr(globalS->lastFuncName); 
+    if(globalS->lastFuncName)
+    {
+        globalS->funcName = createStr(globalS->lastFuncName); 
+    }
+    else
+    {
+        globalS->funcName = 0;
+    }
     globalS->indentlvl--;
 }
 

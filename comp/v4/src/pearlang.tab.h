@@ -181,9 +181,10 @@ typedef union YYSTYPE
     Assign *assign;
     Sassign *sassign;
     Struc *struc;
+    Decl *decl;
 }
 /* Line 1529 of yacc.c.  */
-#line 187 "./src/pearlang.tab.h"
+#line 188 "./src/pearlang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

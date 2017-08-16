@@ -2,7 +2,7 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
-bool __TestU_update(TestU* this);
+bool __TestU_update(TestU *this,char* tst);
 int main()
 {
 printf("listTest\n");
@@ -35,25 +35,25 @@ printf("map key sophie null working!\n");
 }
 map->forEach(map,&printNames);
 map->delete(map);
-event.add("test","id1",&eventf1,"clos1");
-event.add("test","id2",&eventf2,"clos2");
-event.add("test","id3",&eventf3,"clos3");
-event.add("test1","id4",&eventf1,"clos4");
-event.add("test1","id5",&eventf1,"clos5");
-event.add("test2","id6",&eventf1,"clos6");
-event.dispatch("test","datah");
-event.dispatch("test1","datac");
-event.dispatch("test2","datab");
-event.removeID("test","id1");
+event.add(&event,"test","id1",&eventf1,"clos1");
+event.add(&event,"test","id2",&eventf2,"clos2");
+event.add(&event,"test","id3",&eventf3,"clos3");
+event.add(&event,"test1","id4",&eventf1,"clos4");
+event.add(&event,"test1","id5",&eventf1,"clos5");
+event.add(&event,"test2","id6",&eventf1,"clos6");
+event.dispatch(&event,"test","datah");
+event.dispatch(&event,"test1","datac");
+event.dispatch(&event,"test2","datab");
+event.removeID(&event,"test","id1");
 printf("eventid1 rem\n");
-event.dispatch("test","datah");
-event.dispatch("test1","datac");
-event.dispatch("test2","datab");
-event.remove("test1");
+event.dispatch(&event,"test","datah");
+event.dispatch(&event,"test1","datac");
+event.dispatch(&event,"test2","datab");
+event.remove(&event,"test1");
 printf("ev test1 rem \n");
-event.dispatch("test","datah");
-event.dispatch("test1","datac");
-event.dispatch("test2","datab");
+event.dispatch(&event,"test","datah");
+event.dispatch(&event,"test1","datac");
+event.dispatch(&event,"test2","datab");
 printf("foreach problem!!!!!\n");
 Map* fmap = __new_Map();
 printf("event problem!!!\n");
@@ -67,25 +67,26 @@ teste2->count=1;
 TestU* teste3 = __new_TestU();
 teste3->fmap=fmap;
 teste3->id="id3";
-event.add("tp","id1",teste1->update,teste1);
-event.add("tp","id2",teste2->update,teste2);
-event.add("tp","id3",teste3->update,teste3);
-event.dispatch("tp",NULL);
-event.dispatch("tp",NULL);
+event.add(&event,"tp","id1",teste1->update,teste1);
+event.add(&event,"tp","id2",teste2->update,teste2);
+event.add(&event,"tp","id3",teste3->update,teste3);
+event.dispatch(&event,"tp",NULL);
+event.dispatch(&event,"tp",NULL);
 free(teste1);
 free(teste3);
-return 0;}
-bool __TestU_update(TestU* this)
+return 0;
+}bool __TestU_update(TestU *this,char* tst)
 {
 printf("updatinng: %s\n",this->id);
 if(this->count!=0){
 printf("wehere\n");
-event.removeID("tp",this->id);
+event.removeID(&event,"tp",this->id);
+printf("segfaulthere\n");
 free(this);
 }
 printf("finish updating\n");
-return true;}
-TestU* __new_TestU()
+return true;
+}TestU* __new_TestU()
 { 
 TestU *this = malloc(sizeof(TestU));
 this->fmap = NULL; 
@@ -103,24 +104,25 @@ return this;
 } 
 bool testufor(TestU* testu)
 {
-testu->update(testu);
-return true;}
-bool eventf1(char* clos,char* data)
+testu->update(testu,"g");
+return true;
+}bool eventf1(char* clos,char* data)
 {
 printf("clos : %s --",clos);
 printf("eventf1%s\n",data);
-return true;}
-bool eventf2(char* clos,char* data)
+return true;
+}bool eventf2(char* clos,char* data)
 {
 printf("clos : %s --",clos);
 printf("eventf2\n");
-return true;}
-bool eventf3(char* clos,char* data)
+return true;
+}bool eventf3(char* clos,char* data)
 {
 printf("clos : %s --",clos);
 printf("eventf3\n");
-return true;}
-bool printNames(void* data)
+return true;
+}bool printNames(void* data)
 {
 printf("foreach name: %s\n",(char*)data);
-return true;}
+return true;
+}

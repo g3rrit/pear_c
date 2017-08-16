@@ -1,5 +1,3 @@
-COMP = comp.out
-
 all: main.pear
 	cp ~/Desktop/projects/pearC/comp/v4/build/comp.out comp.out
 	./comp.out main.pear lib/testl.pear

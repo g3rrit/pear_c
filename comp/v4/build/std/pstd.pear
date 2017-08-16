@@ -12,7 +12,7 @@ List : struct
 
     size : i32 = 0;
 
-    add : (this : List*, data : void*) -> void*
+    add : (data : void*) -> void*
     {
         entry : ListNode** = &(this->start);
 
@@ -30,7 +30,7 @@ List : struct
         return data;
     }
 
-    get : (this : List*, i : i32) -> void*
+    get : (i : i32) -> void*
     {
         entry : ListNode** = &(this->start);
         count : i32 = 0;
@@ -46,7 +46,7 @@ List : struct
         return (*entry)->data;
     }
 
-    remove : (this : List*, i : i32) -> void*
+    remove : (i : i32) -> void*
     {   
         entry : ListNode** = &(this->start);
         count : i32 = 0;
@@ -77,7 +77,7 @@ List : struct
         return (*entry)->data;
     }
 
-    forEach : (this : List*, fun : (data : void*) -> bool) -> bool
+    forEach : (fun : (data : void*) -> bool) -> bool
     {
         entry : ListNode* = (this->start);
 
@@ -91,7 +91,7 @@ List : struct
         return true;
     }
 
-    delete : (this : List*) -> void
+    delete : () -> void
     {
         entry : ListNode** = &(this->start);
         fentry : ListNode** = entry;
@@ -122,7 +122,7 @@ Map : struct
 
     size : i32 = 0;
 
-    add : (this : Map*, key : char*, data : void*) -> void*
+    add : (key : char*, data : void*) -> void*
     {
         entry : MapNode** = &(this->start);
 
@@ -141,7 +141,7 @@ Map : struct
         return data;
     }
 
-    get : (this : Map*, key : char*) -> void*
+    get : (key : char*) -> void*
     {
         entry : MapNode** = &(this->start);
         
@@ -155,7 +155,7 @@ Map : struct
         return null;
     }
 
-    remove : (this : Map*, key : char*) -> void*
+    remove : (key : char*) -> void*
     {
         entry : MapNode** = &(this->start);
 
@@ -192,7 +192,7 @@ Map : struct
         return data;
     }
 
-    forEach : (this : Map*, fun : (data : void*) -> bool) -> bool
+    forEach : (fun : (data : void*) -> bool) -> bool
     {
         entry : MapNode* = (this->start);
 
@@ -206,7 +206,7 @@ Map : struct
         return true;
     }
 
-    delete : (this : Map*) -> void
+    delete : () -> void
     {
         entry : MapNode** = &(this->start);
         fentry : MapNode** = entry;
@@ -240,18 +240,18 @@ EventList : struct
         if(!event.map)
             event.map = new Map();
 
-        tempMap : Map* = event.map->get(event.map, name);
+        tempMap : Map* = event.map->get(name);
 
         if(!tempMap)
         {
             tempMap = new Map();
-            event.map->add(event.map, name, tempMap);
+            event.map->add(name, tempMap);
         }
     
         eventData : EventData* = new EventData();
         eventData->fun = fun;
         eventData->clos = clos;
-        tempMap->add(tempMap, id, eventData);
+        tempMap->add(id, eventData);
     } 
 
     dispatch : (name : char*, data : void*) -> bool 
@@ -259,7 +259,7 @@ EventList : struct
         if(!event.map)
             return true;
 
-        tempMap : Map* = event.map->get(event.map, name); 
+        tempMap : Map* = event.map->get(name); 
     
         if(!tempMap)
             return false;
@@ -282,12 +282,12 @@ EventList : struct
         if(!event.map)
             return;
 
-        tempMap : Map* = event.map->remove(event.map, name);
+        tempMap : Map* = event.map->remove(name);
 
         if(tempMap)
         {
-            tempMap->forEach(tempMap, &__eventDeleteMapForEach);
-            tempMap->delete(tempMap);
+            tempMap->forEach(&__eventDeleteMapForEach);
+            tempMap->delete();
             free(tempMap);
         }
     }
@@ -297,14 +297,14 @@ EventList : struct
         if(!event.map)
             return;
     
-        tempMap : Map* = event.map->get(event.map, name);
+        tempMap : Map* = event.map->get(name);
 
         if(tempMap)
         {
-            free(tempMap->remove(tempMap, id));
+            free(tempMap->remove(id));
             if(tempMap->size <= 0)
             {
-                tempMap->delete(tempMap);
+                tempMap->delete();
                 free(tempMap);
             }
         }
@@ -315,7 +315,7 @@ EventList : struct
         if(!event.map)
             return;
 
-        event.map->forEach(event.map, &__eventDeleteForEach);
+        event.map->forEach(&__eventDeleteForEach);
         free(event.map);
     }
     
@@ -323,13 +323,14 @@ EventList : struct
 
 EventData : struct
 {
-    fun : (clos : void*, data : void*) -> bool {}
+    fun : (clos : void*, data : void*) -> bool;
     clos : void*; 
 }
 
 __eventDispatchForEach : (eventData : EventData*, data : void*) -> bool
 {
-    return eventData->fun(eventData->clos, data);
+    fun : (clos : void*, data : void*) -> bool = eventData->fun;
+    return fun(eventData->clos, data);
 }
 
 __eventDeleteMapForEach : (eventData : EventData*) -> bool
@@ -344,8 +345,8 @@ __eventDeleteForEach : (data : void*) -> bool
 
     if(tempMap)
     {
-        tempMap->forEach(tempMap, &__eventDeleteMapForEach);
-        tempMap->delete(tempMap);
+        tempMap->forEach(&__eventDeleteMapForEach);
+        tempMap->delete();
         free(tempMap);
     }
 

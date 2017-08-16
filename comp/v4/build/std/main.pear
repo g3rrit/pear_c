@@ -5,50 +5,50 @@ main : () -> int
     printf("listTest\n");
 
     list : List* = new List();
-    list->add(list, "list");
-    list->add(list, "is");
-    list->add(list, "working");
+    list->add("list");
+    list->add("is");
+    list->add("working");
 
     for(i : i32 = 0; i < 3; i++)
     {
-        printf("%i : %s \n", i, list->get(list,i));
+        printf("%i : %s \n", i, list->get(i));
     }
 
-    list->remove(list,1);
+    list->remove(1);
 
     for(i : i32  = 0; i < 2; i++)
     {
-        printf("%i : %s \n", i, list->get(list,i));
+        printf("%i : %s \n", i, list->get(i));
     }
 
-    list->delete(list);
+    list->delete();
 
     printf("maptest\n");
 
     map : Map* = new Map();
-    map->add(map, "gerrit", "proessl");
-    map->add(map, "dominik", "ermer");
-    map->add(map, "sophie", "meckl");
+    map->add("gerrit", "proessl");
+    map->add("dominik", "ermer");
+    map->add("sophie", "meckl");
 
-    printf("key: gerrit val: %s\n", map->get(map, "gerrit"));
-    printf("key: dominik val: %s\n", map->get(map,"dominik"));
-    printf("key: sophie val: %s\n", map->get(map,"sophie"));
+    printf("key: gerrit val: %s\n", map->get("gerrit"));
+    printf("key: dominik val: %s\n", map->get("dominik"));
+    printf("key: sophie val: %s\n", map->get("sophie"));
 
-    map->remove(map, "sophie");
+    map->remove("sophie");
     
-    if(map->get(map, "sophie"))
+    if(map->get("sophie"))
     {
         printf("map key sophie not null error!\n");
-        printf("map: %s\n", map->get(map,"sophie"));
+        printf("map: %s\n", map->get("sophie"));
     }
     else
     {
         printf("map key sophie null working!\n");
     }
 
-    map->forEach(map, &printNames);
+    map->forEach(&printNames);
 
-    map->delete(map);
+    map->delete();
 
     event.add("test", "id1", &eventf1, "clos1");
     event.add("test", "id2", &eventf2, "clos2");
@@ -92,14 +92,14 @@ main : () -> int
     testu3->fmap = fmap;
     testu3->id = "id3";
 
-    fmap->add(fmap, testu1->id, testu1);
-    fmap->add(fmap, testu2->id, testu2);
-    fmap->add(fmap, testu3->id, testu3);
+    fmap->add(testu1->id, testu1);
+    fmap->add(testu2->id, testu2);
+    fmap->add(testu3->id, testu3);
 
     printf("fea\n");
-    fmap->forEach(fmap, &testufor);
+    fmap->forEach(&testufor);
 
-    fmap->forEach(fmap, &testufor);
+    fmap->forEach(&testufor);
     free(testu1);
     free(testu3);*/
 
@@ -138,13 +138,14 @@ TestU : struct
     fmap : Map* = null;
     count : int = 0;
     id : char*;
-    update : (this : TestU*) -> bool
+    update : (tst : char*) -> bool
     {
         printf("updatinng: %s\n", this->id);
         if(this->count != 0)
         {
             printf("wehere\n");
             event.removeID("tp",  this->id);
+            printf("segfaulthere\n");
             //printf("whut id: %s \n", this->id);
             free(this);
         }
@@ -155,7 +156,7 @@ TestU : struct
 
 testufor : (testu : TestU*) -> bool
 {
-    testu->update(testu);    
+    testu->update("g");    
     return true;
 }
 
