@@ -73,35 +73,36 @@
      OR = 289,
      NOT = 290,
      NOTEQ = 291,
-     VOID = 292,
-     I8 = 293,
-     I16 = 294,
-     I32 = 295,
-     I64 = 296,
-     U8 = 297,
-     U16 = 298,
-     U32 = 299,
-     U64 = 300,
-     F32 = 301,
-     F64 = 302,
-     BOOL = 303,
-     INT = 304,
-     RETURN = 305,
-     NEW = 306,
-     CRT = 307,
-     BREAK = 308,
-     CONTINUE = 309,
-     STRUCT = 310,
-     INCLUDE = 311,
-     IF = 312,
-     ELSE = 313,
-     WHILE = 314,
-     FOR = 315,
-     LOCAL = 316,
-     TRUE = 317,
-     FALSE = 318,
-     NUL = 319,
-     access_p = 320
+     BITOR = 292,
+     VOID = 293,
+     I8 = 294,
+     I16 = 295,
+     I32 = 296,
+     I64 = 297,
+     U8 = 298,
+     U16 = 299,
+     U32 = 300,
+     U64 = 301,
+     F32 = 302,
+     F64 = 303,
+     BOOL = 304,
+     INT = 305,
+     RETURN = 306,
+     NEW = 307,
+     CRT = 308,
+     BREAK = 309,
+     CONTINUE = 310,
+     STRUCT = 311,
+     INCLUDE = 312,
+     IF = 313,
+     ELSE = 314,
+     WHILE = 315,
+     FOR = 316,
+     LOCAL = 317,
+     TRUE = 318,
+     FALSE = 319,
+     NUL = 320,
+     access_p = 321
    };
 #endif
 /* Tokens.  */
@@ -139,35 +140,36 @@
 #define OR 289
 #define NOT 290
 #define NOTEQ 291
-#define VOID 292
-#define I8 293
-#define I16 294
-#define I32 295
-#define I64 296
-#define U8 297
-#define U16 298
-#define U32 299
-#define U64 300
-#define F32 301
-#define F64 302
-#define BOOL 303
-#define INT 304
-#define RETURN 305
-#define NEW 306
-#define CRT 307
-#define BREAK 308
-#define CONTINUE 309
-#define STRUCT 310
-#define INCLUDE 311
-#define IF 312
-#define ELSE 313
-#define WHILE 314
-#define FOR 315
-#define LOCAL 316
-#define TRUE 317
-#define FALSE 318
-#define NUL 319
-#define access_p 320
+#define BITOR 292
+#define VOID 293
+#define I8 294
+#define I16 295
+#define I32 296
+#define I64 297
+#define U8 298
+#define U16 299
+#define U32 300
+#define U64 301
+#define F32 302
+#define F64 303
+#define BOOL 304
+#define INT 305
+#define RETURN 306
+#define NEW 307
+#define CRT 308
+#define BREAK 309
+#define CONTINUE 310
+#define STRUCT 311
+#define INCLUDE 312
+#define IF 313
+#define ELSE 314
+#define WHILE 315
+#define FOR 316
+#define LOCAL 317
+#define TRUE 318
+#define FALSE 319
+#define NUL 320
+#define access_p 321
 
 
 
@@ -184,7 +186,7 @@ typedef union YYSTYPE
     Decl *decl;
 }
 /* Line 1529 of yacc.c.  */
-#line 188 "./src/pearlang.tab.h"
+#line 190 "./src/pearlang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

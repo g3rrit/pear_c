@@ -51,6 +51,7 @@ sizeof                {yylval.str = createStr(yytext); return SIZEOF;}
 "=="                   {yylval.str = createStr(yytext); printf("SAME"); return SAME;}
 "!="                   {yylval.str = createStr(yytext); printf("NOTEQ"); return NOTEQ;}
 "||"                   {yylval.str = createStr(yytext); printf("OR"); return OR;}
+"|"                   {yylval.str = createStr(yytext); printf("BITOR"); return BITOR;}
 "&&"                   {yylval.str = createStr(yytext); printf("AND"); return AND;}
 "!"                   {yylval.str = createStr(yytext); printf("NOT"); return NOT;}
 "/"                   {yylval.str = createStr(yytext); printf("DIVIDED"); return DIVIDED;}

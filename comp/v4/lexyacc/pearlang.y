@@ -62,6 +62,8 @@ void yyerror(const char* s);
 %token<str> NOT
 %token<str> NOTEQ
 
+%token<str> BITOR
+
 %token<str> VOID
 %token<str> I8
 %token<str> I16
@@ -816,6 +818,12 @@ s_expression:
                                     appendStrF(&$1,1,&$2);
                                     $$ = $1;
                                 }
+            | expression BITOR { 
+                                    printf("s_expression\n"); 
+                                    appendStrF(&$1,1,&$2);
+                                    $$ = $1;
+                                }
+
             | expression MODULO { 
                                     printf("s_expression\n"); 
                                     appendStrF(&$1,1,&$2);

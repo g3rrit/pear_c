@@ -361,8 +361,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 67
-#define YY_END_OF_BUFFER 68
+#define YY_NUM_RULES 68
+#define YY_END_OF_BUFFER 69
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -372,22 +372,22 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[154] =
     {   0,
-        0,    0,   68,   67,    1,    2,   38,   41,   29,   40,
-       22,   19,   20,   28,   26,   24,   27,   25,   39,   61,
-       18,   17,   31,   23,   30,   63,   42,   43,   63,   63,
-       63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-       63,   44,   67,   45,   35,    0,   64,    0,   37,   21,
-        0,   66,    0,   61,   33,   34,   32,   63,   63,   63,
-       63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-       48,   12,   63,   63,   63,   63,   63,   63,   63,   63,
-       63,   63,   63,   52,   63,   63,   36,    0,   64,    0,
-        0,    0,   66,   62,   63,   63,   63,    7,   63,   56,
+        0,    0,   69,   68,    1,    2,   39,   42,   29,   41,
+       22,   19,   20,   28,   26,   24,   27,   25,   40,   62,
+       18,   17,   31,   23,   30,   64,   43,   44,   64,   64,
+       64,   64,   64,   64,   64,   64,   64,   64,   64,   64,
+       64,   45,   37,   46,   35,    0,   65,    0,   38,   21,
+        0,   67,    0,   62,   33,   34,   32,   64,   64,   64,
+       64,   64,   64,   64,   64,   64,   64,   64,   64,   64,
+       49,   12,   64,   64,   64,   64,   64,   64,   64,   64,
+       64,   64,   64,   53,   64,   64,   36,    0,   65,    0,
+        0,    0,   67,   63,   64,   64,   64,    7,   64,   57,
 
-       57,   63,   15,   49,   50,   51,   63,   58,   63,    8,
-       63,   63,   63,   63,   63,   53,   54,   55,   63,   63,
-       65,   59,   63,   63,   13,   63,   63,   63,    6,   63,
-       63,   63,   46,   60,   63,    4,   63,   47,   63,   11,
-       63,   63,   63,   14,   63,   63,    3,   16,    9,   63,
+       58,   64,   15,   50,   51,   52,   64,   59,   64,    8,
+       64,   64,   64,   64,   64,   54,   55,   56,   64,   64,
+       66,   60,   64,   64,   13,   64,   64,   64,    6,   64,
+       64,   64,   47,   61,   64,    4,   64,   48,   64,   11,
+       64,   64,   64,   14,   64,   64,    3,   16,    9,   64,
        10,    5,    0
     } ;
 
@@ -1018,174 +1018,179 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 54 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("AND"); return AND;}
+{yylval.str = createStr(yytext); printf("BITOR"); return BITOR;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 55 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("NOT"); return NOT;}
+{yylval.str = createStr(yytext); printf("AND"); return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 56 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("DIVIDED"); return DIVIDED;}
+{yylval.str = createStr(yytext); printf("NOT"); return NOT;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 57 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("MODULO"); return MODULO;}
+{yylval.str = createStr(yytext); printf("DIVIDED"); return DIVIDED;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 58 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("QUOTATION"); return QUOTATION;}
+{yylval.str = createStr(yytext); printf("MODULO"); return MODULO;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 59 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("L_ABRACE"); return L_ABRACE;}
+{yylval.str = createStr(yytext); printf("QUOTATION"); return QUOTATION;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 60 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("R_ABRACE"); return R_ABRACE;}
+{yylval.str = createStr(yytext); printf("L_ABRACE"); return L_ABRACE;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 62 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("L_GBRACE"); return L_GBRACE;}
+#line 61 "./lexyacc/pearlang.l"
+{yylval.str = createStr(yytext); printf("R_ABRACE"); return R_ABRACE;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 63 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("R_GBRACE"); return R_GBRACE;}
+{yylval.str = createStr(yytext); printf("L_GBRACE"); return L_GBRACE;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 65 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("TRUE"); return TRUE;}
+#line 64 "./lexyacc/pearlang.l"
+{yylval.str = createStr(yytext); printf("R_GBRACE"); return R_GBRACE;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 66 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("FALSE"); return FALSE;}
+{yylval.str = createStr(yytext); printf("TRUE"); return TRUE;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 68 "./lexyacc/pearlang.l"
-{yylval.str = createStr("int8_t"); printf("I8"); return I8;}
+#line 67 "./lexyacc/pearlang.l"
+{yylval.str = createStr(yytext); printf("FALSE"); return FALSE;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 69 "./lexyacc/pearlang.l"
-{yylval.str = createStr("int16_t"); printf("I16"); return I16;}
+{yylval.str = createStr("int8_t"); printf("I8"); return I8;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 70 "./lexyacc/pearlang.l"
-{yylval.str = createStr("int32_t"); printf("I32"); return I32;}
+{yylval.str = createStr("int16_t"); printf("I16"); return I16;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 71 "./lexyacc/pearlang.l"
-{yylval.str = createStr("long long"); printf("I64"); return I64;}
+{yylval.str = createStr("int32_t"); printf("I32"); return I32;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 72 "./lexyacc/pearlang.l"
-{yylval.str = createStr("uint8_t"); printf("U8"); return U8;}
+{yylval.str = createStr("long long"); printf("I64"); return I64;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 73 "./lexyacc/pearlang.l"
-{yylval.str = createStr("uint16_t"); printf("U16"); return U16;}
+{yylval.str = createStr("uint8_t"); printf("U8"); return U8;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 74 "./lexyacc/pearlang.l"
-{yylval.str = createStr("uint32_t"); printf("U32"); return U32;}
+{yylval.str = createStr("uint16_t"); printf("U16"); return U16;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 75 "./lexyacc/pearlang.l"
-{yylval.str = createStr("unsigned long long"); printf("U64"); return U64;}
+{yylval.str = createStr("uint32_t"); printf("U32"); return U32;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 76 "./lexyacc/pearlang.l"
-{yylval.str = createStr("float"); printf("F32"); return F32;}
+{yylval.str = createStr("unsigned long long"); printf("U64"); return U64;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 77 "./lexyacc/pearlang.l"
-{yylval.str = createStr("double"); printf("F64"); return F64;}
+{yylval.str = createStr("float"); printf("F32"); return F32;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 78 "./lexyacc/pearlang.l"
-{yylval.str = createStr("int"); printf("int"); return INT;}
+{yylval.str = createStr("double"); printf("F64"); return F64;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 79 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("BOOL"); return BOOL;}
+{yylval.str = createStr("int"); printf("int"); return INT;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
 #line 80 "./lexyacc/pearlang.l"
-{yylval.str = createStr(yytext); printf("VOID"); return VOID;}
+{yylval.str = createStr(yytext); printf("BOOL"); return BOOL;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 83 "./lexyacc/pearlang.l"
+#line 81 "./lexyacc/pearlang.l"
+{yylval.str = createStr(yytext); printf("VOID"); return VOID;}
+	YY_BREAK
+case 62:
+YY_RULE_SETUP
+#line 84 "./lexyacc/pearlang.l"
 {yylval.str = createStr(yytext); 
                             printf("NUMBER ");
                             return NUMBER;
                         }
 	YY_BREAK
-case 62:
+case 63:
 YY_RULE_SETUP
-#line 87 "./lexyacc/pearlang.l"
+#line 88 "./lexyacc/pearlang.l"
 {yylval.str = createStr(yytext); 
                             printf("FLOAT");
                             return FLOAT;
                         }
 	YY_BREAK
-case 63:
+case 64:
 YY_RULE_SETUP
-#line 91 "./lexyacc/pearlang.l"
+#line 92 "./lexyacc/pearlang.l"
 {yylval.str = createStr(yytext); 
                             //[a-zA-Z0-9]+
                             printf("ID ");
                             return ID;
                         }
 	YY_BREAK
-case 64:
-/* rule 64 can match eol */
+case 65:
+/* rule 65 can match eol */
 YY_RULE_SETUP
-#line 97 "./lexyacc/pearlang.l"
+#line 98 "./lexyacc/pearlang.l"
 {yylval.str = createStr(yytext); 
                             printf("STRING ");
                             return STRING;
                         }   
 	YY_BREAK
-case 65:
-/* rule 65 can match eol */
-YY_RULE_SETUP
-#line 102 "./lexyacc/pearlang.l"
-{printf("multiline comment \n");}
-	YY_BREAK
 case 66:
+/* rule 66 can match eol */
 YY_RULE_SETUP
 #line 103 "./lexyacc/pearlang.l"
-{printf("line comment \n");}
+{printf("multiline comment \n");}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 106 "./lexyacc/pearlang.l"
+#line 104 "./lexyacc/pearlang.l"
+{printf("line comment \n");}
+	YY_BREAK
+case 68:
+YY_RULE_SETUP
+#line 107 "./lexyacc/pearlang.l"
 ECHO;
 	YY_BREAK
-#line 1189 "./src/lex.yy.c"
+#line 1194 "./src/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2182,7 +2187,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 106 "./lexyacc/pearlang.l"
+#line 107 "./lexyacc/pearlang.l"
 
 
 
