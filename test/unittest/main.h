@@ -15,6 +15,7 @@ TestSingleton testSingleton;
 typedef struct TestList TestList;
 typedef struct TestStruct TestStruct;
 int main();
+bool testArrayInit();
 bool testFunctionPointer();
 struct TestFP {
 bool (*test)(TestFP *this,bool (*fun)()); 

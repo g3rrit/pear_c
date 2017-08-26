@@ -46,7 +46,17 @@ testidtype=__crt_TestIDType();
 checkTest("id as type",testidtype.res);
 checkTest("array access",testArray());
 checkTest("function pointer",testFunctionPointer());
+checkTest("array init",testArrayInit());
 return 0;
+}bool testArrayInit()
+{
+char* tempArr[] = {
+"test","working"};
+char* arr[] = {
+"working","wsdforking"};
+if(strcmp(arr[0],tempArr[1])==0){
+return true;
+}
 }bool testFunctionPointer()
 {
 TestFP temp = __crt_TestFP();

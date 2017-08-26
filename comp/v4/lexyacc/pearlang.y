@@ -98,7 +98,7 @@ void yyerror(const char* s);
 
 %token<str> NUL
 
-%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast access s_expression
+%type<str> statement expression areturn type fcall s_fcall preproc include_s block_s block loop conditionalOp condition allotment typecast access s_expression array array_s
 %type<func> func funcdecl s_funcdecl 
 %type<decl> declaration
 %type<struc> s_struct struct
@@ -730,6 +730,7 @@ expression:
           | access { printf("expression\n"); $$=$1;} 
           | assignment { printf("expression\n"); $$=createStrAssign($1);}
           | allotment { printf("expression\n"); $$=$1;}
+          | array { printf("array\n"); $$=$1;}
           | SIZEOF L_BRACE type R_BRACE { 
                                             printf("expression\n"); 
                                             char *arr[] = { $2,$3,$4};
@@ -834,6 +835,33 @@ s_expression:
                                             appendStrF(&$1,1,&$2);
                                             $$ = $1;
                                         }
+;
+
+array:
+     | array_s R_GBRACE {
+                            printf("array\n");
+                            appendStrF(&$1,1,&$2);
+                            $$ = $1;
+                    }
+;
+
+array_s:
+       block_s expression COMMA expression {
+                                    printf("array_s\n");
+                                    char *arr[] = { $2, $3, $4 };
+                                    appendStrF(&$1,3,arr);
+                                    $$ = $1;
+                                }
+       | array_s expression {
+                                printf("array_s\n");
+                                appendStrF(&$1,1,&$2);
+                                $$ = $1;
+                            } 
+       | array_s COMMA {
+                            printf("array_s\n");
+                            appendStrF(&$1,1,&$2);
+                            $$ = $1;
+                        }
 ;
 
 type:
