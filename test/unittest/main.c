@@ -3,6 +3,10 @@
 #include"stdint.h"
 #include"stdbool.h"
 #include"testl.h"
+bool __TestArraySt_test(TestArraySt *this);
+TestArraySt testArraySt={.arr={
+false,true},.arr2={
+true,false,false,false,false,false,false,false},.test=&__TestArraySt_test};
 bool __TestFP_test(TestFP *this,bool (*fun)());
 bool __TestThis_test(TestThis *this);
 TestThis testThis={.test=&__TestThis_test};
@@ -47,16 +51,136 @@ checkTest("id as type",testidtype.res);
 checkTest("array access",testArray());
 checkTest("function pointer",testFunctionPointer());
 checkTest("array init",testArrayInit());
+checkTest("array in struct",testArraySt.test(&testArraySt));
 return 0;
+}TestArrayStr* __new_TestArrayStr()
+{ 
+TestArrayStr *this = malloc(sizeof(TestArrayStr));
+*((char**)this->arr+0) =  
+"one";
+*((char**)this->arr+1) = "two";
+*((char**)this->arr+2) = getCharta(getCharta("me","se"),getCharta("lol",getCharta("he","me")));
+*((char**)this->arr+3) = getCharta("well","no") ;
+*((char**)this->arr2+0) =  
+"lel";
+*((char**)this->arr2+1) = "test" ;
+return this;
+} 
+TestArrayStr __crt_TestArrayStr()
+{ 
+TestArrayStr this;
+*((char**)this.arr+0) =  
+"one";
+*((char**)this.arr+1) = "two";
+*((char**)this.arr+2) = getCharta(getCharta("me","se"),getCharta("lol",getCharta("he","me")));
+*((char**)this.arr+3) = getCharta("well","no") ;
+*((char**)this.arr2+0) =  
+"lel";
+*((char**)this.arr2+1) = "test" ;
+return this;
+} 
+char* getCharta(char* i,char* l)
+{
+char*temp="hello";
+return temp;
+}bool __TestArraySt_test(TestArraySt *this)
+{
+TestArrayStr* temparr = __new_TestArrayStr();
+if(strcmp(*((char**)temparr->arr+2),"hello")!=0)return false;
+if(strcmp(temparr->arr[0][0],"one")!=0)return false;
+if(this->arr[1]&&this->arr2[0][0][0])return true;
+return false;
+}TestArraySt* __new_TestArraySt()
+{ 
+TestArraySt *this = malloc(sizeof(TestArraySt));
+*((bool*)this->arr+0) =  
+false;
+*((bool*)this->arr+1) = true ;
+*((bool*)this->arr2+0) =  
+true;
+*((bool*)this->arr2+1) = false;
+*((bool*)this->arr2+2) = false;
+*((bool*)this->arr2+3) = false;
+*((bool*)this->arr2+4) = false;
+*((bool*)this->arr2+5) = false;
+*((bool*)this->arr2+6) = false;
+*((bool*)this->arr2+7) = false ;
+this->test = &__TestArraySt_test; 
+return this;
+} 
+TestArraySt __crt_TestArraySt()
+{ 
+TestArraySt this;
+*((bool*)this.arr+0) =  
+false;
+*((bool*)this.arr+1) = true ;
+*((bool*)this.arr2+0) =  
+true;
+*((bool*)this.arr2+1) = false;
+*((bool*)this.arr2+2) = false;
+*((bool*)this.arr2+3) = false;
+*((bool*)this.arr2+4) = false;
+*((bool*)this.arr2+5) = false;
+*((bool*)this.arr2+6) = false;
+*((bool*)this.arr2+7) = false ;
+this.test = &__TestArraySt_test; 
+return this;
+} 
+EmptyS* __new_EmptyS()
+{ 
+EmptyS *this = malloc(sizeof(EmptyS));
+return this;
+} 
+EmptyS __crt_EmptyS()
+{ 
+EmptyS this;
+return this;
+} 
+void emptyfun()
+{
+}void emptyblock()
+{
+if(true){
+}else if(true){
+}else{
+}
+for(int i = 0;i<2;i++){
+}
+while(false){
+}
 }bool testArrayInit()
 {
 char* tempArr[] = {
 "test","working"};
 char* arr[] = {
-"working","wsdforking"};
+"working"};
+void* tempArr2[3] = {
+};
+int tempExA[] = {
+3,7,8,getatest(3)*2};
+int tempAA[][2] = {
+{
+2,2},{
+3,3},{
+getatest(2),4}};
+int tempAB[2][2][2] = {
+{
+{
+2,2},{
+3,3}},{
+{
+4,4},{
+5,5}}};
+int tempAC[2][2][2][2][2][2];
 if(strcmp(arr[0],tempArr[1])==0){
-return true;
+if(tempExA[3]==18){
+if(tempAA[2][0]==4)return true;
 }
+}
+return false;
+}int getatest(int x)
+{
+return x*x;
 }bool testFunctionPointer()
 {
 TestFP temp = __crt_TestFP();

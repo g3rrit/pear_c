@@ -169,11 +169,84 @@ void addStructToFile(Struc *struc, int local)
     while(*sassign)
     {
         Assign *assign = (*sassign)->assign;
-        
+
         if(assign->init)
         {
-            char *arr2[] = { "this->", assign->id, " = ", assign->value, "; \n"};
-            appendStr(&func->body, 5, arr2);
+            char *tempvalue = createStr(assign->value); 
+            char *tempid = createStr(assign->id);
+
+            char *spos = strchr(tempid, '[');
+            if(spos != NULL)
+            {
+                *spos = '\0';
+
+                char *lgbrace = strchr(tempvalue,'{');
+                while(lgbrace != NULL)
+                {
+                    *lgbrace = ' ';
+                    lgbrace = strchr(tempvalue,'{');
+                }
+                char *rgbrace = strchr(tempvalue,'}');
+                while(rgbrace != NULL)
+                {
+                    *rgbrace = ' ';
+                    rgbrace = strchr(tempvalue,'}');
+                }
+
+                bool conArray = true;
+                int num = 0;
+                char *value = tempvalue;
+                printf("value: %s\n", value);
+                while(conArray)
+                {
+                    //printf("value: %s\n", value);
+                    char *ncomma = strchr(value, ',');
+                    char *nbrace = strchr(value, '(');
+                    char *nextc = fsmallestC(ncomma,nbrace);
+                    if(nextc == NULL)
+                    {
+                        conArray = false;
+                    }
+                    else if(nextc == nbrace)
+                    {
+                        nextc = fmatchingBrace(nextc);
+                        printf("nextc: %s\n",nextc);
+                        nextc = strchr(nextc, ',');
+                        if(nextc == NULL)
+                            conArray=false;
+                    }
+                    
+                    if(nextc != NULL)
+                    {
+                        *nextc = '\0';
+                    }
+
+                    //appendString to func body 
+                    char *strnum = malloc(16);
+                    snprintf(strnum,16,"%d",num);
+
+                    printf("value: %s\n", value);
+
+                    char *valara[] = { "*((",assign->type,"*)this->", tempid, "+", strnum, ") = ", value, ";\n"};
+                    appendStr(&func->body, 9, valara);
+
+                    num++;
+
+                    if(nextc != NULL)
+                    {
+                        value = nextc + 1;
+                    }
+
+                    free(strnum);
+                }
+                free(tempvalue);
+                free(tempid);
+            }
+            else
+            { 
+                char *arr2[] = { "this->", assign->id, " = ", assign->value, "; \n"};
+                appendStr(&func->body, 5, arr2);
+            }
         }
 
         sassign = &((*sassign)->next);
@@ -205,11 +278,81 @@ void addStructToFile(Struc *struc, int local)
     while(*sassign)
     {
         Assign *assign = (*sassign)->assign;
-        
+
         if(assign->init)
         {
-            char *arr2[] = { "this.", assign->id, " = ", assign->value, "; \n"};
-            appendStr(&func2->body, 5, arr2);
+            char *tempvalue = createStr(assign->value); 
+            char *tempid = createStr(assign->id);
+
+            char *spos = strchr(tempid, '[');
+            if(spos != NULL)
+            {
+                *spos = '\0';
+
+                char *lgbrace = strchr(tempvalue,'{');
+                while(lgbrace != NULL)
+                {
+                    *lgbrace = ' ';
+                    lgbrace = strchr(tempvalue,'{');
+                }
+                char *rgbrace = strchr(tempvalue,'}');
+                while(rgbrace != NULL)
+                {
+                    *rgbrace = ' ';
+                    rgbrace = strchr(tempvalue,'}');
+                }
+
+                bool conArray = true;
+                int num = 0;
+                char *value = tempvalue;
+                while(conArray)
+                {
+                    char *ncomma = strchr(value, ',');
+                    char *nbrace = strchr(value, '(');
+                    char *nextc = fsmallestC(ncomma,nbrace);
+                    if(nextc == NULL)
+                    {
+                        conArray = false;
+                    }
+                    else if(nextc == nbrace)
+                    {
+                        nextc = fmatchingBrace(nextc);
+                        nextc = strchr(nextc, ',');
+                        if(nextc == NULL)
+                            conArray=false;
+                    }
+                    
+                    if(nextc != NULL)
+                    {
+                        *nextc = '\0';
+                    }
+
+                    //appendString to func body 
+                    char *strnum = malloc(16);
+                    snprintf(strnum,16,"%d",num);
+
+                    printf("value: %s\n", value);
+
+                    char *valara[] = { "*((",assign->type,"*)this.", tempid, "+", strnum, ") = ", value, ";\n"};
+                    appendStr(&func2->body, 9, valara);
+
+                    num++;
+
+                    if(nextc != NULL)
+                    {
+                        value = nextc + 1;
+                    }
+
+                    free(strnum);
+                }
+                free(tempvalue);
+                free(tempid);
+            }
+            else
+            {
+                char *arr2[] = { "this.", assign->id, " = ", assign->value, "; \n"};
+                appendStr(&func2->body, 5, arr2);
+            }
         }
 
         sassign = &((*sassign)->next);
@@ -243,6 +386,31 @@ void addSingleToFile(Struc *struc, char *id, int local)
     while(*sassign)
     {
         Assign *assign = (*sassign)->assign;
+        
+        //remove size of array []
+        char *spos = strchr(assign->id, '[');
+        if(spos != NULL)
+        {
+            *spos = '\0';
+        }            
+        /*int anum = 0;
+        while(spos != NULL)
+        {
+            anum++;
+            spos = strchr(spos, ']');
+            spos = strchr(spos, '[');
+        }            
+        spos = strchr(assign->id, '[');
+        for(int i = 0; i < anum; i++)
+        {
+            //TODO += 1 on all systems?
+            *spos = '[';
+            spos += 1;
+            *spos = ']';
+            spos += 1;
+        }*/
+        //--
+
         if((*sassign)->next)
         {
             char *arr2[] = { ".", assign->id, "=", assign->value,","};
@@ -273,6 +441,50 @@ void addFuncDeclToFile(Func *func)
     appendStrF(&(activeFT.hdef), 9, arr); 
 }
 
+char *fmatchingBrace(char *brace)
+{
+    printf("brace: %s\n", brace);
+    brace += 1;
+    char *nextbl = strchr(brace, '(');
+    char *nextbr = strchr(brace, ')');
+
+    char *smallest = fsmallestC(nextbl, nextbr);
 
 
+    if(smallest==nextbr)
+    {
+        return nextbr;
+    }
+    else
+    {
+        char *matchr = fmatchingBrace(nextbl);
+        return fmatchingBrace(matchr);
+    }
+}
+
+char *fsmallestCF(char *a, char *b, char *c, char *d)
+{
+    return fsmallestC(fsmallestC(a,b), fsmallestC(c,d));
+}
+
+char *fsmallestC(char *a, char *b)
+{
+    if(a == NULL && b == NULL)
+        return NULL;
+
+    if(b == NULL)
+        return a;
+
+    if(a == NULL)
+        return b;
+
+    if(a <= b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
 

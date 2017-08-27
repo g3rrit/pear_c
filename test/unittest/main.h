@@ -3,6 +3,10 @@
 #include"stdlib.h"
 #include"stdint.h"
 #include"stdbool.h"
+typedef struct TestArrayStr TestArrayStr;
+typedef struct TestArraySt TestArraySt;
+TestArraySt testArraySt;
+typedef struct EmptyS EmptyS;
 typedef struct TestFP TestFP;
 typedef struct TestThis TestThis;
 TestThis testThis;
@@ -15,7 +19,28 @@ TestSingleton testSingleton;
 typedef struct TestList TestList;
 typedef struct TestStruct TestStruct;
 int main();
+struct TestArrayStr {
+char* arr[2][2]; 
+char* arr2[2]; 
+};
+TestArrayStr* __new_TestArrayStr();
+TestArrayStr __crt_TestArrayStr();
+char* getCharta(char* i,char* l);
+struct TestArraySt {
+bool arr[2]; 
+bool arr2[2][2][2]; 
+bool (*test)(TestArraySt *this); 
+};
+TestArraySt* __new_TestArraySt();
+TestArraySt __crt_TestArraySt();
+struct EmptyS {
+};
+EmptyS* __new_EmptyS();
+EmptyS __crt_EmptyS();
+void emptyfun();
+void emptyblock();
 bool testArrayInit();
+int getatest(int x);
 bool testFunctionPointer();
 struct TestFP {
 bool (*test)(TestFP *this,bool (*fun)()); 

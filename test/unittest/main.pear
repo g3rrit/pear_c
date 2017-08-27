@@ -35,19 +35,98 @@ main : () -> int
     checkTest("array access", testArray());
     checkTest("function pointer", testFunctionPointer());
     checkTest("array init", testArrayInit());
+    checkTest("array in struct", testArraySt.test());
 
     return 0;
 }
 
+TestArrayStr : struct
+{
+    arr[2][2] : char* = { "one", "two", getCharta(getCharta("me","se"),getCharta("lol",getCharta("he","me"))), getCharta("well","no") };
+    arr2[2] : char* = { "lel", "test" };
+}
+
+getCharta : (i : char*, l : char*) -> char*
+{
+    char *temp = "hello";
+    return temp;
+}
+
+TestArraySt : struct
+{
+    arr[2] : bool = { false, true };
+    arr2[2][2][2] : bool = { true, false, false, false, false, false, false, false };
+    test : () -> bool
+    {
+        temparr : TestArrayStr* = new TestArrayStr();
+        if(strcmp(*((char**)temparr->arr+2), "hello") != 0)
+            return false;
+        if(strcmp(temparr->arr[0][0], "one") != 0)
+            return false;
+        if(this->arr[1] && this->arr2[0][0][0])
+            return true;
+        return false;
+    }
+} : testArraySt
+
+//-- TEST EMPTY
+EmptyS : struct 
+{
+}
+
+emptyfun : () -> void
+{
+}
+
+emptyblock : () -> void
+{
+    if(true)
+    {
+    }
+    else if(true)
+    {
+    }
+    else
+    {
+    }
+    
+    for(i : int = 0; i < 2; i++)
+    {
+    }
+    
+    while(false)
+    {
+    }
+}
+//--
+
 testArrayInit : () -> bool
 {
     tempArr[] : char* = { "test", "working" };
-    arr[] : char* = { "working", "wsdforking" };
+    arr[] : char* = { "working"};
+    tempArr2[3] : void* = {};
+
+    tempExA[] : int = { 3, 7, 8, getatest(3) * 2 };
+
+    tempAA[][2] : int = { {2,2}, {3,3}, {getatest(2),4}};
+
+    tempAB[2][2][2] : int = { {{2,2},{3,3}}, {{4,4},{5,5}}};
+    tempAC[2][2][2][2][2][2] : int;
     
     if(strcmp(arr[0], tempArr[1]) == 0)
     {
-        return true; 
+        if(tempExA[3] == 18)
+        {
+            if(tempAA[2][0] == 4)
+                return true;
+        }
     }
+    return false;
+}
+
+getatest : (x : int) -> int
+{
+    return x * x;
 }
 
 testFunctionPointer : () -> bool

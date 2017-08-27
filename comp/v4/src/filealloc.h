@@ -30,4 +30,10 @@ void addSingleToFile(Struc *struc, char *id, int local);
 
 void addFuncDeclToFile(Func *func);
 
+char *fsmallestCF(char *a, char *b, char *c, char *d);
+
+char *fsmallestC(char *a, char *b);
+
+char *fmatchingBrace(char *brace);
+
 #endif

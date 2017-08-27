@@ -147,7 +147,22 @@ declaration:
                                                 $$ = res;
                                                 free($4);
                                             }
+
            | ID L_ABRACE expression R_ABRACE COLON type { 
+                                                            printf("declaration\n"); 
+                                                            Decl *res = malloc(sizeof(Decl));
+                                                            res->fun = false;
+                                                            res->id = createStr($1);   
+                                                            res->type = $6;
+                                                            char *iarr[] = { createStr($2), createStr($3), createStr($4) };
+                                                            appendStrF(&(res->id),3,iarr);
+                                                            res->def = createStr($6);
+                                                            char *arr[] = { createStr(" "), $1, $2, $3, $4 };
+                                                            appendStrF(&(res->def),5, arr);
+                                                            $$ = res;
+                                                            free($5);
+                                                        }
+           | access L_ABRACE expression R_ABRACE COLON type { 
                                                             printf("declaration\n"); 
                                                             Decl *res = malloc(sizeof(Decl));
                                                             res->fun = false;
@@ -775,6 +790,16 @@ expression:
                                     appendStrF(&$1,1,&$2);
                                     $$ = $1;
                                 } 
+          | TIMES expression {
+                                printf("expression\n"); 
+                                appendStrF(&$1,1,&$2);
+                                $$ = $1;
+                            }
+          | ADDRESS expression {
+                                    printf("expression\n"); 
+                                    appendStrF(&$1,1,&$2);
+                                    $$ = $1;
+                                }
           | MINUS expression { 
                                 printf("expression\n"); 
                                 appendStrF(&$1,1,&$2);
@@ -838,18 +863,22 @@ s_expression:
 ;
 
 array:
-     | array_s R_GBRACE {
+     array_s R_GBRACE {
                             printf("array\n");
                             appendStrF(&$1,1,&$2);
                             $$ = $1;
                     }
+     | block_s R_GBRACE {
+                            printf("array\n");
+                            appendStrF(&$1,1,&$2);
+                            $$ = $1;
+                        } 
 ;
 
 array_s:
-       block_s expression COMMA expression {
+       block_s expression {
                                     printf("array_s\n");
-                                    char *arr[] = { $2, $3, $4 };
-                                    appendStrF(&$1,3,arr);
+                                    appendStrF(&$1,1,&$2);
                                     $$ = $1;
                                 }
        | array_s expression {
