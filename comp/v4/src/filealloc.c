@@ -413,13 +413,24 @@ void addSingleToFile(Struc *struc, char *id, int local)
 
         if((*sassign)->next)
         {
-            char *arr2[] = { ".", assign->id, "=", assign->value,","};
-            appendStr(&(activeFT.sdef), 5, arr2);
+            if(assign->init)
+            {
+                char *arr2[] = { ".", assign->id, "=", assign->value,","};
+                appendStr(&(activeFT.sdef), 5, arr2);
+            }
         }
         else
         {
-            char *arr2[] = { ".", assign->id, "=", assign->value,"};\n"};
-            appendStr(&(activeFT.sdef), 5, arr2);
+            if(assign->init)
+            {
+                char *arr2[] = { ".", assign->id, "=", assign->value,"};\n"};
+                appendStr(&(activeFT.sdef), 5, arr2);
+            }
+            else
+            {
+                char *endstr = "};\n";     
+                appendStr(&(activeFT.sdef),1,&endstr);
+            }
         }
         sassign = &((*sassign)->next);
     }
